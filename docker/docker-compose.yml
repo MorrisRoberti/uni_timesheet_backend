@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: 'mariadb:10.3.31'
+    restart: 'always'
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'uni_timesheet'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+  
