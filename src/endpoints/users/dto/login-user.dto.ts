@@ -15,10 +15,10 @@ export class LoginUserDto {
   @MaxLength(255)
   email: string;
 
-  // @IsStrongPassword({ minLength: 8, minNumbers: 2, minSymbols: 1 })
   @IsDefined()
   @IsNotEmpty()
   @IsString()
+  // @IsStrongPassword({ minLength: 8, minNumbers: 2, minSymbols: 1 })
   @MaxLength(255)
   password: string;
 }

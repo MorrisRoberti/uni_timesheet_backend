@@ -29,7 +29,7 @@ export class UserConfigTable extends Model {
   user_id: number;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  faculty: string = null;
+  faculty: string;
 
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   active: boolean = true;

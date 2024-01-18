@@ -14,16 +14,24 @@ export class AuthService {
   ) {}
 
   async validateUser(loginUser: LoginUserDto) {
-    const user = await this.userService.findOneByEmail(loginUser.email);
+    try {
+      const user = await this.userService.findOneByEmail(loginUser.email);
 
-    if (!user) return null;
+      if (user == undefined || user == null) return null;
 
-    const passwordValid = await bcrypt.compare(
-      loginUser.password,
-      user.password,
-    );
+      this.logger.log('Comparing passwords for login');
+      const passwordValid = await bcrypt.compare(
+        loginUser.password,
+        user.password,
+      );
 
-    if (passwordValid) return user;
+      if (passwordValid) {
+        this.logger.log('Valid password');
+        return user;
+      }
+    } catch (error) {
+      this.logger.error('Error during the User validation', error);
+    }
   }
 
   async login(user: LoginUserDto): Promise<{ accessToken: string }> {

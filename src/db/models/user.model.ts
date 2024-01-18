@@ -21,10 +21,10 @@ export class UserTable extends Model {
   id: number;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  first_name: string = null;
+  first_name: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  last_name: string = null;
+  last_name: string;
 
   @Column({
     type: DataType.STRING,

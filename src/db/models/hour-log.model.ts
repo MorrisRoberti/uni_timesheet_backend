@@ -35,10 +35,10 @@ export class HourLogTable extends Model {
   user_subject_id: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  hours: number = 0;
+  hours: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false, validate: { max: 59 } })
-  minutes: number = 0;
+  minutes: number;
 
   @Column({ type: DataType.DATEONLY, allowNull: false })
   date: string;
