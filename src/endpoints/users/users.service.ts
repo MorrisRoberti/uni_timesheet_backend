@@ -54,20 +54,22 @@ export class UsersService {
 
   // db functions
 
-  async createUserOnDb(user: any) {
+  async createUserOnDb(user: any, transaction: any) {
     try {
       this.logger.log('Creating User record on db');
-      const userCreated = await UserTable.create(user);
+      const userCreated = await UserTable.create(user, { transaction });
       return userCreated;
     } catch (error) {
       this.logger.error('Error during creation User', error);
     }
   }
 
-  async createUserConfigOnDb(user: any) {
+  async createUserConfigOnDb(user: any, transaction: any) {
     try {
       this.logger.log('Creating UserConfig record on db');
-      const userConfigCreated = await UserConfigTable.create(user);
+      const userConfigCreated = await UserConfigTable.create(user, {
+        transaction,
+      });
       return userConfigCreated;
     } catch (error) {
       this.logger.error('Error during creation UserConfig', error);

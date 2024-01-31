@@ -14,6 +14,7 @@ import { WeeklyLogTable } from './db/models/weekly-log.model';
 import { SubjectsModule } from './endpoints/subjects/subjects.module';
 import { HourLogsModule } from './endpoints/hour-logs/hour-logs.module';
 import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
