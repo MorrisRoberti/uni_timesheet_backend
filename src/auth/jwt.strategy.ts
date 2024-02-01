@@ -1,20 +1,26 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-local';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/endpoints/users/dto/login-user.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: 'testSecret',
+    })
   }
 
-  async validate(loginUser: LoginUserDto): Promise<any> {
-    const user = await this.authService.validateUserOnLogin(loginUser);
+  // checks if the token is valid in the routes that have the AuthGuard
+  async validate(credentialsAccessToken: any) {
+    const rawCredentials = {email: credentialsAccessToken.username, password: credentialsAccessToken.sub};
+    const user = await this.authService.validateAccessToken(rawCredentials);
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user;
+    return credentialsAccessToken;
   }
 }

@@ -67,6 +67,8 @@ export class UsersController {
       transaction,
     );
 
+    await transaction.commit();
+
     // calls the login function and returns the token
     return HttpStatus.CREATED;
   }

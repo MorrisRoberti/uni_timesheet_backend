@@ -72,6 +72,37 @@ export class AuthService {
     }
   }
 
+  async validateAccessToken(payload: {email: string; password: string}) {
+    try {
+      const user = await this.userService.findOneByEmail(payload.email);
+
+      if (!user) {
+        // error in case the user does not exist
+        const err = new HttpException(
+          { error: 'User not found', statusCode: 404 },
+          HttpStatus.NOT_FOUND,
+        );
+        throw err;
+      }
+
+      this.logger.log('Comparing passwords for login');
+      if (user.password == payload.password) {
+        this.logger.log('Valid password');
+        return user;
+      }
+      // error in case the password is not correct
+      const err = new HttpException(
+        { error: 'Unauthorized', statusCode: 401 },
+        HttpStatus.UNAUTHORIZED,
+      );
+      throw err;
+    } catch (error) {
+      this.logger.error('Error during the Token validation', error.response);
+      throw error;
+    }
+  }
+
+
   async login(user: LoginUserDto): Promise<{ accessToken: string }> {
     const payload = { username: user.email, sub: user.password };
     return {
