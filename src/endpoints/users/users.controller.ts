@@ -3,13 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   HttpStatus,
-  HttpException,
   Logger,
+  Put,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -45,8 +43,7 @@ export class UsersController {
     await this.authService.validateUserOnCreate(createUserDto);
 
     // converts the dto in the db user object
-    const convertedUser =
-      this.userService.convertNewUserToCreate(createUserDto);
+    const convertedUser = this.userService.convertNewUser(createUserDto);
 
     const transaction = await this.sequelize.transaction();
 
@@ -76,6 +73,36 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Get('/test')
   findAll() {
+    return HttpStatus.OK;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/config')
+  async updateUserConfig(
+    @Request() req: any,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    // for now the only editable field is faculty
+    // find the user that logged in
+    const user = await this.userService.findOneByEmail(req.user.username);
+
+    // find the active user_config record
+    const user_config = await this.userService.findActiveUserConfig(user.id);
+
+    // converts the dto in the db user config object
+    const convertedUserConfig =
+      this.userService.convertUpdateUserConfig(updateUserDto);
+
+    const transaction = await this.sequelize.transaction();
+
+    // updates the record on db
+    await this.userService.updateUserConfigOnDb(
+      convertedUserConfig,
+      user_config.id,
+      transaction,
+    );
+
+    await transaction.commit();
     return HttpStatus.OK;
   }
 }

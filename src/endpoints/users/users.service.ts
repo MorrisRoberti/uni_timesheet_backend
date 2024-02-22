@@ -9,7 +9,7 @@ import { UserConfigTable } from 'src/db/models/user-config.model';
 export class UsersService {
   constructor(private logger: Logger) {}
 
-  convertNewUserToCreate(createUserDto: CreateUserDto) {
+  convertNewUser(createUserDto: CreateUserDto) {
     this.logger.log('Converting NEW User for creation');
     const saltRounds = 10;
     const hashedPassword = bcrypt.hashSync(createUserDto.password, saltRounds);
@@ -35,6 +35,15 @@ export class UsersService {
     return dbUserConfig;
   }
 
+  convertUpdateUserConfig(userConfigToConvert: UpdateUserDto) {
+    this.logger.log('Converting UPDATE UserConfig for update');
+    const dbUserConfig = {
+      faculty: userConfigToConvert.faculty,
+    };
+    this.logger.log('Done!');
+    return dbUserConfig;
+  }
+
   async findOneByEmail(email: string): Promise<UserTable> {
     try {
       this.logger.log('GET User from Email');
@@ -52,7 +61,43 @@ export class UsersService {
     }
   }
 
+  async findActiveUserConfig(user_id: number) {
+    try {
+      this.logger.log('GET UserConfig from user_id');
+
+      const user_config = await UserConfigTable.findOne({
+        where: { user_id, active: 1 },
+      });
+
+      if (user_config && user_config !== null) {
+        this.logger.log('Done!');
+        return user_config.dataValues;
+      }
+      this.logger.log('User Config not found');
+      return null;
+    } catch (error) {
+      this.logger.error('Error during GET Active User Config');
+    }
+  }
+
   // db functions
+
+  async updateUserConfigOnDb(
+    userConfig: any,
+    user_config_id: number,
+    transaction: any,
+  ) {
+    try {
+      this.logger.log('Updating User Config record on db');
+      const userConfigUpdated = await UserConfigTable.update(userConfig, {
+        where: { id: user_config_id },
+        transaction,
+      });
+      return userConfigUpdated;
+    } catch (error) {
+      this.logger.error('Error during updating UserConfig');
+    }
+  }
 
   async createUserOnDb(user: any, transaction: any) {
     try {
