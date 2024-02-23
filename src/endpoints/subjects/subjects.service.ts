@@ -29,6 +29,9 @@ export class SubjectsService {
       user_id,
       subject_id,
       cfu: createdSubjectDto.cfu,
+      aa_left: createdSubjectDto.aa_left,
+      aa_right: createdSubjectDto.aa_right,
+      semester: createdSubjectDto.semester,
     };
     this.logger.log('Done!');
     return dbSubject;
@@ -52,21 +55,75 @@ export class SubjectsService {
       this.logger.error('Error during GET Subject from name');
     }
   }
+  async findOneUserSubjectDeleted(user_id: number, subject_id: number) {
+    try {
+      this.logger.log('GET User Subject');
+      const userSubject = await UserSubjectTable.findOne({
+        where: { user_id, subject_id },
+        paranoid: false,
+      });
 
-  async createSubject(subject: any) {
+      if (userSubject && userSubject !== null) {
+        this.logger.log('Done!');
+        return userSubject.dataValues;
+      }
+
+      this.logger.log('User Subject not found');
+      return null;
+    } catch (error) {
+      this.logger.error('Error during GET User Subject');
+    }
+  }
+  async findOneUserSubject(user_id: number, subject_id: number) {
+    try {
+      this.logger.log('GET User Subject');
+      const userSubject = await UserSubjectTable.findOne({
+        where: { user_id, subject_id },
+      });
+
+      if (userSubject && userSubject !== null) {
+        this.logger.log('Done!');
+        return userSubject.dataValues;
+      }
+
+      this.logger.log('User Subject not found');
+      return null;
+    } catch (error) {
+      this.logger.error('Error during GET User Subject');
+    }
+  }
+
+  async updateUserSubject(user_subject: any, transaction: any) {
+    try {
+      this.logger.log('Update User Subject record on db');
+      const userSubject = await UserSubjectTable.update(user_subject, {
+        where: { id: user_subject.id },
+        paranoid: false,
+        transaction,
+      });
+      return userSubject;
+    } catch (error) {
+      this.logger.error('Error during UPDATE User Subject');
+    }
+  }
+
+  async createSubject(subject: any, transaction: any): Promise<any> {
     try {
       this.logger.log('Create Subject record on db');
-      const subjectCreated = await SubjectTable.create(subject);
+      const subjectCreated = await SubjectTable.create(subject, transaction);
       return subjectCreated;
     } catch (error) {
       this.logger.error('Error during creating of Subject');
     }
   }
 
-  async createUserSubject(user_subject: any) {
+  async createUserSubject(user_subject: any, transaction: any) {
     try {
       this.logger.log('Create UserSubject record on db');
-      const userSubjectCreated = await UserSubjectTable.create(user_subject);
+      const userSubjectCreated = await UserSubjectTable.create(
+        user_subject,
+        transaction,
+      );
       return userSubjectCreated;
     } catch (error) {
       this.logger.error('Error during creating of UserSubject');
