@@ -38,7 +38,65 @@ export class SubjectsService {
     return dbSubject;
   }
 
+  convertArrayOfUserSubjectsToDto(userSubjects: Array<UserSubjectTable>) {
+    this.logger.log('Converting UserSubject array from db to array of dto');
+    const userSubjectsArrayDto = [];
+    for(let i = 0; i<userSubjects.length; i++) {
+      this.logger.log(`Converting object number ${i}...`);
+      const userSubjectDB = userSubjects[i];
+      const userSubjectDto = {
+        id: userSubjectDB.id,
+        name: userSubjectDB.name,
+        cfu: userSubjectDB.cfu,
+        semester: userSubjectDB.semester,
+        aa_left: userSubjectDB.aa_left,
+        aa_right: userSubjectDB.aa_right
+      }
+      this.logger.log('Ok');
+      userSubjectsArrayDto.push(userSubjectDto);
+    }
+    this.logger.log('Done!');
+    return userSubjectsArrayDto;
+  }
+
+  convertUpdatedUserSubject(
+    updateUserSubject: UpdateSubjectDto,
+    user_id: number,
+    id: number
+  ) {
+    this.logger.log('Converting UPDATE Subject for Udating');
+    const dbSubject = {
+      id,
+      user_id,
+      cfu: updateUserSubject.cfu,
+      name: updateUserSubject.name,
+      aa_left: updateUserSubject.aa_left,
+      aa_right: updateUserSubject.aa_right,
+      semester: updateUserSubject.semester,
+    };
+    this.logger.log('Done!');
+    return dbSubject;
+  }
+
+
   // db functions
+
+async findAllUserSubjectsOfUser(user_id: number) {
+  try {
+    this.logger.log('GET All UserSubjects of User');
+    const userSubjects = await UserSubjectTable.findAndCountAll({where: {user_id}, paranoid: true});
+  
+    if (userSubjects && userSubjects !== null) {
+      this.logger.log('Done!');
+      return userSubjects.rows;
+    }
+
+    this.logger.log('UserSubjects not found');
+    return null;
+  } catch (error) {
+    this.logger.error('Error during GET of all User Subjects of user');
+  }
+}
 
   async findUserSubjectByName(name: string, user_id: number) {
     try {

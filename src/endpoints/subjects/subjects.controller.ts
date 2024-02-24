@@ -10,6 +10,7 @@ import {
   Logger,
   Request,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
@@ -28,6 +29,21 @@ export class SubjectsController {
     private userService: UsersService,
     private sequelize: Sequelize,
   ) {}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  async findAll(@Request() request: any) {
+    // look for user
+    const user = await this.userService.findOneByEmail(request.user.username);
+
+    const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(user.id);
+
+    // I convert the objects back to the Dto format to hide sensible data
+    const userSubjectsConverted = this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
+
+    return userSubjectsConverted;
+  }
+
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
@@ -126,6 +142,24 @@ export class SubjectsController {
 
     // delete the subject
     await this.subjectsService.deleteUserSubject(userSubject.id, transaction);
+
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/:id')
+  async update(@Request() request: any, @Param('id') id: number, @Body() updateSubjectDto: UpdateSubjectDto) {
+    // look for the user
+    const user = await this.userService.findOneByEmail(request.user.username);
+
+    // convert user_subject in db object
+    const userSubjectConverted = this.subjectsService.convertUpdatedUserSubject(updateSubjectDto, user.id, id);
+
+    const transaction = await this.sequelize.transaction();
+
+    await this.subjectsService.updateUserSubject(userSubjectConverted, transaction);
 
     await transaction.commit();
 
