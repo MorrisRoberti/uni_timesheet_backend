@@ -79,12 +79,12 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/config')
   async updateUserConfig(
-    @Request() req: any,
+    @Request() request: any,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     // for now the only editable field is faculty
     // find the user that logged in
-    const user = await this.userService.findOneByEmail(req.user.username);
+    const user = await this.userService.findOneByEmail(request.user.username);
 
     // find the active user_config record
     const user_config = await this.userService.findActiveUserConfig(user.id);

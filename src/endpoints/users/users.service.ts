@@ -44,6 +44,8 @@ export class UsersService {
     return dbUserConfig;
   }
 
+  // db functions
+
   async findOneByEmail(email: string): Promise<UserTable> {
     try {
       this.logger.log('GET User from Email');
@@ -79,8 +81,6 @@ export class UsersService {
       this.logger.error('Error during GET Active User Config');
     }
   }
-
-  // db functions
 
   async updateUserConfigOnDb(
     userConfig: any,
