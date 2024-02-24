@@ -33,10 +33,8 @@ export class SubjectsController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Request() request: any) {
-    // look for user
-    const user = await this.userService.findOneByEmail(request.user.username);
 
-    const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(user.id);
+    const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(request.user.id);
 
     // I convert the objects back to the Dto format to hide sensible data
     const userSubjectsConverted = this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
@@ -51,18 +49,8 @@ export class SubjectsController {
     @Request() request: any,
     @Body() createSubjectDto: CreateSubjectDto,
   ) {
-    // look for user from the request
-    const userPromise = new Promise<UserTable>((resolve) => {
-      resolve(this.userService.findOneByEmail(request.user.username));
-    });
-
     // look for subject
-    const subjectPromise = new Promise<SubjectTable>((resolve) => {
-      resolve(this.subjectsService.findSubjectByName(createSubjectDto.name));
-    });
-
-    // wait until both have completed
-    const [user, subject] = await Promise.all([userPromise, subjectPromise]);
+    const subject = await this.subjectsService.findSubjectByName(createSubjectDto.name);
 
     // if subject is not present create subject and relative user_subject
     if (subject == null) {
@@ -79,7 +67,7 @@ export class SubjectsController {
       // converting user_subject
       const convertedUserSubject = this.subjectsService.convertNewUserSubject(
         createSubjectDto,
-        user.id,
+        request.user.id,
         newSubject.id,
       );
       // create user_subject
@@ -95,7 +83,7 @@ export class SubjectsController {
 
     // look for user_subject
     const userSubject = await this.subjectsService.findOneUserSubjectDeleted(
-      user.id,
+      request.user.id,
       subject.id,
     );
 
@@ -106,7 +94,7 @@ export class SubjectsController {
       // convert new user_subject
       const newUserSubject = this.subjectsService.convertNewUserSubject(
         createSubjectDto,
-        user.id,
+        request.user.id,
         subject.id,
       );
       // create user_subject
@@ -129,12 +117,9 @@ export class SubjectsController {
   @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   async delete(@Request() request: any, @Param('id') id: number) {
-    // look for the user
-    const user = await this.userService.findOneByEmail(request.user.username);
-
     // look for the user_subject
     const userSubject = await this.subjectsService.findOneUserSubject(
-      user.id,
+      request.user.id,
       id,
     );
 
@@ -151,11 +136,8 @@ export class SubjectsController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   async update(@Request() request: any, @Param('id') id: number, @Body() updateSubjectDto: UpdateSubjectDto) {
-    // look for the user
-    const user = await this.userService.findOneByEmail(request.user.username);
-
     // convert user_subject in db object
-    const userSubjectConverted = this.subjectsService.convertUpdatedUserSubject(updateSubjectDto, user.id, id);
+    const userSubjectConverted = this.subjectsService.convertUpdatedUserSubject(updateSubjectDto, request.user.id, id);
 
     const transaction = await this.sequelize.transaction();
 

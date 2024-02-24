@@ -32,7 +32,7 @@ export class UsersController {
     const user = await this.authService.validateUserOnLogin(credentials);
 
     // if it does exist it uses passport to log in
-    const token = await this.authService.login(user);
+    const token = await this.authService.login(user, user.id);
     // then returns the token
     return token;
   }
@@ -82,12 +82,8 @@ export class UsersController {
     @Request() request: any,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    // for now the only editable field is faculty
-    // find the user that logged in
-    const user = await this.userService.findOneByEmail(request.user.username);
-
     // find the active user_config record
-    const user_config = await this.userService.findActiveUserConfig(user.id);
+    const user_config = await this.userService.findActiveUserConfig(request.user.id);
 
     // converts the dto in the db user config object
     const convertedUserConfig =

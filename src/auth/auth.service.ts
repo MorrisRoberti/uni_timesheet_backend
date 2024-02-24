@@ -103,8 +103,8 @@ export class AuthService {
   }
 
 
-  async login(user: LoginUserDto): Promise<{ accessToken: string }> {
-    const payload = { username: user.email, sub: user.password };
+  async login(user: LoginUserDto, id: number): Promise<{ accessToken: string }> {
+    const payload = { id, username: user.email, sub: user.password };
     return {
       accessToken: this.jwtService.sign(payload),
     };
