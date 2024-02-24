@@ -55,6 +55,12 @@ export class UserSubjectTable extends Model {
   semester: number;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  name: string;
+
+  @Column({
     type: 'YEAR',
     allowNull: false,
   })

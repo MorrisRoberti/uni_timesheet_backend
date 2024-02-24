@@ -109,4 +109,26 @@ export class SubjectsController {
       return HttpStatus.CREATED;
     }
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:id')
+  async delete(@Request() request: any, @Param('id') id: number) {
+    // look for the user
+    const user = await this.userService.findOneByEmail(request.user.username);
+
+    // look for the user_subject
+    const userSubject = await this.subjectsService.findOneUserSubject(
+      user.id,
+      id,
+    );
+
+    const transaction = await this.sequelize.transaction();
+
+    // delete the subject
+    await this.subjectsService.deleteUserSubject(userSubject.id, transaction);
+
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
 }

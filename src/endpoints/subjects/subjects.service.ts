@@ -29,6 +29,7 @@ export class SubjectsService {
       user_id,
       subject_id,
       cfu: createdSubjectDto.cfu,
+      name: createdSubjectDto.name,
       aa_left: createdSubjectDto.aa_left,
       aa_right: createdSubjectDto.aa_right,
       semester: createdSubjectDto.semester,
@@ -39,6 +40,24 @@ export class SubjectsService {
 
   // db functions
 
+  async findUserSubjectByName(name: string, user_id: number) {
+    try {
+      this.logger.log('GET UserSubject from name');
+      const userSubject = await UserSubjectTable.findOne({
+        where: { name, user_id },
+      });
+
+      if (userSubject && userSubject !== null) {
+        this.logger.log('Done!');
+        return userSubject.dataValues;
+      }
+
+      this.logger.log('UserSubject not found');
+      return null;
+    } catch (error) {
+      this.logger.error('Error during GET UserSubject from name');
+    }
+  }
   async findSubjectByName(name: string) {
     try {
       this.logger.log('GET Subject from name');
@@ -127,6 +146,15 @@ export class SubjectsService {
       return userSubjectCreated;
     } catch (error) {
       this.logger.error('Error during creating of UserSubject');
+    }
+  }
+
+  async deleteUserSubject(id: number, transaction: any) {
+    try {
+      this.logger.log('Eliminate UserSubject record on db');
+      await UserSubjectTable.destroy({ where: { id }, transaction });
+    } catch (error) {
+      this.logger.error('Error during elimination of UserSubject');
     }
   }
 }

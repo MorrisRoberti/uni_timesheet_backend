@@ -133,6 +133,7 @@ CREATE TABLE `user_subjects` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
@@ -148,7 +149,7 @@ CREATE TABLE `user_subjects` (
 
 LOCK TABLES `user_subjects` WRITE;
 /*!40000 ALTER TABLE `user_subjects` DISABLE KEYS */;
-INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL);
+INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL);
 /*!40000 ALTER TABLE `user_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-08 14:46:42
+-- Dump completed on 2024-02-24 20:19:30
