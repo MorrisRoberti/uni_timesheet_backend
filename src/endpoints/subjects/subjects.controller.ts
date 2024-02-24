@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -16,21 +15,17 @@ import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UsersService } from '../users/users.service';
-import { UserTable } from 'src/db/models/user.model';
-import { SubjectTable } from 'src/db/models/subject.model';
 import { Sequelize } from 'sequelize-typescript';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('subjects')
 export class SubjectsController {
   constructor(
     private readonly subjectsService: SubjectsService,
     private logger: Logger,
-    private userService: UsersService,
     private sequelize: Sequelize,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Request() request: any) {
 
@@ -43,7 +38,6 @@ export class SubjectsController {
   }
 
 
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
     @Request() request: any,
@@ -114,7 +108,6 @@ export class SubjectsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   async delete(@Request() request: any, @Param('id') id: number) {
     // look for the user_subject
@@ -133,7 +126,6 @@ export class SubjectsController {
     return HttpStatus.OK;
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Put('/:id')
   async update(@Request() request: any, @Param('id') id: number, @Body() updateSubjectDto: UpdateSubjectDto) {
     // convert user_subject in db object

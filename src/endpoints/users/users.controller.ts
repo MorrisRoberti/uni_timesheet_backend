@@ -22,7 +22,6 @@ export class UsersController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
-    private logger: Logger,
     private sequelize: Sequelize,
   ) {}
 
@@ -68,12 +67,6 @@ export class UsersController {
 
     // calls the login function and returns the token
     return HttpStatus.CREATED;
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/test')
-  findAll() {
-    return HttpStatus.OK;
   }
 
   @UseGuards(AuthGuard('jwt'))
