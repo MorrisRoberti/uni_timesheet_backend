@@ -10,14 +10,17 @@ import {
   Request,
   HttpStatus,
   Put,
+  UseFilters,
 } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Sequelize } from 'sequelize-typescript';
+import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 
 @UseGuards(AuthGuard('jwt'))
+@UseFilters(DBExceptionFilter)
 @Controller('subjects')
 export class SubjectsController {
   constructor(
@@ -29,12 +32,13 @@ export class SubjectsController {
   @Get()
   async findAll(@Request() request: any) {
 
-    const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(request.user.id);
+      const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(request.user.id);
+      
+      // I convert the objects back to the Dto format to hide sensible data
+      const userSubjectsConverted = this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
+      
+      return userSubjectsConverted;
 
-    // I convert the objects back to the Dto format to hide sensible data
-    const userSubjectsConverted = this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
-
-    return userSubjectsConverted;
   }
 
 
@@ -44,10 +48,10 @@ export class SubjectsController {
     @Body() createSubjectDto: CreateSubjectDto,
   ) {
     // look for subject
-    const subject = await this.subjectsService.findSubjectByName(createSubjectDto.name);
+    const isPresent = await this.subjectsService.isSubjectPresent(createSubjectDto.name);
 
     // if subject is not present create subject and relative user_subject
-    if (subject == null) {
+    if (isPresent == false) {
       const transaction = await this.sequelize.transaction();
       // converting subject
       const convertedSubject =
@@ -75,8 +79,11 @@ export class SubjectsController {
       return HttpStatus.CREATED;
     }
 
+
+    const subject = await this.subjectsService.findSubjectByName(createSubjectDto.name);
+
     // look for user_subject
-    const userSubject = await this.subjectsService.findOneUserSubjectDeleted(
+    const isUserSubjectPresent = await this.subjectsService.isUserSubjectDeletedPresent(
       request.user.id,
       subject.id,
     );
@@ -84,7 +91,7 @@ export class SubjectsController {
     const transaction = await this.sequelize.transaction();
 
     // check if user_subject record exists
-    if (userSubject == null) {
+    if (isUserSubjectPresent == false) {
       // convert new user_subject
       const newUserSubject = this.subjectsService.convertNewUserSubject(
         createSubjectDto,
@@ -97,7 +104,11 @@ export class SubjectsController {
       await transaction.commit();
 
       return HttpStatus.CREATED;
-    } else if (userSubject.deletedAt !== null) {
+    } 
+    
+    const userSubject = await this.subjectsService.findOneUserSubjectDeleted(request.user.id, subject.id);
+
+    if (userSubject.deletedAt !== null) {
       // set deletedAt at null and update the record on db
       userSubject.deletedAt = null;
       await this.subjectsService.updateUserSubject(userSubject, transaction);

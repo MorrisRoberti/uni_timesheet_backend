@@ -1,8 +1,12 @@
-import { Injectable, Logger, Param } from '@nestjs/common';
+import { Injectable, Logger} from '@nestjs/common';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectTable } from 'src/db/models/subject.model';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
+import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
+import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
+import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
+import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 
 @Injectable()
 export class SubjectsService {
@@ -81,8 +85,21 @@ export class SubjectsService {
 
   // db functions
 
+async isSubjectPresent(name: string) : Promise<boolean> {
+  this.logger.log('Checking if subject is present');
+  const subject = await SubjectTable.findOne({ where: { name } });
+
+  if (subject && subject !== null) {
+    this.logger.log('Present!');
+    return true;
+  }
+
+  this.logger.log('Not Present!');
+  return false;
+}
+
+
 async findAllUserSubjectsOfUser(user_id: number) {
-  try {
     this.logger.log('GET All UserSubjects of User');
     const userSubjects = await UserSubjectTable.findAndCountAll({where: {user_id}, paranoid: true});
   
@@ -91,15 +108,13 @@ async findAllUserSubjectsOfUser(user_id: number) {
       return userSubjects.rows;
     }
 
-    this.logger.log('UserSubjects not found');
-    return null;
-  } catch (error) {
-    this.logger.error('Error during GET of all User Subjects of user');
-  }
+    // the error could be logged in the custom exception filter
+    throw new NotFoundException('UserSubject', 'findAllUserSubjectsOfUser(user_id)', [`${user_id}`]);
+
 }
 
   async findUserSubjectByName(name: string, user_id: number) {
-    try {
+
       this.logger.log('GET UserSubject from name');
       const userSubject = await UserSubjectTable.findOne({
         where: { name, user_id },
@@ -109,15 +124,10 @@ async findAllUserSubjectsOfUser(user_id: number) {
         this.logger.log('Done!');
         return userSubject.dataValues;
       }
-
-      this.logger.log('UserSubject not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET UserSubject from name');
-    }
+      throw new NotFoundException('UserSubject', 'findUserSubjectByName(name, user_id)', [name, `${user_id}`]);
   }
   async findSubjectByName(name: string) {
-    try {
+  
       this.logger.log('GET Subject from name');
       const subject = await SubjectTable.findOne({ where: { name } });
 
@@ -126,14 +136,11 @@ async findAllUserSubjectsOfUser(user_id: number) {
         return subject.dataValues;
       }
 
-      this.logger.log('Subject not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET Subject from name');
-    }
+      throw new NotFoundException('Subject', 'findSubjectByName(name)', [name]);
+
   }
   async findOneUserSubjectDeleted(user_id: number, subject_id: number) {
-    try {
+
       this.logger.log('GET User Subject');
       const userSubject = await UserSubjectTable.findOne({
         where: { user_id, subject_id },
@@ -145,17 +152,32 @@ async findAllUserSubjectsOfUser(user_id: number) {
         return userSubject.dataValues;
       }
 
-      this.logger.log('User Subject not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET User Subject');
-    }
+      throw new NotFoundException('UserSubject', 'findOneUserSubjectDeleted(user_id, subject_id)', [`${user_id}`, `${subject_id}`]);
+      
   }
-  async findOneUserSubject(user_id: number, subject_id: number) {
-    try {
+
+  async isUserSubjectDeletedPresent(user_id: number, subject_id: number) : Promise<boolean>{
+
+    this.logger.log('GET User Subject');
+    const userSubject = await UserSubjectTable.findOne({
+      where: { user_id, subject_id },
+      paranoid: false,
+    });
+
+    if (userSubject && userSubject !== null) {
+      this.logger.log('Present!');
+      return true;
+    }
+
+    return false;
+
+    
+}
+  async findOneUserSubject(user_id: number, id: number) {
+
       this.logger.log('GET User Subject');
       const userSubject = await UserSubjectTable.findOne({
-        where: { user_id, subject_id },
+        where: { user_id, id },
       });
 
       if (userSubject && userSubject !== null) {
@@ -163,54 +185,60 @@ async findAllUserSubjectsOfUser(user_id: number) {
         return userSubject.dataValues;
       }
 
-      this.logger.log('User Subject not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET User Subject');
-    }
+      throw new NotFoundException('UserSubject', 'findOneUserSubject(user_id, subject_id)', [`${user_id}`, `${id}`]);
+
   }
 
   async updateUserSubject(user_subject: any, transaction: any) {
-    try {
+
       this.logger.log('Update User Subject record on db');
       const userSubject = await UserSubjectTable.update(user_subject, {
         where: { id: user_subject.id },
         paranoid: false,
         transaction,
       });
-      return userSubject;
-    } catch (error) {
-      this.logger.error('Error during UPDATE User Subject');
-    }
+      if (userSubject && userSubject !== null) {
+        this.logger.log('Done!');
+        return userSubject;
+      }
+      throw new UpdateFailedException('UserSubject', 'updateUserSubject(user_id)', [`${user_subject}`]);
+
   }
 
   async createSubject(subject: any, transaction: any): Promise<any> {
-    try {
       this.logger.log('Create Subject record on db');
       const subjectCreated = await SubjectTable.create(subject, transaction);
-      return subjectCreated;
-    } catch (error) {
-      this.logger.error('Error during creating of Subject');
-    }
+
+      if (subjectCreated && subjectCreated !== null) {
+        this.logger.log('Done!');
+        return subjectCreated;
+      }
+      
+      throw new InsertionFailedException('Subject', 'createSubject(subject)', [`${subject}`]);
   }
 
   async createUserSubject(user_subject: any, transaction: any) {
-    try {
       this.logger.log('Create UserSubject record on db');
       const userSubjectCreated = await UserSubjectTable.create(
         user_subject,
         transaction,
       );
-      return userSubjectCreated;
-    } catch (error) {
-      this.logger.error('Error during creating of UserSubject');
-    }
+      if (userSubjectCreated && userSubjectCreated !== null) {
+        this.logger.log('Done!');
+        return userSubjectCreated;
+      }
+
+      throw new InsertionFailedException('UserSubject', 'createUserSubject(subject)', [`${user_subject}`]);
+    
   }
 
   async deleteUserSubject(id: number, transaction: any) {
     try {
       this.logger.log('Eliminate UserSubject record on db');
-      await UserSubjectTable.destroy({ where: { id }, transaction });
+      const t = await UserSubjectTable.destroy({ where: { id }, transaction });
+      if(t !== 1){
+        throw new DeletionFailedException('UserSubject', 'deleteUserSubject(id)', [`${id}`]);
+      }
     } catch (error) {
       this.logger.error('Error during elimination of UserSubject');
     }
