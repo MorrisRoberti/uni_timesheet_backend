@@ -4,6 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/endpoints/users/dto/create-user.dto';
 import { LoginUserDto } from 'src/endpoints/users/dto/login-user.dto';
 import { UsersService } from 'src/endpoints/users/users.service';
+import { DuplicatedException } from 'src/error_handling/models/duplicated.exception.model';
+import { UnauthorizedException } from 'src/error_handling/models/not-found.exception.model copy';
 
 @Injectable()
 export class AuthService {
@@ -13,18 +15,11 @@ export class AuthService {
     private logger: Logger,
   ) {}
 
-  async validateUserOnLogin(loginUser: LoginUserDto) {
-    try {
-      const user = await this.userService.findOneByEmail(loginUser.email);
+    USER = 'User';
 
-      if (!user) {
-        // error in case the user does not exist
-        const err = new HttpException(
-          { error: 'User not found', statusCode: 404 },
-          HttpStatus.NOT_FOUND,
-        );
-        throw err;
-      }
+  async validateUserOnLogin(loginUser: LoginUserDto) {
+      this.logger.log('Validating User for Login');
+      const user = await this.userService.findOneByEmail(loginUser.email);
 
       this.logger.log('Comparing passwords for login');
       const passwordValid = await bcrypt.compare(
@@ -36,70 +31,33 @@ export class AuthService {
         this.logger.log('Valid password');
         return user;
       }
-      // error in case the password is not correct
-      const err = new HttpException(
-        { error: 'Unauthorized', statusCode: 401 },
-        HttpStatus.UNAUTHORIZED,
-      );
-      throw err;
-    } catch (error) {
-      this.logger.error('Error during the User validation', error.response);
-      throw error;
-    }
+      throw new UnauthorizedException(this.USER, 'validateUserOnLogin(loginUser)', [`${loginUser}`]);
+
   }
 
   async validateUserOnCreate(createdUser: CreateUserDto) {
-    try {
+
       const user = await this.userService.findOneByEmail(createdUser.email);
 
       if (user) {
-        // error in case the email is already present -- create
-        const err = new HttpException(
-          {
-            error: 'The email is already associated with another user',
-            statusCode: 404,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-        throw err;
+        throw new DuplicatedException(this.USER, 'validateUserOnCreate(createdUser)', [`${createdUser}`]);
+
       }
-    } catch (error) {
-      this.logger.error(
-        'Error during the User Creation Validation',
-        error.response,
-      );
-      throw error;
-    }
+    
   }
 
   async validateAccessToken(payload: {email: string; password: string}) {
-    try {
+      this.logger.log('Validating Access Token');
       const user = await this.userService.findOneByEmail(payload.email);
-
-      if (!user) {
-        // error in case the user does not exist
-        const err = new HttpException(
-          { error: 'User not found', statusCode: 404 },
-          HttpStatus.NOT_FOUND,
-        );
-        throw err;
-      }
 
       this.logger.log('Comparing passwords for login');
       if (user.password == payload.password) {
         this.logger.log('Valid password');
         return user;
       }
-      // error in case the password is not correct
-      const err = new HttpException(
-        { error: 'Unauthorized', statusCode: 401 },
-        HttpStatus.UNAUTHORIZED,
-      );
-      throw err;
-    } catch (error) {
-      this.logger.error('Error during the Token validation', error.response);
-      throw error;
-    }
+
+      throw new UnauthorizedException(this.USER, 'validateAccessToken(payload)', [`${payload}`]);
+
   }
 
 

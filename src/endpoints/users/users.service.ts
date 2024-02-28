@@ -4,13 +4,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserTable } from 'src/db/models/user.model';
 import * as bcrypt from 'bcrypt';
 import { UserConfigTable } from 'src/db/models/user-config.model';
+import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
+import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
+import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 
 @Injectable()
 export class UsersService {
   constructor(private logger: Logger) {}
 
+  USER = 'User';
+  USER_CONFIG = 'UserConfig';
+
   convertNewUser(createUserDto: CreateUserDto) {
-    this.logger.log('Converting NEW User for creation');
+    this.logger.log(`Converting NEW ${this.USER} for creation`);
     const saltRounds = 10;
     const hashedPassword = bcrypt.hashSync(createUserDto.password, saltRounds);
     const dbUser = {
@@ -25,7 +31,7 @@ export class UsersService {
   }
 
   convertNewUserConfig(userConfigToConvert: CreateUserDto, user_id: number) {
-    this.logger.log('Converting NEW UserConfig for creation');
+    this.logger.log(`Converting NEW ${this.USER_CONFIG} for creation`);
     const dbUserConfig = {
       user_id: user_id,
       active: 1,
@@ -36,7 +42,7 @@ export class UsersService {
   }
 
   convertUpdateUserConfig(userConfigToConvert: UpdateUserDto) {
-    this.logger.log('Converting UPDATE UserConfig for update');
+    this.logger.log(`Converting UPDATE ${this.USER_CONFIG} for update`);
     const dbUserConfig = {
       faculty: userConfigToConvert.faculty,
     };
@@ -47,8 +53,7 @@ export class UsersService {
   // db functions
 
   async findOneByEmail(email: string): Promise<UserTable> {
-    try {
-      this.logger.log('GET User from Email');
+      this.logger.log(`GET ${this.USER} from Email`);
       // executes a sql query to check if a user with the selected email exists
       const user = await UserTable.findOne({ where: { email } });
 
@@ -56,30 +61,38 @@ export class UsersService {
         this.logger.log('Done!');
         return user.dataValues;
       }
-      this.logger.log('User not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET User from Email', error);
-    }
+
+      throw new NotFoundException(this.USER, 'findOneByEmail(email)', [email]);
+
   }
 
-  async findActiveUserConfig(user_id: number) {
-    try {
-      this.logger.log('GET UserConfig from user_id');
+  async isUserAlreadyPresent(email: string): Promise<boolean> {
+    this.logger.log(`GET ${this.USER} to chek if is present`);
+    // executes a sql query to check if a user with the selected email exists
+    const user = await UserTable.findOne({ where: { email } });
 
-      const user_config = await UserConfigTable.findOne({
+    if (user && user !== null) {
+      this.logger.log('Done!');
+      return true;
+    }
+
+    return false;
+
+}
+
+  async findActiveUserConfig(user_id: number) {
+      this.logger.log(`GET ${this.USER_CONFIG} from user_id`);
+
+      const userConfig = await UserConfigTable.findOne({
         where: { user_id, active: 1 },
       });
 
-      if (user_config && user_config !== null) {
+      if (userConfig && userConfig !== null) {
         this.logger.log('Done!');
-        return user_config.dataValues;
+        return userConfig.dataValues;
       }
-      this.logger.log('User Config not found');
-      return null;
-    } catch (error) {
-      this.logger.error('Error during GET Active User Config');
-    }
+      
+    throw new NotFoundException(this.USER_CONFIG, 'findActiveUserConfig(user_id)', [`${user_id}`]);
   }
 
   async updateUserConfigOnDb(
@@ -87,37 +100,43 @@ export class UsersService {
     user_config_id: number,
     transaction: any,
   ) {
-    try {
-      this.logger.log('Updating User Config record on db');
+      this.logger.log(`Updating ${this.USER_CONFIG} record on db`);
       const userConfigUpdated = await UserConfigTable.update(userConfig, {
         where: { id: user_config_id },
         transaction,
       });
+
+      if(userConfigUpdated && userConfigUpdated !== null){
+      this.logger.log('Done!');
       return userConfigUpdated;
-    } catch (error) {
-      this.logger.error('Error during updating UserConfig');
     }
+
+    throw new UpdateFailedException(this.USER_CONFIG, 'updateUserConfigOnDb(userConfig, user_config_id)', [userConfig, user_config_id]);
   }
 
   async createUserOnDb(user: any, transaction: any) {
-    try {
-      this.logger.log('Creating User record on db');
+      this.logger.log(`Creating ${this.USER} record on db`);
       const userCreated = await UserTable.create(user, { transaction });
+
+      if(userCreated && userCreated !== null){
+      this.logger.log('Done!');
       return userCreated;
-    } catch (error) {
-      this.logger.error('Error during creation User', error);
     }
+
+    throw new InsertionFailedException(this.USER, 'createUserOnDb(user)', [user]);
   }
 
   async createUserConfigOnDb(user: any, transaction: any) {
-    try {
-      this.logger.log('Creating UserConfig record on db');
+      this.logger.log(`Creating ${this.USER_CONFIG} record on db`);
       const userConfigCreated = await UserConfigTable.create(user, {
         transaction,
       });
-      return userConfigCreated;
-    } catch (error) {
-      this.logger.error('Error during creation UserConfig', error);
-    }
+      if(userConfigCreated && userConfigCreated !== null){
+        this.logger.log('Done!');
+        return userConfigCreated;
+      }
+
+      throw new InsertionFailedException(this.USER_CONFIG, 'createUserConfigOnDb(user)', [user]);
+    
   }
 }

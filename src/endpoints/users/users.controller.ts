@@ -8,6 +8,7 @@ import {
   Logger,
   Put,
   Request,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,7 +17,9 @@ import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { Sequelize } from 'sequelize-typescript';
+import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 
+@UseFilters(DBExceptionFilter)
 @Controller('users')
 export class UsersController {
   constructor(
@@ -76,7 +79,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     // find the active user_config record
-    const user_config = await this.userService.findActiveUserConfig(request.user.id);
+    const userConfig = await this.userService.findActiveUserConfig(request.user.id);
 
     // converts the dto in the db user config object
     const convertedUserConfig =
@@ -87,7 +90,7 @@ export class UsersController {
     // updates the record on db
     await this.userService.updateUserConfigOnDb(
       convertedUserConfig,
-      user_config.id,
+      userConfig.id,
       transaction,
     );
 
