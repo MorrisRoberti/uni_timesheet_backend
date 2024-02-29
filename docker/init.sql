@@ -195,7 +195,6 @@ DROP TABLE IF EXISTS `weekly_log_table`;
 CREATE TABLE `weekly_log_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `user_subject_id` int(11) NOT NULL,
   `week_start` date NOT NULL,
   `week_end` date NOT NULL,
   `hours` int(11) NOT NULL,
@@ -206,9 +205,7 @@ CREATE TABLE `weekly_log_table` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
-  KEY `user_subject_id` (`user_subject_id`),
-  CONSTRAINT `weekly_log_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `weekly_log_table_ibfk_2` FOREIGN KEY (`user_subject_id`) REFERENCES `user_subjects` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `weekly_log_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -218,7 +215,7 @@ CREATE TABLE `weekly_log_table` (
 
 LOCK TABLES `weekly_log_table` WRITE;
 /*!40000 ALTER TABLE `weekly_log_table` DISABLE KEYS */;
-INSERT INTO `weekly_log_table` VALUES (1,1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL);
+INSERT INTO `weekly_log_table` VALUES (1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL);
 /*!40000 ALTER TABLE `weekly_log_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,4 +232,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-29 15:21:34
+-- Dump completed on 2024-03-01  0:14:30

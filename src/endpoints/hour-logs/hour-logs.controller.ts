@@ -1,16 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  UseFilters,
+} from '@nestjs/common';
 import { HourLogsService } from './hour-logs.service';
 import { CreateHourLogDto } from './dto/create-hour-log.dto';
 import { UpdateHourLogDto } from './dto/update-hour-log.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 
+@UseGuards(AuthGuard('jwt'))
+@UseFilters(DBExceptionFilter)
 @Controller('hour-logs')
 export class HourLogsController {
   constructor(private readonly hourLogsService: HourLogsService) {}
 
   @Post()
-  create(@Body() createHourLogDto: CreateHourLogDto) {
-    return this.hourLogsService.create(createHourLogDto);
-  }
+  create(@Body() createHourLogDto: CreateHourLogDto) {}
 
   @Get()
   findAll() {
