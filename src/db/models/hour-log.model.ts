@@ -47,6 +47,9 @@ export class HourLogTable extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   weekly_log_id: number;
 
+  @Column({ type: DataType.STRING, allowNull: true })
+  description: string;
+
   // Associations
 
   @BelongsTo(() => UserSubjectTable)

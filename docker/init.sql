@@ -35,6 +35,7 @@ CREATE TABLE `hour_logs` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
@@ -102,7 +103,7 @@ CREATE TABLE `user_config` (
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_config_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +112,7 @@ CREATE TABLE `user_config` (
 
 LOCK TABLES `user_config` WRITE;
 /*!40000 ALTER TABLE `user_config` DISABLE KEYS */;
-INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL);
+INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,2,'Informatica',1,'2024-02-29 13:35:22','2024-02-29 13:35:22',NULL);
 /*!40000 ALTER TABLE `user_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +172,7 @@ CREATE TABLE `users` (
   `deletedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +181,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Patrick','Bateman','patrick.bateman@gmail.com','admin','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL);
+INSERT INTO `users` VALUES (1,'Patrick','Bateman','patrick.bateman@gmail.com','admin','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,'morris','roberti','test@email4.com','$2b$10$2p.q9vWODnCU6qQR5QhRfeaJxNz59vD5b4Y5EaVgxVSUzUZn7Hrfq','2024-02-29 13:35:22','2024-02-29 13:35:22',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-24 20:19:30
+-- Dump completed on 2024-02-29 15:21:34
