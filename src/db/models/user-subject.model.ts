@@ -83,6 +83,6 @@ export class UserSubjectTable extends Model {
   @HasMany(() => HourLogTable)
   hour_log_table: HourLogTable;
 
-  @HasMany(() => WeeklyLogTable)
-  weekly_log_table: WeeklyLogTable;
+  // @HasMany(() => WeeklyLogTable)
+  // weekly_log_table: WeeklyLogTable;
 }

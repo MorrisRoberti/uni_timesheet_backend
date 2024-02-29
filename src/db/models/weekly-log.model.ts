@@ -34,12 +34,12 @@ export class WeeklyLogTable extends Model {
   })
   user_id: number;
 
-  @ForeignKey(() => UserSubjectTable)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  user_subject_id: number;
+  // @ForeignKey(() => UserSubjectTable)
+  // @Column({
+  //   type: DataType.INTEGER,
+  //   allowNull: false,
+  // })
+  // user_subject_id: number;
 
   @Column({
     type: DataType.DATEONLY,
@@ -57,18 +57,18 @@ export class WeeklyLogTable extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  hours: number = 0;
+  hours: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false, validate: { max: 59 } })
-  minutes: number = 0;
+  minutes: number;
 
   // Associations
 
   @BelongsTo(() => UserTable)
   user_table: UserTable;
 
-  @BelongsTo(() => UserSubjectTable)
-  user_subject_table: UserSubjectTable;
+  // @BelongsTo(() => UserSubjectTable)
+  // user_subject_table: UserSubjectTable;
 
   @HasMany(() => HourLogTable)
   hour_log_table: HourLogTable;
