@@ -53,17 +53,16 @@ export class UsersService {
   // db functions
 
   async findOneByEmail(email: string): Promise<UserTable> {
-      this.logger.log(`GET ${this.USER} from Email`);
-      // executes a sql query to check if a user with the selected email exists
-      const user = await UserTable.findOne({ where: { email } });
+    this.logger.log(`GET ${this.USER} from Email`);
+    // executes a sql query to check if a user with the selected email exists
+    const user = await UserTable.findOne({ where: { email } });
 
-      if (user && user !== null) {
-        this.logger.log('Done!');
-        return user.dataValues;
-      }
+    if (user && user !== null) {
+      this.logger.log('Done!');
+      return user.dataValues;
+    }
 
-      throw new NotFoundException(this.USER, 'findOneByEmail(email)', [email]);
-
+    throw new NotFoundException(this.USER, 'findOneByEmail(email)', [email]);
   }
 
   async isUserAlreadyPresent(email: string): Promise<boolean> {
@@ -77,22 +76,25 @@ export class UsersService {
     }
 
     return false;
-
-}
+  }
 
   async findActiveUserConfig(user_id: number) {
-      this.logger.log(`GET ${this.USER_CONFIG} from user_id`);
+    this.logger.log(`GET ${this.USER_CONFIG} from user_id`);
 
-      const userConfig = await UserConfigTable.findOne({
-        where: { user_id, active: 1 },
-      });
+    const userConfig = await UserConfigTable.findOne({
+      where: { user_id, active: 1 },
+    });
 
-      if (userConfig && userConfig !== null) {
-        this.logger.log('Done!');
-        return userConfig.dataValues;
-      }
-      
-    throw new NotFoundException(this.USER_CONFIG, 'findActiveUserConfig(user_id)', [`${user_id}`]);
+    if (userConfig && userConfig !== null) {
+      this.logger.log('Done!');
+      return userConfig.dataValues;
+    }
+
+    throw new NotFoundException(
+      this.USER_CONFIG,
+      'findActiveUserConfig(user_id)',
+      [`${user_id}`],
+    );
   }
 
   async updateUserConfigOnDb(
@@ -100,43 +102,52 @@ export class UsersService {
     user_config_id: number,
     transaction: any,
   ) {
-      this.logger.log(`Updating ${this.USER_CONFIG} record on db`);
-      const userConfigUpdated = await UserConfigTable.update(userConfig, {
-        where: { id: user_config_id },
-        transaction,
-      });
+    this.logger.log(`Updating ${this.USER_CONFIG} record on db`);
+    const userConfigUpdated = await UserConfigTable.update(userConfig, {
+      where: { id: user_config_id },
+      transaction,
+    });
 
-      if(userConfigUpdated && userConfigUpdated !== null){
+    if (userConfigUpdated && userConfigUpdated !== null) {
       this.logger.log('Done!');
       return userConfigUpdated;
     }
 
-    throw new UpdateFailedException(this.USER_CONFIG, 'updateUserConfigOnDb(userConfig, user_config_id)', [userConfig, user_config_id]);
+    throw new UpdateFailedException(
+      this.USER_CONFIG,
+      'updateUserConfigOnDb(userConfig, user_config_id)',
+      [userConfig, user_config_id],
+    );
   }
 
   async createUserOnDb(user: any, transaction: any) {
-      this.logger.log(`Creating ${this.USER} record on db`);
-      const userCreated = await UserTable.create(user, { transaction });
+    this.logger.log(`Creating ${this.USER} record on db`);
+    const userCreated = await UserTable.create(user, { transaction });
 
-      if(userCreated && userCreated !== null){
+    if (userCreated && userCreated !== null) {
       this.logger.log('Done!');
       return userCreated;
     }
 
-    throw new InsertionFailedException(this.USER, 'createUserOnDb(user)', [user]);
+    throw new InsertionFailedException(this.USER, 'createUserOnDb(user)', [
+      user,
+    ]);
   }
 
   async createUserConfigOnDb(user: any, transaction: any) {
-      this.logger.log(`Creating ${this.USER_CONFIG} record on db`);
-      const userConfigCreated = await UserConfigTable.create(user, {
-        transaction,
-      });
-      if(userConfigCreated && userConfigCreated !== null){
-        this.logger.log('Done!');
-        return userConfigCreated;
-      }
+    this.logger.log(`Creating ${this.USER_CONFIG} record on db`);
+    const userConfigCreated = await UserConfigTable.create(user, {
+      transaction,
+    });
+    if (userConfigCreated && userConfigCreated !== null) {
+      this.logger.log('Done!');
+      return userConfigCreated;
+    }
 
-      throw new InsertionFailedException(this.USER_CONFIG, 'createUserConfigOnDb(user)', [user]);
-    
+    throw new InsertionFailedException(
+      this.USER_CONFIG,
+      'createUserConfigOnDb(user)',
+      [user],
+    );
   }
 }

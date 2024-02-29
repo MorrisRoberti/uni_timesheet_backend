@@ -79,7 +79,9 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     // find the active user_config record
-    const userConfig = await this.userService.findActiveUserConfig(request.user.id);
+    const userConfig = await this.userService.findActiveUserConfig(
+      request.user.id,
+    );
 
     // converts the dto in the db user config object
     const convertedUserConfig =

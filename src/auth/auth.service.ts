@@ -15,53 +15,60 @@ export class AuthService {
     private logger: Logger,
   ) {}
 
-    USER = 'User';
+  USER = 'User';
 
   async validateUserOnLogin(loginUser: LoginUserDto) {
-      this.logger.log('Validating User for Login');
-      const user = await this.userService.findOneByEmail(loginUser.email);
+    this.logger.log('Validating User for Login');
+    const user = await this.userService.findOneByEmail(loginUser.email);
 
-      this.logger.log('Comparing passwords for login');
-      const passwordValid = await bcrypt.compare(
-        loginUser.password,
-        user.password,
-      );
+    this.logger.log('Comparing passwords for login');
+    const passwordValid = await bcrypt.compare(
+      loginUser.password,
+      user.password,
+    );
 
-      if (passwordValid) {
-        this.logger.log('Valid password');
-        return user;
-      }
-      throw new UnauthorizedException(this.USER, 'validateUserOnLogin(loginUser)', [`${loginUser}`]);
-
+    if (passwordValid) {
+      this.logger.log('Valid password');
+      return user;
+    }
+    throw new UnauthorizedException(
+      this.USER,
+      'validateUserOnLogin(loginUser)',
+      [`${loginUser}`],
+    );
   }
 
   async validateUserOnCreate(createdUser: CreateUserDto) {
+    const user = await this.userService.isUserAlreadyPresent(createdUser.email);
 
-      const user = await this.userService.findOneByEmail(createdUser.email);
-
-      if (user) {
-        throw new DuplicatedException(this.USER, 'validateUserOnCreate(createdUser)', [`${createdUser}`]);
-
-      }
-    
+    if (user) {
+      throw new DuplicatedException(
+        this.USER,
+        'validateUserOnCreate(createdUser)',
+        [`${createdUser}`],
+      );
+    }
   }
 
-  async validateAccessToken(payload: {email: string; password: string}) {
-      this.logger.log('Validating Access Token');
-      const user = await this.userService.findOneByEmail(payload.email);
+  async validateAccessToken(payload: { email: string; password: string }) {
+    this.logger.log('Validating Access Token');
+    const user = await this.userService.findOneByEmail(payload.email);
 
-      this.logger.log('Comparing passwords for login');
-      if (user.password == payload.password) {
-        this.logger.log('Valid password');
-        return user;
-      }
+    this.logger.log('Comparing passwords for login');
+    if (user.password == payload.password) {
+      this.logger.log('Valid password');
+      return user;
+    }
 
-      throw new UnauthorizedException(this.USER, 'validateAccessToken(payload)', [`${payload}`]);
-
+    throw new UnauthorizedException(this.USER, 'validateAccessToken(payload)', [
+      `${payload}`,
+    ]);
   }
 
-
-  async login(user: LoginUserDto, id: number): Promise<{ accessToken: string }> {
+  async login(
+    user: LoginUserDto,
+    id: number,
+  ): Promise<{ accessToken: string }> {
     const payload = { id, username: user.email, sub: user.password };
     return {
       accessToken: this.jwtService.sign(payload),

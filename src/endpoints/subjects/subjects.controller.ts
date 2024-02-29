@@ -31,16 +31,16 @@ export class SubjectsController {
 
   @Get()
   async findAll(@Request() request: any) {
+    const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(
+      request.user.id,
+    );
 
-      const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(request.user.id);
-      
-      // I convert the objects back to the Dto format to hide sensible data
-      const userSubjectsConverted = this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
-      
-      return userSubjectsConverted;
+    // I convert the objects back to the Dto format to hide sensible data
+    const userSubjectsConverted =
+      this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
 
+    return userSubjectsConverted;
   }
-
 
   @Post()
   async create(
@@ -48,7 +48,9 @@ export class SubjectsController {
     @Body() createSubjectDto: CreateSubjectDto,
   ) {
     // look for subject
-    const isPresent = await this.subjectsService.isSubjectPresent(createSubjectDto.name);
+    const isPresent = await this.subjectsService.isSubjectPresent(
+      createSubjectDto.name,
+    );
 
     // if subject is not present create subject and relative user_subject
     if (isPresent == false) {
@@ -79,14 +81,16 @@ export class SubjectsController {
       return HttpStatus.CREATED;
     }
 
-
-    const subject = await this.subjectsService.findSubjectByName(createSubjectDto.name);
+    const subject = await this.subjectsService.findSubjectByName(
+      createSubjectDto.name,
+    );
 
     // look for user_subject
-    const isUserSubjectPresent = await this.subjectsService.isUserSubjectDeletedPresent(
-      request.user.id,
-      subject.id,
-    );
+    const isUserSubjectPresent =
+      await this.subjectsService.isUserSubjectDeletedPresent(
+        request.user.id,
+        subject.id,
+      );
 
     const transaction = await this.sequelize.transaction();
 
@@ -104,9 +108,12 @@ export class SubjectsController {
       await transaction.commit();
 
       return HttpStatus.CREATED;
-    } 
-    
-    const userSubject = await this.subjectsService.findOneUserSubjectDeleted(request.user.id, subject.id);
+    }
+
+    const userSubject = await this.subjectsService.findOneUserSubjectDeleted(
+      request.user.id,
+      subject.id,
+    );
 
     if (userSubject.deletedAt !== null) {
       // set deletedAt at null and update the record on db
@@ -138,13 +145,24 @@ export class SubjectsController {
   }
 
   @Put('/:id')
-  async update(@Request() request: any, @Param('id') id: number, @Body() updateSubjectDto: UpdateSubjectDto) {
+  async update(
+    @Request() request: any,
+    @Param('id') id: number,
+    @Body() updateSubjectDto: UpdateSubjectDto,
+  ) {
     // convert user_subject in db object
-    const userSubjectConverted = this.subjectsService.convertUpdatedUserSubject(updateSubjectDto, request.user.id, id);
+    const userSubjectConverted = this.subjectsService.convertUpdatedUserSubject(
+      updateSubjectDto,
+      request.user.id,
+      id,
+    );
 
     const transaction = await this.sequelize.transaction();
 
-    await this.subjectsService.updateUserSubject(userSubjectConverted, transaction);
+    await this.subjectsService.updateUserSubject(
+      userSubjectConverted,
+      transaction,
+    );
 
     await transaction.commit();
 

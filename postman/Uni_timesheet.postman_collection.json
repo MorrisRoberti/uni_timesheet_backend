@@ -1,0 +1,257 @@
+{
+	"info": {
+		"_postman_id": "5af3f68c-5215-4eeb-af37-651cf0d45be5",
+		"name": "Uni_timesheet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21800574"
+	},
+	"item": [
+		{
+			"name": "User Creation",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/create",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"test@email4.com\",\r\n    \"password\" : \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/login",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Config",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"faculty\" : \"nuova facolta\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/config",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subject Creation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Algoritmi e strutture dati\",\r\n    \"cfu\" : 9,\r\n    \"aa_left\" : 2023,\r\n    \"aa_right\" : 2024,\r\n    \"semester\" : 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Subject",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Algoritmi\",\r\n    \"cfu\" : 6,\r\n    \"aa_left\" : 2024,\r\n    \"aa_right\" : 2023,\r\n    \"semester\" : 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/2",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subject Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/3",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subject Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const host = pm.variables.get(\"HOST\");",
+					"",
+					"const loginRequest = {",
+					"    method: 'POST',",
+					"    url: `http://${host}:3000/users/login/`,",
+					"    header: {",
+					"        'Content-Type': 'application/json'",
+					"    },",
+					"    body: {",
+					"     mode: 'raw',",
+					"     raw: JSON.stringify({'email': 'test@email4.com', 'password': 'admin'})",
+					"  }",
+					"};",
+					"",
+					"pm.sendRequest(loginRequest, function (err, response) {",
+					"    console.log(response.json());",
+					"    pm.variables.set(\"token\", response.json().accessToken);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ0ZXN0QGVtYWlsNC5jb20iLCJzdWIiOiIkMmIkMTAkMnAucTl2V09EbkNVNnFRUjVRaFJmZWFKeE56NTl2RDViNFk1RWFWZ3hWU1V6VVpuN0hyZnEiLCJpYXQiOjE3MDkyMTQ3NDAsImV4cCI6MTcwOTIxODM0MH0.HACrc1VLyBjHduVWs72oSIRIZYU5W16fYLU69VX_kGg",
+			"type": "string"
+		},
+		{
+			"key": "HOST",
+			"value": "localhost",
+			"type": "string"
+		}
+	]
+}
