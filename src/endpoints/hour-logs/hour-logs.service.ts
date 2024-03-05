@@ -173,7 +173,7 @@ export class HourLogsService {
 
   async createHourLog(hourLog: any, transaction: any): Promise<HourLogTable> {
     this.logger.log(`CREATE ${this.HOUR_LOG}`);
-    const createdHourLog = await HourLogTable.create(hourLog, transaction);
+    const createdHourLog = await HourLogTable.create(hourLog, { transaction });
 
     if (createdHourLog && createdHourLog !== null) {
       this.logger.log('Done!');
