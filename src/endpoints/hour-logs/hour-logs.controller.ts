@@ -75,6 +75,7 @@ export class HourLogsController {
       );
     }
 
+    const transaction2 = await this.sequelize.transaction();
     // convert hour_log (with the weekly_log_id)
     const convertedHourLog = this.hourLogsService.convertNewHourLog(
       request.user.id,
@@ -82,8 +83,8 @@ export class HourLogsController {
       createHourLogDto,
     );
     // create hour_log on db
-    await this.hourLogsService.createHourLog(convertedHourLog, transaction);
-    await transaction.commit();
+    await this.hourLogsService.createHourLog(convertedHourLog, transaction2);
+    await transaction2.commit();
 
     // return
     return HttpStatus.CREATED;

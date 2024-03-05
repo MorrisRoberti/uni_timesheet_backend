@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateHourLogDto } from './dto/create-hour-log.dto';
 import { UpdateHourLogDto } from './dto/update-hour-log.dto';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import { HourLogTable } from 'src/db/models/hour-log.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
@@ -132,10 +132,10 @@ export class HourLogsService {
 
   async updateWeeklyLog(weeklyLog: any, transaction: any) {
     this.logger.log(`UPDATE ${this.WEEKLY_LOG}`);
-    const updatedWeeklyLog = await WeeklyLogTable.update(
-      weeklyLog,
+    const updatedWeeklyLog = await WeeklyLogTable.update(weeklyLog, {
+      where: { id: weeklyLog.id },
       transaction,
-    );
+    });
 
     if (updatedWeeklyLog && updatedWeeklyLog !== null) {
       this.logger.log('Done!');
