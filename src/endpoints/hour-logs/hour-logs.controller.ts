@@ -41,6 +41,8 @@ export class HourLogsController {
 
     let weeklyLog: WeeklyLogTable;
 
+    const transaction = await this.sequelize.transaction();
+
     if (isWeeklyLogPresent) {
       // find associated weekly_log record
       weeklyLog = await this.hourLogsService.findWeeklyLog(
@@ -55,22 +57,11 @@ export class HourLogsController {
         createHourLogDto.minutes,
       );
 
-      const transaction = await this.sequelize.transaction();
       // update weekly_log record on db
       await this.hourLogsService.updateWeeklyLog(
         convertedWeeklyLog,
         transaction,
       );
-
-      // convert hour_log (with the weekly_log_id)
-      const convertedHourLog = this.hourLogsService.convertNewHourLog(
-        request.user.id,
-        weeklyLog.id,
-        createHourLogDto,
-      );
-      // create hour_log on db
-      await this.hourLogsService.createHourLog(convertedHourLog, transaction);
-      await transaction.commit();
     } else {
       // convert new weekly_log record
       const weeklyLogConverted = this.hourLogsService.convertNewWeeklyLog(
@@ -78,24 +69,22 @@ export class HourLogsController {
         createHourLogDto,
       );
 
-      const transaction = await this.sequelize.transaction();
-
       // create new weekly_log record on db
       weeklyLog = await this.hourLogsService.createWeeklyLog(
         weeklyLogConverted,
         transaction,
       );
-
-      // convert hour_log (with the weekly_log_id)
-      const convertedHourLog = this.hourLogsService.convertNewHourLog(
-        request.user.id,
-        weeklyLog.id,
-        createHourLogDto,
-      );
-      // create hour_log on db
-      await this.hourLogsService.createHourLog(convertedHourLog, transaction);
-      await transaction.commit();
     }
+
+    // convert hour_log (with the weekly_log_id)
+    const convertedHourLog = this.hourLogsService.convertNewHourLog(
+      request.user.id,
+      weeklyLog.id,
+      createHourLogDto,
+    );
+    // create hour_log on db
+    await this.hourLogsService.createHourLog(convertedHourLog, transaction);
+    await transaction.commit();
 
     // return
     return HttpStatus.CREATED;
