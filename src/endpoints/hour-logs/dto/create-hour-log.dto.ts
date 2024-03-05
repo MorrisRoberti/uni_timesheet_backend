@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsDateString,
   IsDefined,
   IsNotEmpty,
   IsNumber,
@@ -30,7 +31,7 @@ export class CreateHourLogDto {
   // data
   @IsDefined()
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   date: string;
 
   // materia (user_subject_id)
