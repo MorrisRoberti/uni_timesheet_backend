@@ -10,6 +10,7 @@ import {
   UseFilters,
   Request,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { HourLogsService } from './hour-logs.service';
 import { CreateHourLogDto } from './dto/create-hour-log.dto';
@@ -90,13 +91,44 @@ export class HourLogsController {
     return HttpStatus.CREATED;
   }
 
-  // GET week hours
+  // GET week hours (from week) -> returns all the hour_logs for the week and the total
+  @Get('/weekly-hour-logs/:week')
+  async getWeeklyHourLogs(
+    @Request() request: any,
+    @Param('week') week: string,
+  ) {}
 
-  // GET hour_log from id
+  // GET daily log (from day) -> returns all hour_logs for the day
+  @Get('/daily-hour-logs/:day')
+  async getDailyHourLogs(@Request() request: any, @Param('day') day: string) {}
 
-  // GET weekly log for subject from subject id
+  // GET hour_log (from id) -> returns single hour_log from id
+  @Get('/:id')
+  async getHourLogFromId(@Request() request: any, @Param('id') id: number) {}
 
-  // PUT hour_log from id
+  // GET weekly log for subject (from subject id, week) -> returns hour_logs of the week aggregated for user_subject
+  @Get('/weekly-hour-log-for-subject/')
+  async getWeeklyHourLogForSubject(
+    @Request() request: any,
+    @Body() body: { week: string; subjet_id: number },
+  ) {}
 
-  // DELETE hour_log from id
+  // GET daily log for subject (from subject id, day) -> returns hour_logs of the day aggregated for user_subject
+  @Get('/daily-hour-log-for-subject/')
+  async getDailyHourLogForSubject(
+    @Request() request: any,
+    @Body() body: { day: string; subjet_id: number },
+  ) {}
+
+  // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract)
+  @Put('/:id')
+  async updateHourLog(
+    @Request() request: any,
+    @Param('id') id: number,
+    @Body() updateHourLogDto: UpdateHourLogDto,
+  ) {}
+
+  // DELETE hour_log from id -> pay attention to remove the number of hours of weekly_log (will only subtract)
+  @Delete('/:id')
+  async deleteHourLog(@Request() request: any, @Param('id') id: number) {}
 }
