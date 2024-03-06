@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateHourLogDto } from './dto/create-hour-log.dto';
 import { UpdateHourLogDto } from './dto/update-hour-log.dto';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { HourLogTable } from 'src/db/models/hour-log.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
@@ -24,18 +24,35 @@ export class HourLogsService {
     this.logger.log(`Adding hours to ${this.WEEKLY_LOG}`);
     // does a deep copy of the previous object
     const updatedWeeklyLog = JSON.parse(JSON.stringify(weeklyLog));
+
+    let new_hours = updatedWeeklyLog.hours;
+    let new_minutes = updatedWeeklyLog.minutes;
+
     // check if the sum of the minutes is >=60, if so add one hour and sum the rest of the minutes
-    if (updatedWeeklyLog.minutes + minutes < 60) {
-      updatedWeeklyLog.minutes += minutes;
+    if (new_minutes + minutes < 60) {
+      new_minutes += minutes;
     } else {
       // this is not strictly necessary because the minute column should always be <=59, I do this just to be sure that data is consistent
-      const carry_hours = parseInt(
-        ((updatedWeeklyLog.minutes + minutes) / 60).toFixed(0),
-      );
-      updatedWeeklyLog.minutes += minutes - 60 * carry_hours;
-      updatedWeeklyLog.hours += carry_hours;
+      const carry_hours = parseInt(((new_minutes + minutes) / 60).toFixed(0));
+      new_minutes += minutes - 60 * carry_hours;
+      new_hours += carry_hours;
     }
-    updatedWeeklyLog.hours += hours;
+
+    new_hours += hours;
+
+    if (new_hours > 168 || (new_hours == 168 && new_minutes != 0)) {
+      // it goes over the max week hours
+      throw new UpdateFailedException(
+        this.WEEKLY_LOG,
+        'addHoursToWeeklyLog(weeklyLog, hours, minutes)',
+        [`${weeklyLog}`, `${hours}`, `${minutes}`],
+        'It is not possible to log more than 168 per week',
+      );
+    }
+
+    // standard case
+    updatedWeeklyLog.hours = new_hours;
+    updatedWeeklyLog.minutes = new_minutes;
     this.logger.log('Done!');
     return updatedWeeklyLog;
   }
