@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -19,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
 import { Sequelize } from 'sequelize-typescript';
+import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -92,11 +92,36 @@ export class HourLogsController {
   }
 
   // GET week hours (from week) -> returns all the hour_logs for the week and the total
-  @Get('/weekly-hour-logs/:week')
+  @Get('/weekly-hour-logs/')
   async getWeeklyHourLogs(
     @Request() request: any,
-    @Param('week') week: string,
-  ) {}
+    @Body() body: { week_start: string; week_end: string },
+  ) {
+    const { week_start, week_end } = body;
+
+    // GET weekly_log
+    const weeklyLog = await this.hourLogsService.findWeeklyLogFromWeek(
+      request.user.id,
+      week_start,
+      week_end,
+    );
+
+    // GET hour_logs for that week
+    const hourLogs = await this.hourLogsService.findHourLogsFromWeeklyLogId(
+      request.user.id,
+      weeklyLog.id,
+    );
+
+    const convertedHourLogs =
+      this.hourLogsService.convertHourLogsArrayToDto(hourLogs);
+
+    const weeklyLogConverted = this.hourLogsService.convertWeeklyLogToDto(
+      weeklyLog,
+      convertedHourLogs,
+    );
+
+    return weeklyLogConverted;
+  }
 
   // GET daily log (from day) -> returns all hour_logs for the day
   @Get('/daily-hour-logs/:day')

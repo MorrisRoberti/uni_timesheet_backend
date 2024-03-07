@@ -101,6 +101,42 @@ export class HourLogsService {
     return convertedHourLog;
   }
 
+  convertHourLogsArrayToDto(hourLogs: any) {
+    this.logger.log(`Converting ${this.HOUR_LOG} array from db to dto`);
+    const convertedHourLogsArray = [];
+    for (let i = 0; i < hourLogs.length; i++) {
+      this.logger.log(`Converting object n ${i}...`);
+      const hourLogDb = hourLogs[i];
+      const hourLogDto = {
+        id: hourLogDb.id,
+        user_subject_id: hourLogDb.user_subject_id,
+        hours: hourLogDb.hours,
+        minutes: hourLogDb.minutes,
+        date: hourLogDb.date,
+        weekly_log_id: hourLogDb.weekly_log_id,
+        description: hourLogDb.description,
+      };
+      this.logger.log('Ok');
+      convertedHourLogsArray.push(hourLogDto);
+    }
+    this.logger.log('Done!');
+    return convertedHourLogsArray;
+  }
+
+  convertWeeklyLogToDto(weeklyLog: any, hourLogs: any): any {
+    this.logger.log(`Converting ${this.WEEKLY_LOG} from db to dto`);
+    const convertedWeeklyLog = {
+      id: weeklyLog.id,
+      week_start: weeklyLog.week_start,
+      week_end: weeklyLog.week_end,
+      hours: weeklyLog.hours,
+      minutes: weeklyLog.minutes,
+      hourLogs: hourLogs,
+    };
+    this.logger.log('Done!');
+    return convertedWeeklyLog;
+  }
+
   // db functions
   async isWeeklyLogPresent(user_id: number, date: string): Promise<boolean> {
     this.logger.log(`Check if ${this.WEEKLY_LOG} is present`);
@@ -121,6 +157,49 @@ export class HourLogsService {
 
     this.logger.log('Not Found!');
     return false;
+  }
+
+  async findWeeklyLogFromWeek(
+    user_id: number,
+    week_start: string,
+    week_end: string,
+  ): Promise<WeeklyLogTable> {
+    this.logger.log(`GET ${this.WEEKLY_LOG} of user from week number`);
+    const weeklyLog = await WeeklyLogTable.findOne({
+      where: { user_id, week_start, week_end },
+    });
+
+    if (weeklyLog && weeklyLog !== null) {
+      this.logger.log('Done!');
+      return weeklyLog.dataValues;
+    }
+
+    throw new NotFoundException(
+      this.WEEKLY_LOG,
+      'findweeklyLogFromWeek(user_id, week_start, week_end)',
+      [`${user_id}`, week_start, week_end],
+    );
+  }
+
+  async findHourLogsFromWeeklyLogId(
+    user_id: number,
+    weekly_log_id: number,
+  ): Promise<Array<HourLogTable>> {
+    this.logger.log(`GET all ${this.HOUR_LOG} from weekly log id`);
+    const hourLogs = await HourLogTable.findAll({
+      where: { user_id, weekly_log_id },
+    });
+
+    if (hourLogs && hourLogs !== null) {
+      this.logger.log('Done!');
+      return hourLogs;
+    }
+
+    throw new NotFoundException(
+      this.HOUR_LOG,
+      'findHourLogsFromWeeklyLogId(user_id, weekly_log_id)',
+      [`${user_id}`, `${weekly_log_id}`],
+    );
   }
 
   async findWeeklyLog(user_id: number, date: string): Promise<WeeklyLogTable> {
