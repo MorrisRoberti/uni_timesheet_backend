@@ -15,6 +15,7 @@ import { SubjectsModule } from './endpoints/subjects/subjects.module';
 import { HourLogsModule } from './endpoints/hour-logs/hour-logs.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { MinutesOverflowConstraint } from './validation/minutes-overflow.validator';
 
 @Module({
   imports: [
@@ -47,6 +48,6 @@ import { PassportModule } from '@nestjs/passport';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MinutesOverflowConstraint],
 })
 export class AppModule {}

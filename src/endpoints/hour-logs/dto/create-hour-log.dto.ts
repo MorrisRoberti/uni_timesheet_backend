@@ -10,6 +10,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { MinutesOverflow } from 'src/validation/decorators/minutes-overflow.decorator';
 
 export class CreateHourLogDto {
   // ore
@@ -26,6 +27,7 @@ export class CreateHourLogDto {
   @IsNumber()
   @Min(0)
   @Max(59)
+  @MinutesOverflow()
   minutes: number;
 
   // data
