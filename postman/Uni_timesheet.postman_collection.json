@@ -193,6 +193,133 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Hour Log Creation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hours\": 24,\r\n    \"minutes\": 7,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hour logs GET weekly",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"week_start\" : \"2024-03-04\",\r\n    \"week_end\" : \"2024-03-10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"weekly-hour-logs",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hour logs GET From Date",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"week_start\" : \"2024-03-04\",\r\n    \"week_end\" : \"2024-03-10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/daily-hour-logs/2024-03-01",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"daily-hour-logs",
+						"2024-03-01"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hour logs GET From Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"week_start\" : \"2024-03-04\",\r\n    \"week_end\" : \"2024-03-10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/a",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"a"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
