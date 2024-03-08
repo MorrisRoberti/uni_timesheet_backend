@@ -140,14 +140,26 @@ export class HourLogsController {
 
   // GET hour_log (from id) -> returns single hour_log from id
   @Get('/:id')
-  async getHourLogFromId(@Request() request: any, @Param('id') id: number) {}
+  async getHourLogFromId(@Request() request: any, @Param('id') id: number) {
+    // GET hour log from id
+    const hourLog = await this.hourLogsService.findHourLogFromId(
+      request.user.id,
+      id,
+    );
+
+    // convert hour log to dto
+    const convertedHourLog = this.hourLogsService.convertHourLogToDto(hourLog);
+    return convertedHourLog;
+  }
 
   // GET weekly log for subject (from subject id, week) -> returns hour_logs of the week aggregated for user_subject
   @Get('/weekly-hour-log-for-subject/')
   async getWeeklyHourLogForSubject(
     @Request() request: any,
     @Body() body: { week: string; subjet_id: number },
-  ) {}
+  ) {
+    //
+  }
 
   // GET daily log for subject (from subject id, day) -> returns hour_logs of the day aggregated for user_subject
   @Get('/daily-hour-log-for-subject/')

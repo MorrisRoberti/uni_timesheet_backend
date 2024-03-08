@@ -101,21 +101,28 @@ export class HourLogsService {
     return convertedHourLog;
   }
 
+  convertHourLogToDto(hourLog: any) {
+    this.logger.log(`Converting ${this.HOUR_LOG} from db to dto`);
+    const hourLogDto = {
+      id: hourLog.id,
+      user_subject_id: hourLog.user_subject_id,
+      hours: hourLog.hours,
+      minutes: hourLog.minutes,
+      date: hourLog.date,
+      weekly_log_id: hourLog.weekly_log_id,
+      description: hourLog.description,
+    };
+    this.logger.log('Done!');
+    return hourLogDto;
+  }
+
   convertHourLogsArrayToDto(hourLogs: any) {
     this.logger.log(`Converting ${this.HOUR_LOG} array from db to dto`);
     const convertedHourLogsArray = [];
     for (let i = 0; i < hourLogs.length; i++) {
       this.logger.log(`Converting object n ${i}...`);
       const hourLogDb = hourLogs[i];
-      const hourLogDto = {
-        id: hourLogDb.id,
-        user_subject_id: hourLogDb.user_subject_id,
-        hours: hourLogDb.hours,
-        minutes: hourLogDb.minutes,
-        date: hourLogDb.date,
-        weekly_log_id: hourLogDb.weekly_log_id,
-        description: hourLogDb.description,
-      };
+      const hourLogDto = this.convertHourLogToDto(hourLogDb);
       this.logger.log('Ok');
       convertedHourLogsArray.push(hourLogDto);
     }
@@ -196,6 +203,20 @@ export class HourLogsService {
       this.HOUR_LOG,
       'findHourLogsFromDate(user_id, date)',
       [`${user_id}`, `${date}`],
+    );
+  }
+  async findHourLogFromId(user_id: number, id: number): Promise<HourLogTable> {
+    this.logger.log(`GET all ${this.HOUR_LOG} of user from id`);
+    const hourLog = await HourLogTable.findOne({ where: { user_id, id } });
+
+    if (hourLog && hourLog !== null) {
+      this.logger.log('Done!');
+      return hourLog;
+    }
+    throw new NotFoundException(
+      this.HOUR_LOG,
+      'findHourLogFromId(user_id, id)',
+      [`${user_id}`, `${id}`],
     );
   }
 

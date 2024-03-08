@@ -4,12 +4,16 @@ import { DeletionFailedException } from './models/deletion-failed.exception.mode
 import { InsertionFailedException } from './models/insertion-failed.exception.model';
 import { UpdateFailedException } from './models/update-failed.exception.model';
 import { Request, Response } from 'express';
+import { UnauthorizedException } from './models/not-found.exception.model copy';
+import { DuplicatedException } from './models/duplicated.exception.model';
 
 @Catch(
   NotFoundException,
   DeletionFailedException,
   InsertionFailedException,
   UpdateFailedException,
+  UnauthorizedException,
+  DuplicatedException,
 )
 export class DBExceptionFilter implements ExceptionFilter {
   constructor(private logger: Logger) {}
@@ -25,7 +29,7 @@ export class DBExceptionFilter implements ExceptionFilter {
     const parameters = exception.parameters;
     const user_id = request.user.id;
 
-    this.logger.error(message,{
+    this.logger.error(message, {
       object,
       func,
       parameters,
