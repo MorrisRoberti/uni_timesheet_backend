@@ -181,6 +181,24 @@ export class HourLogsService {
     );
   }
 
+  async findHourLogsFromDate(
+    user_id: number,
+    date: string,
+  ): Promise<Array<HourLogTable>> {
+    this.logger.log(`GET all ${this.HOUR_LOG} of user from day`);
+    const hourLogs = await HourLogTable.findAll({ where: { user_id, date } });
+
+    if (hourLogs && hourLogs !== null) {
+      this.logger.log('Done!');
+      return hourLogs;
+    }
+    throw new NotFoundException(
+      this.HOUR_LOG,
+      'findHourLogsFromDate(user_id, date)',
+      [`${user_id}`, `${date}`],
+    );
+  }
+
   async findHourLogsFromWeeklyLogId(
     user_id: number,
     weekly_log_id: number,

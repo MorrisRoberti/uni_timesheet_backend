@@ -124,8 +124,19 @@ export class HourLogsController {
   }
 
   // GET daily log (from day) -> returns all hour_logs for the day
-  @Get('/daily-hour-logs/:day')
-  async getDailyHourLogs(@Request() request: any, @Param('day') day: string) {}
+  @Get('/daily-hour-logs/:date')
+  async getDailyHourLogs(@Request() request: any, @Param('date') date: string) {
+    // GET the hourLogs of user for that date
+    const hourLogs = await this.hourLogsService.findHourLogsFromDate(
+      request.user.id,
+      date,
+    );
+
+    // convert records to return
+    const convertedHourLogs =
+      this.hourLogsService.convertHourLogsArrayToDto(hourLogs);
+    return convertedHourLogs;
+  }
 
   // GET hour_log (from id) -> returns single hour_log from id
   @Get('/:id')
