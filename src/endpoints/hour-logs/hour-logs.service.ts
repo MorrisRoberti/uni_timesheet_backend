@@ -8,6 +8,7 @@ import { NotFoundException } from 'src/error_handling/models/not-found.exception
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
 import { format, startOfWeek, endOfWeek } from 'date-fns';
+import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 
 @Injectable()
 export class HourLogsService {
@@ -16,11 +17,43 @@ export class HourLogsService {
   WEEKLY_LOG = 'WeeklyLog';
   HOUR_LOG = 'HourLog';
 
+  subtractHoursToWeeklyLog(
+    weeklyLog: WeeklyLogTable,
+    hours: number,
+    minutes: number,
+  ): WeeklyLogTable {
+    // Precondition: the hours to subtract cannot be more than the hours present
+    // so the weeklyLog hours/minutes fields are >= of hours/minutes to subtract
+
+    this.logger.log(`Subtracting hours to ${this.WEEKLY_LOG}`);
+    // does a deep copy of the previous object
+    const updatedWeeklyLog = JSON.parse(JSON.stringify(weeklyLog));
+
+    let new_hours = updatedWeeklyLog.hours;
+    let new_minutes = updatedWeeklyLog.minutes;
+
+    if (minutes > new_minutes) {
+      // ex: (old)10 - (new)40 = -30 and the hours goes down by at most 1
+      new_hours -= 1;
+      new_minutes -= Math.abs(minutes - new_minutes);
+    } else {
+      // subtract the minutes
+      new_minutes -= minutes;
+    }
+
+    // subtract the hours
+    new_hours -= hours;
+
+    updatedWeeklyLog.hours = new_hours;
+    updatedWeeklyLog.minutes = new_minutes;
+    this.logger.log('Done!');
+    return updatedWeeklyLog;
+  }
   addHoursToWeeklyLog(
     weeklyLog: WeeklyLogTable,
     hours: number,
     minutes: number,
-  ) {
+  ): WeeklyLogTable {
     this.logger.log(`Adding hours to ${this.WEEKLY_LOG}`);
     // does a deep copy of the previous object
     const updatedWeeklyLog = JSON.parse(JSON.stringify(weeklyLog));
@@ -241,7 +274,10 @@ export class HourLogsService {
     );
   }
 
-  async findWeeklyLog(user_id: number, date: string): Promise<WeeklyLogTable> {
+  async findWeeklyLogFromDate(
+    user_id: number,
+    date: string,
+  ): Promise<WeeklyLogTable> {
     this.logger.log(`GET ${this.WEEKLY_LOG} of user from date`);
     const weeklyLog = await WeeklyLogTable.findOne({
       where: {
@@ -260,8 +296,31 @@ export class HourLogsService {
 
     throw new NotFoundException(
       this.WEEKLY_LOG,
-      'findWeeklyLog(user_id, date)',
+      'findWeeklyLogFromDate(user_id, date)',
       [`${user_id}`, date],
+    );
+  }
+  async findWeeklyLogFromId(
+    user_id: number,
+    id: number,
+  ): Promise<WeeklyLogTable> {
+    this.logger.log(`GET ${this.WEEKLY_LOG} of user from id`);
+    const weeklyLog = await WeeklyLogTable.findOne({
+      where: {
+        user_id,
+        id,
+      },
+    });
+
+    if (weeklyLog && weeklyLog !== null) {
+      this.logger.log('Done!');
+      return weeklyLog.dataValues;
+    }
+
+    throw new NotFoundException(
+      this.WEEKLY_LOG,
+      'findWeeklyLogFromId(user_id, id)',
+      [`${user_id}`, `${id}`],
     );
   }
 
@@ -320,5 +379,34 @@ export class HourLogsService {
       'createHourLog(hourLog)',
       [hourLog],
     );
+  }
+
+  async deleteHourLogFromId(id: number, transaction: any) {
+    this.logger.log(`DELETE ${this.HOUR_LOG}`);
+    const deletedHourLog = await HourLogTable.destroy({
+      where: { id },
+      transaction,
+    });
+
+    if (deletedHourLog !== 1) {
+      throw new DeletionFailedException(this.HOUR_LOG, 'deleteHourLog(id)', [
+        `${id}`,
+      ]);
+    }
+  }
+  async deleteWeeklyLogFromId(id: number, transaction: any) {
+    this.logger.log(`DELETE ${this.WEEKLY_LOG}`);
+    const deletedWeeklyLog = await WeeklyLogTable.destroy({
+      where: { id },
+      transaction,
+    });
+
+    if (deletedWeeklyLog !== 1) {
+      throw new DeletionFailedException(
+        this.WEEKLY_LOG,
+        'deleteWeeklyLog(id)',
+        [`${id}`],
+      );
+    }
   }
 }

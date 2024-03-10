@@ -46,7 +46,7 @@ export class HourLogsController {
 
     if (isWeeklyLogPresent) {
       // find associated weekly_log record
-      weeklyLog = await this.hourLogsService.findWeeklyLog(
+      weeklyLog = await this.hourLogsService.findWeeklyLogFromDate(
         request.user.id,
         createHourLogDto.date,
       );
@@ -178,5 +178,75 @@ export class HourLogsController {
 
   // DELETE hour_log from id -> pay attention to remove the number of hours of weekly_log (will only subtract)
   @Delete('/:id')
-  async deleteHourLog(@Request() request: any, @Param('id') id: number) {}
+  async deleteHourLog(@Request() request: any, @Param('id') id: number) {
+    // get the corresponding hour_log
+    const hourLog = await this.hourLogsService.findHourLogFromId(
+      request.user.id,
+      id,
+    );
+
+    // get the corresponging weekly_log
+    const weeklyLog = await this.hourLogsService.findWeeklyLogFromId(
+      request.user.id,
+      hourLog.weekly_log_id,
+    );
+
+    const transaction = await this.sequelize.transaction();
+
+    const convertedWeeklyLog = this.hourLogsService.subtractHoursToWeeklyLog(
+      weeklyLog,
+      hourLog.hours,
+      hourLog.minutes,
+    );
+    // delete the hour log
+    await this.hourLogsService.deleteHourLogFromId(weeklyLog.id, transaction);
+
+    // i update the weekly log also in case the hours/minutes are 0 in this way i can delete it but keep the values 0
+    await this.hourLogsService.updateWeeklyLog(convertedWeeklyLog, transaction);
+
+    if (convertedWeeklyLog.hours == 0 && convertedWeeklyLog.minutes == 0) {
+      await this.hourLogsService.deleteWeeklyLogFromId(
+        weeklyLog.id,
+        transaction,
+      );
+    }
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
 }
+
+// const transaction = await this.sequelize.transaction();
+// // check if the hours are equal
+// if (
+//   weeklyLog.hours == hourLog.hours &&
+//   weeklyLog.minutes == hourLog.minutes
+// ) {
+//   // delete the hour log
+//   await this.hourLogsService.deleteHourLogFromId(weeklyLog.id, transaction);
+
+//   // put the hour and minutes of weekly log to zero and delete the weekly log
+//   weeklyLog.hours = 0;
+//   weeklyLog.minutes = 0;
+//   await this.hourLogsService.updateWeeklyLog(weeklyLog, transaction);
+//   await this.hourLogsService.deleteWeeklyLogFromId(
+//     weeklyLog.id,
+//     transaction,
+//   );
+// } else {
+//   // delete the hour log
+//   await this.hourLogsService.deleteHourLogFromId(id, transaction);
+
+//   const convertedWeeklyLog = this.hourLogsService.subtractHoursToWeeklyLog(
+//     weeklyLog,
+//     hourLog.hours,
+//     hourLog.minutes,
+//   );
+
+//   // update the hours of weekly_log
+//   await this.hourLogsService.updateWeeklyLog(
+//     convertedWeeklyLog,
+//     transaction,
+//   );
+// }
+// await transaction.commit();
