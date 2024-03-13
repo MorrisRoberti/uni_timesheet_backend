@@ -19,6 +19,7 @@ import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
 import { Sequelize } from 'sequelize-typescript';
 import { SubjectsService } from '../subjects/subjects.service';
+import { HourLogTable } from 'src/db/models/hour-log.model';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -175,13 +176,89 @@ export class HourLogsController {
     @Body() body: { day: string; subjet_id: number },
   ) {}
 
-  // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract)
+  // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract) it is not possible to change the date
   @Put('/:id')
   async updateHourLog(
     @Request() request: any,
     @Param('id') id: number,
     @Body() updateHourLogDto: UpdateHourLogDto,
-  ) {}
+  ) {
+    // find the hourLog
+    const hourLogFromDb = await this.hourLogsService.findHourLogFromId(
+      request.user.id,
+      id,
+    );
+
+    // find the weeklyLog
+    const weeklyHourLogFromDb = await this.hourLogsService.findWeeklyLogFromId(
+      request.user.id,
+      hourLogFromDb.weekly_log_id,
+    );
+
+    let weeklyLogConversionPromise;
+    // if the new hours are more then add to the weekly, if less remove
+    if (
+      parseFloat(updateHourLogDto.minutes.toFixed(2)) + updateHourLogDto.hours >
+      parseFloat(hourLogFromDb.minutes.toFixed(2)) + hourLogFromDb.hours
+    ) {
+      // add
+      weeklyLogConversionPromise = new Promise((resolve) => {
+        const value = this.hourLogsService.addHoursToWeeklyLog(
+          weeklyHourLogFromDb,
+          updateHourLogDto.hours,
+          updateHourLogDto.minutes,
+        );
+        resolve(value);
+      });
+    } else if (
+      updateHourLogDto.hours !== hourLogFromDb.hours &&
+      updateHourLogDto.minutes !== hourLogFromDb.minutes
+    ) {
+      // subtract
+      weeklyLogConversionPromise = new Promise((resolve) => {
+        const value = this.hourLogsService.subtractHoursToWeeklyLog(
+          weeklyHourLogFromDb,
+          updateHourLogDto.hours,
+          updateHourLogDto.minutes,
+        );
+        resolve(value);
+      });
+    }
+
+    const hourLogConversionPromise = new Promise((resolve) => {
+      const value = this.hourLogsService.convertUpdatedHourLog(
+        hourLogFromDb,
+        updateHourLogDto,
+      );
+      resolve(value);
+    });
+
+    // I convert the two objects in parallel
+    const [convertedWeeklyLog, convertedHourLog] = await Promise.all([
+      weeklyLogConversionPromise,
+      hourLogConversionPromise,
+    ]);
+
+    const transaction = await this.sequelize.transaction();
+
+    // I upate indipendently the weekly and the hour log
+    const weeklyUpdatePromise = new Promise((resolve) => {
+      resolve(
+        this.hourLogsService.updateWeeklyLog(convertedWeeklyLog, transaction),
+      );
+    });
+
+    const hourUpdatePromise = new Promise((resolve) => {
+      resolve(
+        this.hourLogsService.updateHourLog(convertedHourLog, transaction),
+      );
+    });
+
+    await Promise.all([weeklyUpdatePromise, hourUpdatePromise]);
+
+    await transaction.commit();
+    return HttpStatus.OK;
+  }
 
   // DELETE hour_log from id -> pay attention to remove the number of hours of weekly_log (will only subtract)
   @Delete('/:id')
@@ -222,38 +299,3 @@ export class HourLogsController {
     return HttpStatus.OK;
   }
 }
-
-// const transaction = await this.sequelize.transaction();
-// // check if the hours are equal
-// if (
-//   weeklyLog.hours == hourLog.hours &&
-//   weeklyLog.minutes == hourLog.minutes
-// ) {
-//   // delete the hour log
-//   await this.hourLogsService.deleteHourLogFromId(weeklyLog.id, transaction);
-
-//   // put the hour and minutes of weekly log to zero and delete the weekly log
-//   weeklyLog.hours = 0;
-//   weeklyLog.minutes = 0;
-//   await this.hourLogsService.updateWeeklyLog(weeklyLog, transaction);
-//   await this.hourLogsService.deleteWeeklyLogFromId(
-//     weeklyLog.id,
-//     transaction,
-//   );
-// } else {
-//   // delete the hour log
-//   await this.hourLogsService.deleteHourLogFromId(id, transaction);
-
-//   const convertedWeeklyLog = this.hourLogsService.subtractHoursToWeeklyLog(
-//     weeklyLog,
-//     hourLog.hours,
-//     hourLog.minutes,
-//   );
-
-//   // update the hours of weekly_log
-//   await this.hourLogsService.updateWeeklyLog(
-//     convertedWeeklyLog,
-//     transaction,
-//   );
-// }
-// await transaction.commit();

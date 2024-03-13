@@ -134,6 +134,18 @@ export class HourLogsService {
     return convertedHourLog;
   }
 
+  convertUpdatedHourLog(
+    oldHourLog: HourLogTable,
+    updatedHourLogDto: UpdateHourLogDto,
+  ) {
+    this.logger.log(`Converting NEW ${this.HOUR_LOG}`);
+    const convertedHourLog = JSON.parse(JSON.stringify(oldHourLog));
+    convertedHourLog.hours = updatedHourLogDto.hours;
+    convertedHourLog.minutes = updatedHourLogDto.minutes;
+    convertedHourLog.description = updatedHourLogDto.description;
+    this.logger.log('Done!');
+    return convertedHourLog;
+  }
   convertHourLogToDto(hourLog: any) {
     this.logger.log(`Converting ${this.HOUR_LOG} from db to dto`);
     const hourLogDto = {
@@ -341,6 +353,23 @@ export class HourLogsService {
       'updateWeeklyLog(weeklyLog)',
       [weeklyLog],
     );
+  }
+
+  async updateHourLog(hourLog: any, transaction: any) {
+    this.logger.log(`UPDATE ${this.HOUR_LOG}`);
+    const updatedHourLog = await HourLogTable.update(hourLog, {
+      where: { id: hourLog.id },
+      transaction,
+    });
+
+    if (updatedHourLog && updatedHourLog !== null) {
+      this.logger.log('Done!');
+      return updatedHourLog;
+    }
+
+    throw new UpdateFailedException(this.HOUR_LOG, 'updateHourLog(hourLog)', [
+      hourLog,
+    ]);
   }
 
   async createWeeklyLog(
