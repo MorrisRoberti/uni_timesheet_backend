@@ -15,9 +15,8 @@ export class MinutesOverflowConstraint implements ValidatorConstraintInterface {
     // prendo le ore
     const { hours } = <CreateHourLogDto>args.object;
 
-    if (!hours) return true;
-
     if (hours == 24) return false;
+    return true;
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {

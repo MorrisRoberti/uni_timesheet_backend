@@ -18,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
 import { Sequelize } from 'sequelize-typescript';
-import { Response } from 'express';
+import { SubjectsService } from '../subjects/subjects.service';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -27,6 +27,7 @@ export class HourLogsController {
   constructor(
     private readonly hourLogsService: HourLogsService,
     private sequelize: Sequelize,
+    private subjectsService: SubjectsService,
   ) {}
 
   @Post()
@@ -41,6 +42,12 @@ export class HourLogsController {
     );
 
     let weeklyLog: WeeklyLogTable;
+
+    // if the user_subject is not present the NotFoundException is thrown
+    await this.subjectsService.findOneUserSubject(
+      request.user.id,
+      createHourLogDto.user_subject_id,
+    );
 
     const transaction = await this.sequelize.transaction();
 
@@ -199,7 +206,7 @@ export class HourLogsController {
       hourLog.minutes,
     );
     // delete the hour log
-    await this.hourLogsService.deleteHourLogFromId(weeklyLog.id, transaction);
+    await this.hourLogsService.deleteHourLogFromId(hourLog.id, transaction);
 
     // i update the weekly log also in case the hours/minutes are 0 in this way i can delete it but keep the values 0
     await this.hourLogsService.updateWeeklyLog(convertedWeeklyLog, transaction);
