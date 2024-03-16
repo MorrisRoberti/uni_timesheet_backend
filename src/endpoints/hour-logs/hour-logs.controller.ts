@@ -205,8 +205,8 @@ export class HourLogsController {
       weeklyLogConversionPromise = new Promise((resolve) => {
         const value = this.hourLogsService.addHoursToWeeklyLog(
           weeklyHourLogFromDb,
-          updateHourLogDto.hours,
-          updateHourLogDto.minutes,
+          updateHourLogDto.hours - hourLogFromDb.hours,
+          updateHourLogDto.minutes - hourLogFromDb.minutes,
         );
         resolve(value);
       });
@@ -218,8 +218,8 @@ export class HourLogsController {
       weeklyLogConversionPromise = new Promise((resolve) => {
         const value = this.hourLogsService.subtractHoursToWeeklyLog(
           weeklyHourLogFromDb,
-          updateHourLogDto.hours,
-          updateHourLogDto.minutes,
+          hourLogFromDb.hours - updateHourLogDto.hours,
+          hourLogFromDb.minutes - updateHourLogDto.minutes,
         );
         resolve(value);
       });

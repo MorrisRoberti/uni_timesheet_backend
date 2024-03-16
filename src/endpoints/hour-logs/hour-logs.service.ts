@@ -139,6 +139,12 @@ export class HourLogsService {
     updatedHourLogDto: UpdateHourLogDto,
   ) {
     this.logger.log(`Converting NEW ${this.HOUR_LOG}`);
+    if (updatedHourLogDto.hours <= 0 && updatedHourLogDto.minutes <= 0)
+      throw new UpdateFailedException(
+        this.HOUR_LOG,
+        'convertUpdatedHourlog(oldHourLog, updateHourLogDto)',
+        [`${oldHourLog}`, `${updatedHourLogDto}`],
+      );
     const convertedHourLog = JSON.parse(JSON.stringify(oldHourLog));
     convertedHourLog.hours = updatedHourLogDto.hours;
     convertedHourLog.minutes = updatedHourLogDto.minutes;
