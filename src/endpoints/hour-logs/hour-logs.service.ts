@@ -17,6 +17,28 @@ export class HourLogsService {
   WEEKLY_LOG = 'WeeklyLog';
   HOUR_LOG = 'HourLog';
 
+  sumTotalHoursOfHourLogsArray(hourLogArray: any): {
+    total_hours: number;
+    total_minutes: number;
+  } {
+    this.logger.log(`Adding total hours to array of ${this.HOUR_LOG}`);
+    let total_hours = 0;
+    let total_minutes = 0;
+    for (let i = 0; i < hourLogArray.length; i++) {
+      const hourLog = hourLogArray[i];
+      total_hours += hourLog.hours;
+      total_minutes += hourLog.minutes;
+    }
+
+    if (total_minutes >= 60) {
+      const carry_hours = parseInt((total_minutes / 60).toFixed(0));
+      total_minutes += total_minutes - 60 * carry_hours;
+      total_hours += carry_hours;
+    }
+
+    return { total_hours, total_minutes };
+  }
+
   subtractHoursToWeeklyLog(
     weeklyLog: WeeklyLogTable,
     hours: number,
@@ -167,7 +189,7 @@ export class HourLogsService {
     return hourLogDto;
   }
 
-  convertHourLogsArrayToDto(hourLogs: any) {
+  convertHourLogsArrayToDto(hourLogs: any): any {
     this.logger.log(`Converting ${this.HOUR_LOG} array from db to dto`);
     const convertedHourLogsArray = [];
     for (let i = 0; i < hourLogs.length; i++) {
@@ -339,6 +361,32 @@ export class HourLogsService {
       this.WEEKLY_LOG,
       'findWeeklyLogFromId(user_id, id)',
       [`${user_id}`, `${id}`],
+    );
+  }
+
+  async findHourLogsOfWeekForSubject(
+    user_id: number,
+    weekly_log_id: number,
+    user_subject_id: number,
+  ): Promise<Array<HourLogTable>> {
+    this.logger.log(`GET ${this.HOUR_LOG} of user from weekly_log and subject`);
+    const hourLog = await HourLogTable.findOne({
+      where: {
+        user_id,
+        weekly_log_id,
+        user_subject_id,
+      },
+    });
+
+    if (hourLog && hourLog !== null) {
+      this.logger.log('Done!');
+      return hourLog.dataValues;
+    }
+
+    throw new NotFoundException(
+      this.WEEKLY_LOG,
+      'findHourLogsOfWeekForSubject(user_id, weekly_log_id, user_subject_id)',
+      [`${user_id}`, `${weekly_log_id}`, `${user_subject_id}`],
     );
   }
 

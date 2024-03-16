@@ -164,17 +164,37 @@ export class HourLogsController {
   @Get('/weekly-hour-log-for-subject/')
   async getWeeklyHourLogForSubject(
     @Request() request: any,
-    @Body() body: { week: string; subjet_id: number },
+    @Body()
+    body: { week_start: string; week_end: string; user_subject_id: number },
   ) {
-    //
-  }
+    const { week_start, week_end, user_subject_id } = body;
+    // GET weekly log
+    const weeklyLog = await this.hourLogsService.findWeeklyLogFromWeek(
+      request.user.id,
+      week_start,
+      week_end,
+    );
 
-  // GET daily log for subject (from subject id, day) -> returns hour_logs of the day aggregated for user_subject
-  @Get('/daily-hour-log-for-subject/')
-  async getDailyHourLogForSubject(
-    @Request() request: any,
-    @Body() body: { day: string; subjet_id: number },
-  ) {}
+    // GET hourLog from the weekly log, user and user_subject_id
+    const hourLogs = await this.hourLogsService.findHourLogsOfWeekForSubject(
+      request.user.id,
+      weeklyLog.id,
+      user_subject_id,
+    );
+
+    // composing the dto
+    const hourLogsDto =
+      this.hourLogsService.convertHourLogsArrayToDto(hourLogs);
+
+    // create the total sum of hours
+    const { total_hours, total_minutes } =
+      this.hourLogsService.sumTotalHoursOfHourLogsArray(hourLogsDto);
+
+    hourLogsDto.total_hours = total_hours;
+    hourLogsDto.total_minutes = total_minutes;
+
+    return hourLogsDto;
+  }
 
   // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract) it is not possible to change the date
   @Put('/:id')
