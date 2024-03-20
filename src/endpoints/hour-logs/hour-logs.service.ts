@@ -32,7 +32,7 @@ export class HourLogsService {
 
     if (total_minutes >= 60) {
       const carry_hours = parseInt((total_minutes / 60).toFixed(0));
-      total_minutes += total_minutes - 60 * carry_hours;
+      total_minutes -= 60 * carry_hours;
       total_hours += carry_hours;
     }
 
@@ -370,7 +370,7 @@ export class HourLogsService {
     user_subject_id: number,
   ): Promise<Array<HourLogTable>> {
     this.logger.log(`GET ${this.HOUR_LOG} of user from weekly_log and subject`);
-    const hourLog = await HourLogTable.findOne({
+    const hourLogs = await HourLogTable.findAll({
       where: {
         user_id,
         weekly_log_id,
@@ -378,9 +378,9 @@ export class HourLogsService {
       },
     });
 
-    if (hourLog && hourLog !== null) {
+    if (hourLogs && hourLogs !== null) {
       this.logger.log('Done!');
-      return hourLog.dataValues;
+      return hourLogs;
     }
 
     throw new NotFoundException(

@@ -161,7 +161,7 @@ export class HourLogsController {
   }
 
   // GET weekly log for subject (from subject id, week) -> returns hour_logs of the week aggregated for user_subject
-  @Get('/weekly-hour-log-for-subject/')
+  @Get('/weekly-hour-logs/for-subject/')
   async getWeeklyHourLogForSubject(
     @Request() request: any,
     @Body()
@@ -190,10 +190,9 @@ export class HourLogsController {
     const { total_hours, total_minutes } =
       this.hourLogsService.sumTotalHoursOfHourLogsArray(hourLogsDto);
 
-    hourLogsDto.total_hours = total_hours;
-    hourLogsDto.total_minutes = total_minutes;
+    const returnObj = { total_hours, total_minutes, hourLogsDto };
 
-    return hourLogsDto;
+    return returnObj;
   }
 
   // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract) it is not possible to change the date
