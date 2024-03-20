@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build --config ./.env.development",
+    "build": "nest build NODE_ENV=development",
     "build-production": "nest build --config ./.env.production",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
