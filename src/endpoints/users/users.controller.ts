@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { Sequelize } from 'sequelize-typescript';
 import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
+import { EmailService } from 'src/email/email.service';
 
 @UseFilters(DBExceptionFilter)
 @Controller('users')
@@ -26,7 +27,14 @@ export class UsersController {
     private authService: AuthService,
     private userService: UsersService,
     private sequelize: Sequelize,
+    private emailService: EmailService,
   ) {}
+
+  @Get('/test/')
+  async test() {
+    this.emailService.weeklyRecapEmail();
+    return;
+  }
 
   @Post('/login')
   async login(@Body() credentials: LoginUserDto) {

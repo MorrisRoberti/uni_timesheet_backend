@@ -14,8 +14,9 @@ import { WeeklyLogTable } from './db/models/weekly-log.model';
 import { SubjectsModule } from './endpoints/subjects/subjects.module';
 import { HourLogsModule } from './endpoints/hour-logs/hour-logs.module';
 import { AuthModule } from './auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
 import { MinutesOverflowConstraint } from './validation/minutes-overflow.validator';
+import { EmailModule } from './email/email.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -42,10 +43,23 @@ import { MinutesOverflowConstraint } from './validation/minutes-overflow.validat
         WeeklyLogTable,
       ],
     }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        auth: {
+          user: 'application.mail.sender12@gmail.com',
+          pass: 'iczq fjox ljgz iyrw',
+        },
+      },
+      defaults: {
+        from: '"uni_timesheet" <uni@timesheet.com>',
+      },
+    }),
     UsersModule,
     SubjectsModule,
     HourLogsModule,
     AuthModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService, MinutesOverflowConstraint],

@@ -14,4 +14,8 @@ services:
     command: --init-file /data/application/init.sql
     volumes:
       - ./init.sql:/data/application/init.sql
-  
+  mailhog:
+    image: 'mailhog/mailhog'
+    ports:
+      - 8025:8025
+      - 1025:1025
