@@ -36,6 +36,7 @@ export class UsersService {
       user_id: user_id,
       active: 1,
       faculty: userConfigToConvert.faculty,
+      notifications: userConfigToConvert.notifications,
     };
     this.logger.log('Done!');
     return dbUserConfig;
@@ -45,6 +46,7 @@ export class UsersService {
     this.logger.log(`Converting UPDATE ${this.USER_CONFIG} for update`);
     const dbUserConfig = {
       faculty: userConfigToConvert.faculty,
+      notifications: userConfigToConvert.notifications,
     };
     this.logger.log('Done!');
     return dbUserConfig;

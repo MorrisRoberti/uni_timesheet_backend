@@ -27,7 +27,10 @@ export class DBExceptionFilter implements ExceptionFilter {
     const object = exception.object;
     const func = exception.callingFunction;
     const parameters = exception.parameters;
-    const user_id = request.user.id;
+    const user_id =
+      request.user !== undefined
+        ? request.user.id
+        : 'user information not present';
 
     this.logger.error(message, {
       object,

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "796e6e95-40c0-4214-8c35-d5d7506ff570",
+		"_postman_id": "5af3f68c-5215-4eeb-af37-651cf0d45be5",
 		"name": "Uni_timesheet",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33596664"
+		"_exporter_id": "21800574"
 	},
 	"item": [
 		{
@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\"\r\n}",
+					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\",\r\n    \"notifications\" : true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -74,7 +74,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"faculty\" : \"nuova facolta\"\r\n}",
+					"raw": "{\r\n    \"faculty\" : \"nuova facolta\",\r\n    \"notifications\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -201,7 +201,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"hours\": 7,\r\n    \"minutes\": 10,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
+					"raw": "{\r\n    \"hours\": 4,\r\n    \"minutes\": 7,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -316,88 +316,6 @@
 					"path": [
 						"hour-logs",
 						"a"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Hour Log Delete",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/5",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "3000",
-					"path": [
-						"hour-logs",
-						"5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Hour Log Update",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"hours\": 10,\n    \"minutes\": 7,\n    \"date\": \"2024-03-01\",\n    \"user_subject_id\": 2,\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/1",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "3000",
-					"path": [
-						"hour-logs",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Hour Log GET weekly from user_subject",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"week_start\": \"2024-03-04\",\n    \"week_end\": \"2024-03-10\",\n    \"user_subject_id\": 2\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "3000",
-					"path": [
-						"hour-logs",
-						"weekly-hour-logs",
-						"for-subject"
 					]
 				}
 			},

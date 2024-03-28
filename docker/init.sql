@@ -44,7 +44,7 @@ CREATE TABLE `hour_logs` (
   CONSTRAINT `hour_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `hour_logs_ibfk_2` FOREIGN KEY (`user_subject_id`) REFERENCES `user_subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `hour_logs_ibfk_3` FOREIGN KEY (`weekly_log_id`) REFERENCES `weekly_log_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,6 +53,7 @@ CREATE TABLE `hour_logs` (
 
 LOCK TABLES `hour_logs` WRITE;
 /*!40000 ALTER TABLE `hour_logs` DISABLE KEYS */;
+INSERT INTO `hour_logs` VALUES (1,2,2,4,7,'2024-03-01',2,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL,'Fatto esercizi sulla complessita\' computazionale');
 /*!40000 ALTER TABLE `hour_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +72,7 @@ CREATE TABLE `subjects` (
   `deletedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +81,7 @@ CREATE TABLE `subjects` (
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES (1,'Architettura degli elaboratori','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,'Elementi di logica e strutture discrete','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL);
+INSERT INTO `subjects` VALUES (1,'Architettura degli elaboratori','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,'Elementi di logica e strutture discrete','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(3,'Algoritmi e strutture dati','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL);
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +100,7 @@ CREATE TABLE `user_config` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL,
+  `notifications` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
@@ -112,7 +114,7 @@ CREATE TABLE `user_config` (
 
 LOCK TABLES `user_config` WRITE;
 /*!40000 ALTER TABLE `user_config` DISABLE KEYS */;
-INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,2,'Informatica',1,'2024-02-29 13:35:22','2024-02-29 13:35:22',NULL);
+INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL,0),(2,2,'nuova facolta',1,'2024-02-29 13:35:22','2024-03-28 22:11:15',NULL,1);
 /*!40000 ALTER TABLE `user_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +143,7 @@ CREATE TABLE `user_subjects` (
   KEY `subject_id` (`subject_id`),
   CONSTRAINT `user_subjects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_subjects_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +152,7 @@ CREATE TABLE `user_subjects` (
 
 LOCK TABLES `user_subjects` WRITE;
 /*!40000 ALTER TABLE `user_subjects` DISABLE KEYS */;
-INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL);
+INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL),(2,2,3,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algoritmi e strutture dati');
 /*!40000 ALTER TABLE `user_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +208,7 @@ CREATE TABLE `weekly_log_table` (
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `weekly_log_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +217,7 @@ CREATE TABLE `weekly_log_table` (
 
 LOCK TABLES `weekly_log_table` WRITE;
 /*!40000 ALTER TABLE `weekly_log_table` DISABLE KEYS */;
-INSERT INTO `weekly_log_table` VALUES (1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL);
+INSERT INTO `weekly_log_table` VALUES (1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL),(2,2,'2024-02-26','2024-03-03',4,7,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL);
 /*!40000 ALTER TABLE `weekly_log_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-01  0:14:30
+-- Dump completed on 2024-03-28 23:19:31

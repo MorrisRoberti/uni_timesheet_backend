@@ -4,6 +4,7 @@ import {
   IsString,
   MaxLength,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 import { LoginUserDto } from './login-user.dto';
 
@@ -25,4 +26,8 @@ export class CreateUserDto extends LoginUserDto {
   @IsString()
   @MaxLength(255)
   faculty: string;
+
+  @IsOptional()
+  @IsBoolean()
+  notifications: boolean;
 }
