@@ -45,10 +45,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
+        host: process.env.EMAIL_HOST,
         auth: {
-          user: 'application.mail.sender12@gmail.com',
-          pass: 'iczq fjox ljgz iyrw',
+          user: process.env.EMAIL_AUTH_USER,
+          pass: process.env.EMAIL_AUTH_PASSWORD,
         },
       },
       defaults: {

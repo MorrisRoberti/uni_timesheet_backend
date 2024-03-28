@@ -9,7 +9,7 @@ export class EmailService {
     this.mailerService.sendMail({
       to: 'morrisroberti349@gmail.com',
       from: 'application.mail.sender12@gmail.com',
-      subject: 'weekly hours recap',
+      subject: 'Weekly recap',
       text: 'this is the recap for the week',
     });
   }
