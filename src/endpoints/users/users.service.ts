@@ -150,4 +150,9 @@ export class UsersService {
       [user],
     );
   }
+
+  async findUsersForEmailForwarding() {
+    this.logger.log(`GET ${this.USER} for email sending`);
+    // const users = await UserConfigTable.findAll();
+  }
 }

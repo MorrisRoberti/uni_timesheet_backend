@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { MinutesOverflowConstraint } from './validation/minutes-overflow.validator';
 import { EmailModule } from './email/email.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       isGlobal: true,
       envFilePath: '.env.development',
     }),
+    ScheduleModule.forRoot(),
     WinstonModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
