@@ -492,4 +492,36 @@ export class HourLogsService {
       );
     }
   }
+
+  async findLogsOfUsersForEmail(userIds: Array<number>): Promise<any> {
+    this.logger.log(
+      `GET ${this.WEEKLY_LOG} and ${this.HOUR_LOG} of users for email`,
+    );
+
+    const date = new Date();
+
+    const week_start = format(
+      startOfWeek(date, { weekStartsOn: 1 }),
+      'yyyy-MM-dd',
+    );
+    const week_end = format(endOfWeek(date, { weekStartsOn: 1 }), 'yyyy-MM-dd');
+
+    const logs = await WeeklyLogTable.findAll({
+      where: {
+        [Op.and]: { week_start, week_end, user_id: userIds },
+      },
+      include: [{ model: HourLogTable }],
+    });
+
+    if (logs && logs !== null) {
+      this.logger.log('Done!');
+      return logs;
+    }
+
+    throw new NotFoundException(
+      `${this.WEEKLY_LOG}/${this.HOUR_LOG}`,
+      'findLogsOfUsersForEmail(userIds)',
+      [],
+    );
+  }
 }

@@ -15,6 +15,20 @@ export class UsersService {
   USER = 'User';
   USER_CONFIG = 'UserConfig';
 
+  extractUsersIdsFromUsersConfig(
+    usersConfigs: Array<UserConfigTable>,
+  ): Array<number> {
+    this.logger.log(
+      `Extracting ${this.USER} ids from ${this.USER_CONFIG} records`,
+    );
+    const idsArray = [];
+    for (let i = 0; i < usersConfigs.length; i++) {
+      idsArray.push(usersConfigs[i].user_id);
+    }
+    this.logger.log('Done!');
+    return idsArray;
+  }
+
   convertNewUser(createUserDto: CreateUserDto) {
     this.logger.log(`Converting NEW ${this.USER} for creation`);
     const saltRounds = 10;
@@ -154,7 +168,22 @@ export class UsersService {
   }
 
   async findUsersForEmailForwarding() {
-    this.logger.log(`GET ${this.USER} for email sending`);
-    // const users = await UserConfigTable.findAll();
+    this.logger.log(`GET ${this.USER_CONFIG} for email sending`);
+    const usersConfig = await UserConfigTable.findAll({
+      where: { notifications: true },
+      raw: true,
+      paranoid: true,
+    });
+
+    if (usersConfig && usersConfig !== null) {
+      this.logger.log('Done!');
+      return usersConfig;
+    }
+
+    throw new NotFoundException(
+      this.USER_CONFIG,
+      'findUsersForEmailForwarding()',
+      [],
+    );
   }
 }

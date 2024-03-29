@@ -18,9 +18,14 @@ export class EmailService {
     this.logger.log(`Sending Weekly recap email...`);
 
     // find the users to send emails to
-    const users = await this.userService.findUsersForEmailForwarding();
+    const usersConfig = await this.userService.findUsersForEmailForwarding();
+
+    // extracting usersIds from usersConfig
+    const usersIds =
+      this.userService.extractUsersIdsFromUsersConfig(usersConfig);
 
     // make a joined query to find all weekly log and hour logs and bla bla bla
+    const logs = await this.hourLogsService.findLogsOfUsersForEmail(usersIds);
 
     this.mailerService.sendMail({
       to: 'morrisroberti349@gmail.com',
