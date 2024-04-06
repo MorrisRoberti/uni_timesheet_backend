@@ -15,15 +15,11 @@ export class UsersService {
   USER = 'User';
   USER_CONFIG = 'UserConfig';
 
-  extractUsersIdsFromUsersConfig(
-    usersConfigs: Array<UserConfigTable>,
-  ): Array<number> {
-    this.logger.log(
-      `Extracting ${this.USER} ids from ${this.USER_CONFIG} records`,
-    );
+  extractUsersIdsFromUsersConfig(users: Array<UserTable>): Array<number> {
+    this.logger.log(`Extracting ${this.USER} ids`);
     const idsArray = [];
-    for (let i = 0; i < usersConfigs.length; i++) {
-      idsArray.push(usersConfigs[i].user_id);
+    for (let i = 0; i < users.length; i++) {
+      idsArray.push(users[i].id);
     }
     this.logger.log('Done!');
     return idsArray;
@@ -169,10 +165,14 @@ export class UsersService {
 
   async findUsersForEmailForwarding() {
     this.logger.log(`GET ${this.USER_CONFIG} for email sending`);
-    const usersConfig = await UserConfigTable.findAll({
-      where: { notifications: true },
-      raw: true,
+    const usersConfig = await UserTable.findAll({
       paranoid: true,
+      include: [
+        {
+          model: UserConfigTable,
+          where: { notifications: true },
+        },
+      ],
     });
 
     if (usersConfig && usersConfig !== null) {

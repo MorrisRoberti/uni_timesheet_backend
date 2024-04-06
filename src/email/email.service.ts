@@ -18,20 +18,33 @@ export class EmailService {
     this.logger.log(`Sending Weekly recap email...`);
 
     // find the users to send emails to
-    const usersConfig = await this.userService.findUsersForEmailForwarding();
+    const users = await this.userService.findUsersForEmailForwarding();
 
-    // extracting usersIds from usersConfig
-    const usersIds =
-      this.userService.extractUsersIdsFromUsersConfig(usersConfig);
+    // extracting usersIds from users
+    const usersIds = this.userService.extractUsersIdsFromUsersConfig(users);
 
     // make a joined query to find all weekly log and hour logs and bla bla bla
     const logs = await this.hourLogsService.findLogsOfUsersForEmail(usersIds);
 
-    this.mailerService.sendMail({
-      to: 'morrisroberti349@gmail.com',
-      from: 'application.mail.sender12@gmail.com',
-      subject: 'Weekly recap',
-      text: 'this is the recap for the week',
-    });
+    // I need a function to combine the user records with the log with id, in this way I have all the info I need in the email
+    const email_data = this.hourLogsService.combineUserRecordsWithLogsForEmail(
+      users,
+      logs,
+    );
+
+    // sending emails to all the users
+    for (let i = 0; i < email_data.length; i++) {
+      const { user, logs } = email_data[i];
+      if (user && user !== null && logs && logs !== null) {
+        this.logger.log(`Sending weekly email to user ${user.id}`);
+        this.mailerService.sendMail({
+          to: user.email,
+          from: 'application.mail.sender12@gmail.com',
+          subject: 'Weekly recap',
+          text: `this is the recap for the week ${logs.week_start} / ${logs.week_end}. Total hours: ${logs.hours}:${logs.minutes}`,
+        });
+        this.logger.log(`Sent!`);
+      }
+    }
   }
 }
