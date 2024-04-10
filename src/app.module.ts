@@ -18,6 +18,8 @@ import { MinutesOverflowConstraint } from './validation/minutes-overflow.validat
 import { EmailModule } from './email/email.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -55,6 +57,13 @@ import { ScheduleModule } from '@nestjs/schedule';
       },
       defaults: {
         from: '"uni_timesheet" <uni@timesheet.com>',
+      },
+      template: {
+        dir: join(__dirname.substring(0, __dirname.length - 5), 'src/email'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
       },
     }),
     UsersModule,

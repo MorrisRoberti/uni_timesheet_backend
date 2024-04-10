@@ -41,7 +41,14 @@ export class EmailService {
           to: user.email,
           from: 'application.mail.sender12@gmail.com',
           subject: 'Weekly recap',
-          text: `this is the recap for the week ${logs.week_start} / ${logs.week_end}. Total hours: ${logs.hours}:${logs.minutes}`,
+          template: 'email_template',
+          context: {
+            week_start: logs.week_start,
+            week_end: logs.week_end,
+            hours: logs.hours,
+            minutes: logs.minutes,
+          },
+          // text: `this is the recap for the week ${logs.week_start} / ${logs.week_end}. Total hours: ${logs.hours}:${logs.minutes}`,
         });
         this.logger.log(`Sent!`);
       }
