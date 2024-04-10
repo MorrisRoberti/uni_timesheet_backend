@@ -26,11 +26,10 @@ export class HourLogsService {
     this.logger.log(`Constructing the object to use in the email service`);
     const returnRecords = [];
     for (let i = 0; i < users.length; i++) {
-      const log = logs.find((value) => {
-        const ret = value.user_id === users[i].id;
-        return ret;
+      const logsToAppend = logs.find((value) => {
+        if (value.user_id === users[i].id) return value;
       });
-      returnRecords.push({ user: users[i], logs: log });
+      returnRecords.push({ user: users[i], logs: logsToAppend });
     }
     this.logger.log('Done!');
     return returnRecords;
