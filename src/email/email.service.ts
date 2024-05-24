@@ -6,12 +6,16 @@ import { UsersService } from 'src/endpoints/users/users.service';
 
 @Injectable()
 export class EmailService {
+  private EMAIL_SENDER: string;
+
   constructor(
     private mailerService: MailerService,
     private logger: Logger,
     private userService: UsersService,
     private hourLogsService: HourLogsService,
-  ) {}
+  ) {
+    this.EMAIL_SENDER = process.env.EMAIL_AUTH_USER;
+  }
 
   @Cron('0 30 16 * * 1')
   async weeklyRecapEmail(): Promise<any> {
@@ -39,7 +43,7 @@ export class EmailService {
         this.logger.log(`Sending weekly email to user ${user.id}`);
         this.mailerService.sendMail({
           to: user.email,
-          from: 'application.mail.sender12@gmail.com',
+          from: this.EMAIL_SENDER,
           subject: 'Weekly recap',
           template: 'email_template',
           context: {
