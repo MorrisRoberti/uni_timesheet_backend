@@ -35,7 +35,8 @@ This will start the application with **pm2**
 ## How to test it
 
 At the moment there are no automatized tests, but there is a postman collection file in the `./postman` folder that you can import into the software.
-The `/login` api is called automatically in the pre-request scripts of each request for the user `2`
+The `/login` api is called automatically in the pre-request scripts of each request for the user `2`.
+If you want to change the default user or if you change the correspondent db values you have to go in the `variables` of the collection and change the `test_user_email` and `test_user_password` as well.
 
 ## How to deploy it
 
