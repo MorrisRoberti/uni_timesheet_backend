@@ -381,7 +381,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"week_start\": \"2024-03-04\",\n    \"week_end\": \"2024-03-10\",\n    \"user_subject_id\": 2\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -389,7 +389,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject",
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject/2/2024-03-04/2024-03-10",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -398,7 +398,10 @@
 					"path": [
 						"hour-logs",
 						"weekly-hour-logs",
-						"for-subject"
+						"for-subject",
+						"2",
+						"2024-03-04",
+						"2024-03-10"
 					]
 				}
 			},
