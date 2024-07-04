@@ -1,4 +1,771 @@
-<h1>Hello Handlebars</h1>
-<body>
-    this is the recap for the week {{week_start}} / {{week_end}}. Total hours: {{hours}}:{{minutes}}
+<div>
+
+<div style="background-color: rgb(52, 27, 114); width: 100%; height: 15px; padding-bottom: 0; margin-bottom: 0"></div>
+<div style="background-color: rgba(190, 165, 255, 0.827) ;color: rgba(48, 21, 114, 0.827); padding-top: 0;margin-top: 0;">
+
+    <h1>Hello Handlebars</h1>
+
+   <p>This is the recap for the week {{week_start}} / {{week_end}}. Total hours: {{hours}}:{{minutes}}</p>
+</div>
+
+
+</div>
+{{!-- 
+<!DOCTYPE html>
+
+<html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<title></title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"/><!--<![endif]-->
+<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		a[x-apple-data-detectors] {
+			color: inherit !important;
+			text-decoration: inherit !important;
+		}
+
+		#MessageViewBody a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		p {
+			line-height: inherit
+		}
+
+		.desktop_hide,
+		.desktop_hide table {
+			mso-hide: all;
+			display: none;
+			max-height: 0px;
+			overflow: hidden;
+		}
+
+		.image_block img+div {
+			display: none;
+		}
+
+		@media (max-width:660px) {
+			.desktop_hide table.icons-outer {
+				display: inline-table !important;
+			}
+
+			.desktop_hide table.icons-inner {
+				display: inline-block !important;
+			}
+
+			.icons-inner {
+				text-align: center;
+			}
+
+			.icons-inner td {
+				margin: 0 auto;
+			}
+
+			.image_block div.fullWidth {
+				max-width: 100% !important;
+			}
+
+			.mobile_hide {
+				display: none;
+			}
+
+			.row-content {
+				width: 100% !important;
+			}
+
+			.stack .column {
+				width: 100%;
+				display: block;
+			}
+
+			.mobile_hide {
+				min-height: 0;
+				max-height: 0;
+				max-width: 0;
+				overflow: hidden;
+				font-size: 0px;
+			}
+
+			.desktop_hide,
+			.desktop_hide table {
+				display: table !important;
+				max-height: none !important;
+			}
+
+			.reverse {
+				display: table;
+				width: 100%;
+			}
+
+			.reverse .column.first {
+				display: table-footer-group !important;
+			}
+
+			.reverse .column.last {
+				display: table-header-group !important;
+			}
+
+			.row-7 td.column.first .border,
+			.row-7 td.column.last .border {
+				padding: 0;
+				border-top: 0;
+				border-right: 0px;
+				border-bottom: 0;
+				border-left: 0;
+			}
+		}
+	</style>
+</head>
+<body style="background-color: #f2f2f7; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+<table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:80px;line-height:80px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+<div align="center" class="alignment" style="line-height:10px">
+<div style="max-width: 128px;"><a href="https://www.example.com" style="outline:none" tabindex="-1" target="_blank"><img alt="Your Logo Placeholder" height="auto" src="images/WP_yourlogo.png" style="display: block; height: auto; border: 0; width: 100%;" title="Your Logo Placeholder" width="128"/></a></div>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-3" style="height:10px;line-height:10px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-position: center top; background-repeat: no-repeat; color: #000000; background-image: url('images/WP_roundedcorners.png'); width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:45px;line-height:45px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #e1e1ef; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:30px;line-height:30px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:10px;padding-right:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:center;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>YOUR WEEKLY</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+<div align="center" class="alignment" style="line-height:10px">
+<div class="fullWidth" style="max-width: 576px;"><img alt="Progress Banner Image Placeholder" height="auto" src="images/WP_progress_banner.png" style="display: block; height: auto; border: 0; width: 100%;" title="Progress Banner Image Placeholder" width="576"/></div>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-4" style="height:20px;line-height:20px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:10px;padding-left:35px;padding-right:35px;padding-top:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing</strong></span><br/><span><strong>elit, sed diam nonummy nibh euismod tincidunt ut </strong></span><br/><span><strong>laoreet dolore magna aliquam erat volutpat.</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-6" style="height:30px;line-height:30px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-position: center top; background-repeat: no-repeat; color: #000000; background-color: #ffffff; background-image: url('images/e20a6b04-734c-4b9c-9668-0810947a8dca.png'); width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:70px;line-height:70px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<div class="spacer_block block-1" style="height:20px;line-height:20px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:left;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span>YOUR<strong> LEVEL</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:80px;line-height:120%;text-align:left;mso-line-height-alt:96px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>L8</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;line-height:120%;text-align:left;mso-line-height-alt:21.599999999999998px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing </strong></span><span><strong>elit.</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+<td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="padding-left:20px;padding-right:20px;width:100%;">
+<div align="left" class="alignment" style="line-height:10px">
+<div style="max-width: 240px;"><img alt="Daily Steps Placeholder" height="auto" src="images/WP_level.png" style="display: block; height: auto; border: 0; width: 100%;" title="Daily Steps Placeholder" width="240"/></div>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; background-position: center top; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:60px;line-height:60px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:left;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span>ACTIVITY<strong> TIME</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-3" style="height:5px;line-height:5px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="padding-left:20px;padding-right:20px;width:100%;">
+<div align="left" class="alignment" style="line-height:10px">
+<div style="max-width: 600px;"><img alt="Activity Time Bar Placeholder" height="auto" src="images/WP_activitybar.png" style="display: block; height: auto; border: 0; width: 100%;" title="Activity Time Bar Placeholder" width="600"/></div>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-5" style="height:50px;line-height:50px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr class="reverse">
+<td class="column column-1 first" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<div class="border">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="padding-left:20px;padding-right:20px;width:100%;">
+<div align="left" class="alignment" style="line-height:10px">
+<div style="max-width: 240px;"><img alt="Calendar Graph Placeholder" height="auto" src="images/WP_calendar.png" style="display: block; height: auto; border: 0; width: 100%;" title="Calendar Graph Placeholder" width="240"/></div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td class="column column-2 last" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<div class="border">
+<div class="spacer_block block-1" style="height:40px;line-height:40px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:left;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span>MONTHLY <strong>STATISTCS</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;line-height:120%;text-align:left;mso-line-height-alt:21.599999999999998px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing </strong></span><span><strong>elit.</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-4" style="height:35px;line-height:35px;font-size:1px;"> </div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; background-position: center top; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:60px;line-height:60px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-9" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<div class="spacer_block block-1" style="height:45px;line-height:45px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:left;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span>RECENT</span></p>
+<p style="margin: 0; word-break: break-word;"><span><strong>SLEEP SCORE</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;line-height:120%;text-align:left;mso-line-height-alt:21.599999999999998px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing </strong></span><span><strong>elit.</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-4" style="height:45px;line-height:45px;font-size:1px;"> </div>
+</td>
+<td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="padding-left:20px;padding-right:20px;width:100%;">
+<div align="left" class="alignment" style="line-height:10px">
+<div style="max-width: 240px;"><img alt="Sleep Score Graph Placeholder" height="auto" src="images/WP_sleepscore.png" style="display: block; height: auto; border: 0; width: 100%;" title="Sleep Score Graph Placeholder" width="240"/></div>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-10" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; background-position: center top; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:60px;line-height:60px;font-size:1px;"> </div>
+<div class="spacer_block block-2" style="height:5px;line-height:5px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-11" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-position: center top; background-repeat: no-repeat; color: #000000; background-color: #ffffff; background-image: url('images/WP_roundedcorners.png'); width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:45px;line-height:45px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-12" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #e1e1ef; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:30px;line-height:30px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:10px;padding-right:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:center;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span>COMPLETED<strong> CHALLENGES</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-3" style="height:20px;line-height:20px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center;" width="100%">
+<tr>
+<td class="pad" style="vertical-align: middle; color: #000000; font-family: inherit; font-size: 14px; text-align: center;">
+<table cellpadding="0" cellspacing="0" class="icons-outer" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-table;">
+<tr>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 0px; padding-right: 10px;"><img align="center" alt="Icon Cycling" class="icon" height="auto" src="images/WP_icon_cycling.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="64"/></td>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px;"><img align="center" alt="Icon Running" class="icon" height="auto" src="images/WP_icon_running.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="64"/></td>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 0px;"><img align="center" alt="Icon Swimming" class="icon" height="auto" src="images/WP_icon_swimming.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="64"/></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-5" style="height:20px;line-height:20px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-6" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:10px;padding-left:35px;padding-right:35px;padding-top:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing</strong></span><br/><span><strong>elit, sed diam nonummy nibh euismod tincidunt ut </strong></span><br/><span><strong>laoreet dolore magna aliquam erat volutpat.</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-7" style="height:30px;line-height:30px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-13" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #e1e1ef; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;">
+<div align="center" class="alignment" style="line-height:10px">
+<div style="max-width: 114px;"><img alt="User Portrait" height="auto" src="images/WP_userportrait_1.png" style="display: block; height: auto; border: 0; width: 100%;" title="User Portrait" width="114"/></div>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:center;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>7.3K</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+<td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="50%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;">
+<div align="center" class="alignment" style="line-height:10px">
+<div style="max-width: 114px;"><img alt="User Portrait" height="auto" src="images/WP_userportrait_2.png" style="display: block; height: auto; border: 0; width: 100%;" title="User Portrait" width="114"/></div>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:30px;padding-right:30px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:34px;line-height:120%;text-align:center;mso-line-height-alt:40.8px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>8.1K</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-14" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-position: center top; background-repeat: no-repeat; color: #000000; background-color: #ffffff; background-image: url('images/e20a6b04-734c-4b9c-9668-0810947a8dca.png'); width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:100px;line-height:100px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-15" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="33.333333333333336%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+<div align="center" class="alignment" style="line-height:10px">
+<div style="max-width: 181.333px;"><a href="https://www.example.com" style="outline:none" tabindex="-1" target="_blank"><img alt="Your Logo Placeholder" height="auto" src="images/WP_yourlogo.png" style="display: block; height: auto; border: 0; width: 100%;" title="Your Logo Placeholder" width="181.333"/></a></div>
+</div>
+</td>
+</tr>
+</table>
+</td>
+<td class="column column-2" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="33.333333333333336%">
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:10px;padding-right:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:24px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>FOLLOW US</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<div class="spacer_block block-2" style="height:10px;line-height:10px;font-size:1px;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center;" width="100%">
+<tr>
+<td class="pad" style="vertical-align: middle; color: #000000; font-family: inherit; font-size: 14px; text-align: center;">
+<table cellpadding="0" cellspacing="0" class="icons-outer" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-table;">
+<tr>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"><a href="https://www.example.com" style="text-decoration: none;" target="_self"><img align="center" alt="Facebook" class="icon" height="auto" src="images/WP_socialmedia_facebook.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="32"/></a></td>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"><a href="https://www.example.com" style="text-decoration: none;" target="_self"><img align="center" alt="Twitter" class="icon" height="auto" src="images/WP_socialmedia_twitter.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="32"/></a></td>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"><a href="https://www.example.com" style="text-decoration: none;" target="_self"><img align="center" alt="Instagram" class="icon" height="auto" src="images/WP_socialmedia_instagram.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="32"/></a></td>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"><a href="https://www.example.com" style="text-decoration: none;" target="_self"><img align="center" alt="YouTube" class="icon" height="auto" src="images/WP_socialmedia_youtube.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="32"/></a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:14px;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
+<p style="margin: 0; word-break: break-word;"><span><span><strong>Lorem ipsum dolor sit amet, consectetuer.</strong></span></span></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+<td class="column column-3" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="33.333333333333336%">
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-left:10px;padding-right:10px;">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:24px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+<p style="margin: 0; word-break: break-word;"><span><strong>CONTACT US</strong></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:14px;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
+<p style="margin: 0; word-break: break-word;"><span><span><strong>Lorem ipsum dolor sit amet, consectetuer adipiscing </strong></span><span><strong>elit.</strong></span></span></p>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad">
+<div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:14px;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
+<p style="margin: 0; word-break: break-word;"><strong>+123 456 789</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-16" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f7;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; background-position: center top; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:40px;line-height:40px;font-size:1px;"> </div>
+<div class="spacer_block block-2" style="height:5px;line-height:5px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-17" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<div class="spacer_block block-1" style="height:80px;line-height:80px;font-size:1px;"> </div>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-18" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 640px; margin: 0 auto;" width="640">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center;" width="100%">
+<tr>
+<td class="pad" style="vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;">
+<table cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="alignment" style="vertical-align: middle; text-align: center;"><!--[if vml]><table align="center" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
+<!--[if !vml]><!-->
+<table cellpadding="0" cellspacing="0" class="icons-inner" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;"><!--<![endif]-->
+<tr>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;"><a href="http://designedwithbeefree.com/" style="text-decoration: none;" target="_blank"><img align="center" alt="Beefree Logo" class="icon" height="auto" src="images/Beefree-logo.png" style="display: block; height: auto; margin: 0 auto; border: 0;" width="34"/></a></td>
+<td style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: undefined; color: #1e0e4b; vertical-align: middle; letter-spacing: undefined; text-align: center;"><a href="http://designedwithbeefree.com/" style="color: #1e0e4b; text-decoration: none;" target="_blank">Designed with Beefree</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table><!-- End -->
 </body>
+</html> --}}

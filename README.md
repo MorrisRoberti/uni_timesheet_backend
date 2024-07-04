@@ -35,7 +35,8 @@ This will start the application with **pm2**
 ## How to test it
 
 At the moment there are no automatized tests, but there is a postman collection file in the `./postman` folder that you can import into the software.
-The `/login` api is called automatically in the pre-request scripts of each request for the user `2`
+The `/login` api is called automatically in the pre-request scripts of each request for the user `2`.
+If you want to change the default user or if you change the correspondent db values you have to go in the `variables` of the collection and change the `test_user_email` and `test_user_password` as well.
 
 ## How to deploy it
 
@@ -64,11 +65,42 @@ In the `src` folder we find the following "feature" folders:
 - `endpoints` -> contains the objects, with relative controllers, services etc.
 - `error-handling` -> contains the necessary file to manage the errors in an efficient way (models and exception filters)
 - `validation` -> contains the DTO validators to do checks on the objects that are sent to the API
+- `email` -> contains the provider to send the recap emails
 
-There are the environment files: `.env.development` and `.env.production`, this are pretty self explanatory.  
 Finally the `ecosystem.config.js` file is a configuration file to launch the program instance with `pm2`.
 
 The other files are the standard files of a Nestjs project.
+
+## Environment
+
+To get the code running you have to create the **environment** files specifying the name as it follows `.env.<typeofenv>`.
+Typically you have 2 files:
+
+- `.env.development`
+- `.env.production`
+
+**Remember to specify the file in the `app.module.ts`**
+
+> The following structure must be applied for the software to work correctly, the names of the env variables don't need an explanation.  
+> _You have to change the values accordingly to your configurations_
+
+```
+# DATABASE
+DB_NAME='uni_timesheet'
+DB_DIALECT='mysql' #Not used for it needs to be specified manually
+DB_PORT=3306 #Same as above
+DB_USERNAME='root'
+DB_PASSWORD='root'
+DB_HOST='localhost'
+
+# MAIL SERVER CONFIG
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_AUTH_USER='test'
+EMAIL_AUTH_PASSWORD='testPassword'
+
+# JWT AUTH
+JWT_SECRET='testSecret'
+```
 
 ## Database Entities & Structure
 
