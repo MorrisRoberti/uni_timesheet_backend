@@ -14,8 +14,12 @@ import { WeeklyLogTable } from './db/models/weekly-log.model';
 import { SubjectsModule } from './endpoints/subjects/subjects.module';
 import { HourLogsModule } from './endpoints/hour-logs/hour-logs.module';
 import { AuthModule } from './auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
 import { MinutesOverflowConstraint } from './validation/minutes-overflow.validator';
+import { EmailModule } from './email/email.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ScheduleModule } from '@nestjs/schedule';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -23,6 +27,7 @@ import { MinutesOverflowConstraint } from './validation/minutes-overflow.validat
       isGlobal: true,
       envFilePath: '.env.development',
     }),
+    ScheduleModule.forRoot(),
     WinstonModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
@@ -42,10 +47,30 @@ import { MinutesOverflowConstraint } from './validation/minutes-overflow.validat
         WeeklyLogTable,
       ],
     }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_AUTH_USER,
+          pass: process.env.EMAIL_AUTH_PASSWORD,
+        },
+      },
+      defaults: {
+        from: '"uni_timesheet" <uni@timesheet.com>',
+      },
+      template: {
+        dir: join(__dirname.substring(0, __dirname.length - 5), 'src/email'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
     UsersModule,
     SubjectsModule,
     HourLogsModule,
     AuthModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService, MinutesOverflowConstraint],

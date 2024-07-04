@@ -15,6 +15,16 @@ export class UsersService {
   USER = 'User';
   USER_CONFIG = 'UserConfig';
 
+  extractUsersIdsFromUsersConfig(users: Array<UserTable>): Array<number> {
+    this.logger.log(`Extracting ${this.USER} ids`);
+    const idsArray = [];
+    for (let i = 0; i < users.length; i++) {
+      idsArray.push(users[i].id);
+    }
+    this.logger.log('Done!');
+    return idsArray;
+  }
+
   convertNewUser(createUserDto: CreateUserDto) {
     this.logger.log(`Converting NEW ${this.USER} for creation`);
     const saltRounds = 10;
@@ -36,6 +46,7 @@ export class UsersService {
       user_id: user_id,
       active: 1,
       faculty: userConfigToConvert.faculty,
+      notifications: userConfigToConvert.notifications,
     };
     this.logger.log('Done!');
     return dbUserConfig;
@@ -45,6 +56,7 @@ export class UsersService {
     this.logger.log(`Converting UPDATE ${this.USER_CONFIG} for update`);
     const dbUserConfig = {
       faculty: userConfigToConvert.faculty,
+      notifications: userConfigToConvert.notifications,
     };
     this.logger.log('Done!');
     return dbUserConfig;
@@ -148,6 +160,30 @@ export class UsersService {
       this.USER_CONFIG,
       'createUserConfigOnDb(user)',
       [user],
+    );
+  }
+
+  async findUsersForEmailForwarding() {
+    this.logger.log(`GET ${this.USER_CONFIG} for email sending`);
+    const usersConfig = await UserTable.findAll({
+      paranoid: true,
+      include: [
+        {
+          model: UserConfigTable,
+          where: { notifications: true },
+        },
+      ],
+    });
+
+    if (usersConfig && usersConfig !== null) {
+      this.logger.log('Done!');
+      return usersConfig;
+    }
+
+    throw new NotFoundException(
+      this.USER_CONFIG,
+      'findUsersForEmailForwarding()',
+      [],
     );
   }
 }

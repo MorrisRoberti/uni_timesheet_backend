@@ -34,6 +34,9 @@ export class UserConfigTable extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   active: boolean = true;
 
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  notifications: boolean;
+
   // Associations
 
   @BelongsTo(() => UserTable)

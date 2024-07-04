@@ -9,6 +9,7 @@ import { UpdateFailedException } from 'src/error_handling/models/update-failed.e
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
 import { format, startOfWeek, endOfWeek } from 'date-fns';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
+import { UserTable } from 'src/db/models/user.model';
 
 @Injectable()
 export class HourLogsService {
@@ -16,6 +17,23 @@ export class HourLogsService {
 
   WEEKLY_LOG = 'WeeklyLog';
   HOUR_LOG = 'HourLog';
+
+  // combines the logs record with the users to have all the info in one place
+  combineUserRecordsWithLogsForEmail(
+    users: Array<UserTable>,
+    logs: Array<any>,
+  ): Array<any> {
+    this.logger.log(`Constructing the object to use in the email service`);
+    const returnRecords = [];
+    for (let i = 0; i < users.length; i++) {
+      const logsToAppend = logs.find((value) => {
+        if (value.user_id === users[i].id) return value;
+      });
+      returnRecords.push({ user: users[i], logs: logsToAppend });
+    }
+    this.logger.log('Done!');
+    return returnRecords;
+  }
 
   sumTotalHoursOfHourLogsArray(hourLogArray: any): {
     total_hours: number;
@@ -491,5 +509,41 @@ export class HourLogsService {
         [`${id}`],
       );
     }
+  }
+
+  async findLogsOfUsersForEmail(userIds: Array<number>): Promise<any> {
+    this.logger.log(
+      `GET ${this.WEEKLY_LOG} and ${this.HOUR_LOG} of users for email`,
+    );
+
+    const date = new Date();
+
+    const week_start = format(
+      startOfWeek(date, { weekStartsOn: 1 }),
+      'yyyy-MM-dd',
+    );
+    const week_end = format(endOfWeek(date, { weekStartsOn: 1 }), 'yyyy-MM-dd');
+
+    const logs = await WeeklyLogTable.findAll({
+      where: {
+        [Op.and]: {
+          week_start: '2024-02-26',
+          week_end: '2024-03-03',
+          user_id: userIds,
+        },
+      },
+      include: [{ model: HourLogTable }],
+    });
+
+    if (logs && logs !== null) {
+      this.logger.log('Done!');
+      return logs;
+    }
+
+    throw new NotFoundException(
+      `${this.WEEKLY_LOG}/${this.HOUR_LOG}`,
+      'findLogsOfUsersForEmail(userIds)',
+      [],
+    );
   }
 }

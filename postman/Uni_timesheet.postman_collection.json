@@ -45,7 +45,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\" : \"test@email4.com\",\r\n    \"password\" : \"admin\"\r\n}",
+					"raw": "{\r\n    \"email\" : \"{{test_user_email}}\",\r\n    \"password\" : \"{{test_user_password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -233,7 +233,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"week_start\" : \"2024-03-04\",\r\n    \"week_end\" : \"2024-03-10\"\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -241,7 +241,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/",
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/2024-03-04/2024-03-10",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -250,7 +250,8 @@
 					"path": [
 						"hour-logs",
 						"weekly-hour-logs",
-						""
+						"2024-03-04",
+						"2024-03-10"
 					]
 				}
 			},
@@ -380,7 +381,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"week_start\": \"2024-03-04\",\n    \"week_end\": \"2024-03-10\",\n    \"user_subject_id\": 2\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -388,7 +389,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject",
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject/2/2024-03-04/2024-03-10",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -397,7 +398,33 @@
 					"path": [
 						"hour-logs",
 						"weekly-hour-logs",
-						"for-subject"
+						"for-subject",
+						"2",
+						"2024-03-04",
+						"2024-03-10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Email service test",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/test",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"test"
 					]
 				}
 			},
@@ -421,6 +448,8 @@
 				"type": "text/javascript",
 				"exec": [
 					"const host = pm.variables.get(\"HOST\");",
+					"const test_user_email = pm.variables.get(\"test_user_email\");",
+					"const test_user_password = pm.variables.get(\"test_user_password\");",
 					"",
 					"const loginRequest = {",
 					"    method: 'POST',",
@@ -430,7 +459,7 @@
 					"    },",
 					"    body: {",
 					"     mode: 'raw',",
-					"     raw: JSON.stringify({'email': 'test@email4.com', 'password': 'admin'})",
+					"     raw: JSON.stringify({'email': `${test_user_email}`, 'password': `${test_user_password}`})",
 					"  }",
 					"};",
 					"",
@@ -460,6 +489,16 @@
 		{
 			"key": "HOST",
 			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "test_user_email",
+			"value": "test@email4.com",
+			"type": "string"
+		},
+		{
+			"key": "test_user_password",
+			"value": "admin",
 			"type": "string"
 		}
 	]
