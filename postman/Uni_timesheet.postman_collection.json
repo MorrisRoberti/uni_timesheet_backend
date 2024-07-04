@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5af3f68c-5215-4eeb-af37-651cf0d45be5",
+		"_postman_id": "796e6e95-40c0-4214-8c35-d5d7506ff570",
 		"name": "Uni_timesheet",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21800574"
+		"_exporter_id": "33596664"
 	},
 	"item": [
 		{
@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\",\r\n    \"notifications\" : true\r\n}",
+					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -45,7 +45,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\" : \"test@email4.com\",\r\n    \"password\" : \"admin\"\r\n}",
+					"raw": "{\r\n    \"email\" : \"{{test_user_email}}\",\r\n    \"password\" : \"{{test_user_password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -74,7 +74,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"faculty\" : \"nuova facolta\",\r\n    \"notifications\": false\r\n}",
+					"raw": "{\r\n    \"faculty\" : \"nuova facolta\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -201,7 +201,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"hours\": 4,\r\n    \"minutes\": 7,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
+					"raw": "{\r\n    \"hours\": 7,\r\n    \"minutes\": 10,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -233,7 +233,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"week_start\" : \"2024-03-04\",\r\n    \"week_end\" : \"2024-03-10\"\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -241,7 +241,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/",
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/2024-03-04/2024-03-10",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -250,7 +250,8 @@
 					"path": [
 						"hour-logs",
 						"weekly-hour-logs",
-						""
+						"2024-03-04",
+						"2024-03-10"
 					]
 				}
 			},
@@ -320,6 +321,114 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Hour Log Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/5",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hour Log Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hours\": 10,\n    \"minutes\": 7,\n    \"date\": \"2024-03-01\",\n    \"user_subject_id\": 2,\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/1",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hour Log GET weekly from user_subject",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/for-subject/2/2024-03-04/2024-03-10",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"weekly-hour-logs",
+						"for-subject",
+						"2",
+						"2024-03-04",
+						"2024-03-10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Email service test",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/test",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"test"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -339,6 +448,8 @@
 				"type": "text/javascript",
 				"exec": [
 					"const host = pm.variables.get(\"HOST\");",
+					"const test_user_email = pm.variables.get(\"test_user_email\");",
+					"const test_user_password = pm.variables.get(\"test_user_password\");",
 					"",
 					"const loginRequest = {",
 					"    method: 'POST',",
@@ -348,7 +459,7 @@
 					"    },",
 					"    body: {",
 					"     mode: 'raw',",
-					"     raw: JSON.stringify({'email': 'test@email4.com', 'password': 'admin'})",
+					"     raw: JSON.stringify({'email': `${test_user_email}`, 'password': `${test_user_password}`})",
 					"  }",
 					"};",
 					"",
@@ -378,6 +489,16 @@
 		{
 			"key": "HOST",
 			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "test_user_email",
+			"value": "test@email4.com",
+			"type": "string"
+		},
+		{
+			"key": "test_user_password",
+			"value": "admin",
 			"type": "string"
 		}
 	]

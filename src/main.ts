@@ -44,6 +44,8 @@ async function bootstrap() {
     }),
   });
 
+  app.enableCors();
+
   app.useGlobalPipes(new ValidationPipe());
 
   // serve per i custom validator
