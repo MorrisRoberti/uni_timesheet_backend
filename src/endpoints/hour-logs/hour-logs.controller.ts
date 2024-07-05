@@ -130,6 +130,27 @@ export class HourLogsController {
     return weeklyLogConverted;
   }
 
+  @Get('/weekly-hour-logs/top-subjects/:week_start/:week_end')
+  async getWeeklyHourLogsTopSubjects(
+    @Request() request: any,
+    @Param('week_start') week_start: string,
+    @Param('week_end') week_end: string,
+  ) {
+    // GET weekly_log
+    const hoursForTheWeekForSubject =
+      await this.hourLogsService.findHoursForTheWeekForSubject(
+        request.user.id,
+        week_start,
+        week_end,
+      );
+
+    // format the object to return
+    const convertedLogs = 0; // write the funcion and call it here
+
+    // return object
+    return convertedLogs;
+  }
+
   // GET daily log (from day) -> returns all hour_logs for the day
   @Get('/daily-hour-logs/:date')
   async getDailyHourLogs(@Request() request: any, @Param('date') date: string) {
@@ -159,7 +180,7 @@ export class HourLogsController {
     return convertedHourLog;
   }
 
-  // GET weekly log for subject (from subject id, week) -> returns hour_logs of the week aggregated for user_subject
+  // GET weekly log for subject (from subject id, week) -> returns hour_logs of the week for a specified user_subject
   @Get('/weekly-hour-logs/for-subject/:user_subject_id/:week_start/:week_end')
   async getWeeklyHourLogForSubject(
     @Request() request: any,

@@ -10,6 +10,8 @@ import { InsertionFailedException } from 'src/error_handling/models/insertion-fa
 import { format, startOfWeek, endOfWeek } from 'date-fns';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 import { UserTable } from 'src/db/models/user.model';
+import { UserSubjectTable } from 'src/db/models/user-subject.model';
+import sequelize from 'sequelize';
 
 @Injectable()
 export class HourLogsService {
@@ -511,6 +513,7 @@ export class HourLogsService {
     }
   }
 
+  // FIXMEEEE
   async findLogsOfUsersForEmail(userIds: Array<number>): Promise<any> {
     this.logger.log(
       `GET ${this.WEEKLY_LOG} and ${this.HOUR_LOG} of users for email`,
@@ -544,6 +547,47 @@ export class HourLogsService {
       `${this.WEEKLY_LOG}/${this.HOUR_LOG}`,
       'findLogsOfUsersForEmail(userIds)',
       [],
+    );
+  }
+
+  async findHoursForTheWeekForSubject(
+    user_id: number,
+    week_start: string,
+    week_end: string,
+  ) {
+    this.logger.log(
+      `GET ${this.HOUR_LOG} aggregated for user_subject for user ${user_id} for the week that start at ${week_start} and ends at ${week_end}`,
+    );
+
+    const logs = await HourLogTable.findAll({
+      attributes: [
+        'user_subject_id',
+        [sequelize.fn('sum', sequelize.col('hours')), 'totalHours'],
+        [sequelize.fn('sum', sequelize.col('minutes')), 'totalMinutes'],
+      ],
+      where: {
+        [Op.and]: {
+          date: { [Op.between]: [week_start, week_end] },
+          user_id,
+        },
+      },
+      include: [{ model: UserSubjectTable, attributes: ['name'] }],
+      group: ['user_subject_id'],
+      order: [
+        ['hours', 'DESC'],
+        ['minutes', 'DESC'],
+      ],
+      raw: true,
+    });
+
+    if (logs && logs !== null) {
+      this.logger.log('Done!');
+      return logs;
+    }
+    throw new NotFoundException(
+      `${this.HOUR_LOG}`,
+      'findHoursForTheWeekForSubject(user_id, week_start, week_end)',
+      [`${user_id}`, week_start, week_end],
     );
   }
 }
