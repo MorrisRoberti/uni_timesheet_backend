@@ -44,7 +44,7 @@ CREATE TABLE `hour_logs` (
   CONSTRAINT `hour_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `hour_logs_ibfk_2` FOREIGN KEY (`user_subject_id`) REFERENCES `user_subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `hour_logs_ibfk_3` FOREIGN KEY (`weekly_log_id`) REFERENCES `weekly_log_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,7 +53,7 @@ CREATE TABLE `hour_logs` (
 
 LOCK TABLES `hour_logs` WRITE;
 /*!40000 ALTER TABLE `hour_logs` DISABLE KEYS */;
-INSERT INTO `hour_logs` VALUES (1,2,2,4,7,'2024-03-01',2,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL,'Fatto esercizi sulla complessita\' computazionale');
+INSERT INTO `hour_logs` VALUES (1,2,2,4,7,'2024-03-01',2,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL,'Fatto esercizi sulla complessita\' computazionale'),(2,2,4,2,30,'2024-03-12',3,'2024-07-06 08:44:52','2024-07-06 08:44:52',NULL,'Studiato puntatori'),(3,2,4,2,30,'2024-03-05',4,'2024-07-06 08:45:12','2024-07-06 08:45:12',NULL,'Esercizi stringhe C-style'),(4,2,3,4,50,'2024-03-07',4,'2024-07-06 08:45:59','2024-07-06 08:45:59',NULL,'Algoritmi di ordinamento'),(5,2,6,2,0,'2024-03-07',4,'2024-07-06 08:46:41','2024-07-06 08:46:41',NULL,'Meccanica dei fluidi'),(6,2,8,3,20,'2024-03-09',4,'2024-07-06 08:47:33','2024-07-06 08:47:33',NULL,'Omomorfismi tra gruppi, isomorfismi + esercizi su rette e piani'),(7,2,8,3,20,'2024-03-10',4,'2024-07-06 08:48:13','2024-07-06 08:48:13',NULL,'Diagonalizzabilita di matrici, autovalori e autovettori');
 /*!40000 ALTER TABLE `hour_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +72,7 @@ CREATE TABLE `subjects` (
   `deletedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `subjects` (
 
 LOCK TABLES `subjects` WRITE;
 /*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-INSERT INTO `subjects` VALUES (1,'Architettura degli elaboratori','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,'Elementi di logica e strutture discrete','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(3,'Algoritmi e strutture dati','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL);
+INSERT INTO `subjects` VALUES (1,'Architettura degli elaboratori','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(2,'Elementi di logica e strutture discrete','2024-01-08 12:36:45','2024-01-08 12:36:45',NULL),(3,'Algoritmi e strutture dati','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL),(4,'Programmazione A','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL),(5,'Programmazione B','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL),(6,'Fisica','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL),(7,'Analisi','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL),(8,'Algebra e geometria','2024-03-28 22:17:06','2024-03-28 22:17:06',NULL);
 /*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +143,7 @@ CREATE TABLE `user_subjects` (
   KEY `subject_id` (`subject_id`),
   CONSTRAINT `user_subjects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_subjects_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `user_subjects` (
 
 LOCK TABLES `user_subjects` WRITE;
 /*!40000 ALTER TABLE `user_subjects` DISABLE KEYS */;
-INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL),(2,2,3,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algoritmi e strutture dati');
+INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL),(2,2,3,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algoritmi e strutture dati'),(3,2,4,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione A'),(4,2,5,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione B'),(5,2,7,9,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Analisi'),(6,2,6,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Fisica'),(7,2,8,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algebra e geometria'),(8,2,2,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Elementi di logica e strutture discrete'),(9,2,1,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Architettura degli elaboratori');
 /*!40000 ALTER TABLE `user_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,7 +208,7 @@ CREATE TABLE `weekly_log_table` (
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `weekly_log_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,7 +217,7 @@ CREATE TABLE `weekly_log_table` (
 
 LOCK TABLES `weekly_log_table` WRITE;
 /*!40000 ALTER TABLE `weekly_log_table` DISABLE KEYS */;
-INSERT INTO `weekly_log_table` VALUES (1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL),(2,2,'2024-02-26','2024-03-03',4,7,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL);
+INSERT INTO `weekly_log_table` VALUES (1,1,'2024-01-08','2024-01-14',0,0,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL),(2,2,'2024-02-26','2024-03-03',4,7,'2024-03-28 22:18:29','2024-03-28 22:18:29',NULL),(3,2,'2024-03-11','2024-03-17',2,30,'2024-07-06 08:44:52','2024-07-06 08:44:52',NULL),(4,2,'2024-03-04','2024-03-10',16,0,'2024-07-06 08:45:12','2024-07-06 08:48:13',NULL);
 /*!40000 ALTER TABLE `weekly_log_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-28 23:19:31
+-- Dump completed on 2024-07-06 10:49:02
