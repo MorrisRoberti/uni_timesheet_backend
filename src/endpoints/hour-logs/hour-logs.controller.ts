@@ -145,7 +145,10 @@ export class HourLogsController {
       );
 
     // format the object to return
-    const convertedLogs = 0; // write the funcion and call it here
+    const convertedLogs =
+      this.hourLogsService.convertWeeklyAggregatedForSubjectToDto(
+        hoursForTheWeekForSubject,
+      );
 
     // return object
     return convertedLogs;

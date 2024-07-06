@@ -7,7 +7,7 @@ import { HourLogTable } from 'src/db/models/hour-log.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
-import { format, startOfWeek, endOfWeek } from 'date-fns';
+import { format, startOfWeek, endOfWeek, formatters } from 'date-fns';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 import { UserTable } from 'src/db/models/user.model';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
@@ -221,6 +221,83 @@ export class HourLogsService {
     }
     this.logger.log('Done!');
     return convertedHourLogsArray;
+  }
+
+  formatTimeValues(hours: number, minutes: number) {
+    // carries the minutes in hours
+
+    if (minutes >= 60) {
+      const carry_hours = parseInt((minutes / 60).toFixed(0));
+      minutes -= 60 * carry_hours;
+      hours += carry_hours;
+    }
+
+    let newHours = hours.toString();
+    let newMinutes = minutes.toString();
+
+    if (hours < 10) {
+      newHours = '0' + newHours;
+    }
+
+    if (minutes < 10) {
+      newMinutes = '0' + newMinutes;
+    }
+    return [newHours, newMinutes];
+  }
+
+  convertWeeklyAggregatedForSubjectToDto(logs: Array<any>): any {
+    this.logger.log(`Converting ${this.WEEKLY_LOG} for subject from db to dto`);
+    let logsToReturn = [];
+    let totalHours = 0;
+    let totalMinutes = 0;
+    for (let i = 0; i < logs.length; i++) {
+      const currentLog = logs[i];
+
+      currentLog.hours = parseInt(currentLog.hours);
+      currentLog.minutes = parseInt(currentLog.minutes);
+
+      [currentLog.hours, currentLog.minutes] = this.formatTimeValues(
+        currentLog.hours,
+        currentLog.minutes,
+      );
+
+      totalHours += parseInt(currentLog.hours);
+      totalMinutes += parseInt(currentLog.minutes);
+
+      const convertedLog = {
+        user_subject_id: currentLog.user_subject_id,
+        subject_name: currentLog['user_subject_table.name'],
+        time: `${currentLog.hours}:${currentLog.minutes}`,
+      };
+
+      logsToReturn.push(convertedLog);
+    }
+
+    // sorts the logs for hours and minutes in descending order
+    logsToReturn = logsToReturn.sort((a, b) => {
+      if (a.hours > b.hours) {
+        return -1;
+      } else if (b.hours > a.hours) {
+        return 1;
+      } else {
+        if (a.minutes >= b.minutes) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+    });
+
+    const [totalHoursToReturn, totalMinutesToReturn] = this.formatTimeValues(
+      totalHours,
+      totalMinutes,
+    );
+
+    this.logger.log('Done!');
+    return {
+      total_time: `${totalHoursToReturn}:${totalMinutesToReturn}`,
+      logs: logsToReturn,
+    };
   }
 
   convertWeeklyLogToDto(weeklyLog: any, hourLogs: any): any {
@@ -562,8 +639,8 @@ export class HourLogsService {
     const logs = await HourLogTable.findAll({
       attributes: [
         'user_subject_id',
-        [sequelize.fn('sum', sequelize.col('hours')), 'totalHours'],
-        [sequelize.fn('sum', sequelize.col('minutes')), 'totalMinutes'],
+        [sequelize.fn('sum', sequelize.col('hours')), 'hours'],
+        [sequelize.fn('sum', sequelize.col('minutes')), 'minutes'],
       ],
       where: {
         [Op.and]: {
