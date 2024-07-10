@@ -7,7 +7,7 @@ import { HourLogTable } from 'src/db/models/hour-log.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
-import { format, startOfWeek, endOfWeek, formatters } from 'date-fns';
+import { format, startOfWeek, endOfWeek, formatters, subWeeks } from 'date-fns';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 import { UserTable } from 'src/db/models/user.model';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
@@ -19,6 +19,53 @@ export class HourLogsService {
 
   WEEKLY_LOG = 'WeeklyLog';
   HOUR_LOG = 'HourLog';
+
+  getPreviousWeekBounds(
+    week_start: string,
+    week_end: string,
+  ): { previousWeekStart: string; previousWeekEnd: string } {
+    const previousWeekStart = format(
+      startOfWeek(subWeeks(week_start, 1), { weekStartsOn: 1 }),
+      'yyyy-MM-dd',
+    );
+    const previousWeekEnd = format(
+      endOfWeek(subWeeks(week_end, 1), { weekStartsOn: 1 }),
+      'yyyy-MM-dd',
+    );
+
+    return { previousWeekStart, previousWeekEnd };
+  }
+
+  composeCurrentLastWeekPayload(
+    weeklyLogPrevious: any,
+    weeklyLogCurrent: any,
+  ): { total_previous: string; total_current: string; greater: number } {
+    let greater = 0; // if -1 then prev > current if 0 then prev == current if 1 current > prev
+
+    let [newHours, newMinutes] = this.formatTimeValues(
+      weeklyLogCurrent.hours,
+      weeklyLogCurrent.minutes,
+    );
+    const total_current = `${newHours}:${newMinutes}`;
+
+    const tmpCurrentHours = newHours;
+    const tmpCurrentMinutes = newMinutes;
+
+    [newHours, newMinutes] = this.formatTimeValues(
+      weeklyLogPrevious.hours,
+      weeklyLogPrevious.minutes,
+    );
+    const total_previous = `${newHours}:${newMinutes}`;
+
+    if (tmpCurrentHours > newHours) {
+      greater = 1;
+    } else if (tmpCurrentHours == newHours) {
+      if (tmpCurrentMinutes > newMinutes) greater = 1;
+      else if (tmpCurrentMinutes < newMinutes) greater = -1;
+    } else greater = -1;
+
+    return { total_previous, total_current, greater };
+  }
 
   // combines the logs record with the users to have all the info in one place
   combineUserRecordsWithLogsForEmail(
@@ -227,7 +274,7 @@ export class HourLogsService {
     // carries the minutes in hours
 
     if (minutes >= 60) {
-      const carry_hours = parseInt((minutes / 60).toFixed(0));
+      const carry_hours = Math.floor(minutes / 60);
       minutes -= 60 * carry_hours;
       hours += carry_hours;
     }

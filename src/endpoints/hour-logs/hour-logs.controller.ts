@@ -19,7 +19,6 @@ import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 import { WeeklyLogTable } from 'src/db/models/weekly-log.model';
 import { Sequelize } from 'sequelize-typescript';
 import { SubjectsService } from '../subjects/subjects.service';
-import { HourLogTable } from 'src/db/models/hour-log.model';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -216,6 +215,38 @@ export class HourLogsController {
     const returnObj = { total_hours, total_minutes, hourLogsDto };
 
     return returnObj;
+  }
+
+  @Get('/weekly-hour-logs/last-week-comparison/:week_start/:week_end')
+  async getLastWeekComparison(
+    @Request() request: any,
+    @Param('week_start') week_start: string,
+    @Param('week_end') week_end: string,
+  ) {
+    // GET the current weekly log
+    const weeklyLogCurrent = await this.hourLogsService.findWeeklyLogFromWeek(
+      request.user.id,
+      week_start,
+      week_end,
+    );
+
+    const { previousWeekStart, previousWeekEnd } =
+      this.hourLogsService.getPreviousWeekBounds(week_start, week_end);
+
+    // GET the previous weekly log
+    const weeklyLogPrevious = await this.hourLogsService.findWeeklyLogFromWeek(
+      request.user.id,
+      previousWeekStart,
+      previousWeekEnd,
+    );
+
+    // compose the object to return
+    const responsePayload = this.hourLogsService.composeCurrentLastWeekPayload(
+      weeklyLogPrevious,
+      weeklyLogCurrent,
+    );
+
+    return responsePayload;
   }
 
   // PUT hour_log from id -> pay attention to update the number of hours of weekly_log (could add or subtract) it is not possible to change the date
