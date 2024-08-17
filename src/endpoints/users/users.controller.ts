@@ -47,6 +47,18 @@ export class UsersController {
     return token;
   }
 
+  @Post('/refresh')
+  async refresh(@Request() request: any) {
+    // in the authorization I will send refreshToken;
+
+    const user = await this.authService.validateRefreshToken(
+      request.headers.refreshtoken,
+    );
+    // create new accessToken and return it
+    const newAccessToken = this.authService.createAccessToken(user, user.id);
+    return { accessToken: newAccessToken };
+  }
+
   @Post('/create')
   async create(@Body() createUserDto: CreateUserDto) {
     // checks if the email already exists, if exists calls login, if not it goes on
@@ -106,5 +118,24 @@ export class UsersController {
 
     await transaction.commit();
     return HttpStatus.OK;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/get-user-config')
+  async getUserConfig(@Request() request: any) {
+    // find the user information
+    const user = await this.userService.findOneById(request.user.id);
+
+    // find the user config information
+    const user_config = await this.userService.findActiveUserConfig(user.id);
+
+    // composing the DTO
+    const returnPayload = this.userService.converUserConfigInfo(
+      user,
+      user_config,
+    );
+
+    // return the payload
+    return returnPayload;
   }
 }

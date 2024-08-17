@@ -201,7 +201,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"hours\": 7,\r\n    \"minutes\": 10,\r\n    \"date\": \"2024-03-01\",\r\n    \"user_subject_id\": 2,\r\n    \"description\": \"Fatto esercizi sulla complessita' computazionale\"\r\n}",
+					"raw": "{\r\n    \"hours\": 3,\r\n    \"minutes\": 20,\r\n    \"date\": \"2024-03-10\",\r\n    \"user_subject_id\": 4,\r\n    \"description\": \"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -308,7 +308,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{HOST}}:3000/hour-logs/a",
+					"raw": "http://{{HOST}}:3000/hour-logs/1",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -316,7 +316,7 @@
 					"port": "3000",
 					"path": [
 						"hour-logs",
-						"a"
+						"1"
 					]
 				}
 			},
@@ -425,6 +425,72 @@
 					"path": [
 						"users",
 						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Weekly Log GET weekly aggregated for subject",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/top-subjects/2024-03-04/2024-03-10",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"weekly-hour-logs",
+						"top-subjects",
+						"2024-03-04",
+						"2024-03-10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Weekly Log GET last week comparison",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/last-week-comparison/2024-03-11/2024-03-17",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"weekly-hour-logs",
+						"last-week-comparison",
+						"2024-03-11",
+						"2024-03-17"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Config Information",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/users/get-user-config",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"get-user-config"
 					]
 				}
 			},

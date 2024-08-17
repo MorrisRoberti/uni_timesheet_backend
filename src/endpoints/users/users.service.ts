@@ -62,6 +62,21 @@ export class UsersService {
     return dbUserConfig;
   }
 
+  converUserConfigInfo(user: UserTable, user_config: UserConfigTable) {
+    this.logger.log(
+      `Converting GET ${this.USER} and ${this.USER_CONFIG} to get the userConfigInfo`,
+    );
+    const userConfigInfo = {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      faculty: user_config.faculty,
+      notifications: user_config.notifications,
+      picture: null,
+    };
+    this.logger.log('Done!');
+    return userConfigInfo;
+  }
   // db functions
 
   async findOneByEmail(email: string): Promise<UserTable> {
@@ -77,6 +92,19 @@ export class UsersService {
     throw new NotFoundException(this.USER, 'findOneByEmail(email)', [email]);
   }
 
+  async findOneById(id: number): Promise<UserTable> {
+    this.logger.log(`GET ${this.USER} from id`);
+    // executes a sql query to check if a user with the selected email exists
+    const user = await UserTable.findOne({ where: { id } });
+
+    if (user && user !== null) {
+      this.logger.log('Done!');
+      return user.dataValues;
+    }
+
+    throw new NotFoundException(this.USER, 'findOneById(id)', [`${id}`]);
+  }
+
   async isUserAlreadyPresent(email: string): Promise<boolean> {
     this.logger.log(`GET ${this.USER} to chek if is present`);
     // executes a sql query to check if a user with the selected email exists
@@ -90,7 +118,7 @@ export class UsersService {
     return false;
   }
 
-  async findActiveUserConfig(user_id: number) {
+  async findActiveUserConfig(user_id: number): Promise<UserConfigTable> {
     this.logger.log(`GET ${this.USER_CONFIG} from user_id`);
 
     const userConfig = await UserConfigTable.findOne({

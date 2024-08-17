@@ -268,7 +268,7 @@ export class HourLogsController {
       hourLogFromDb.weekly_log_id,
     );
 
-    let weeklyLogConversionPromise;
+    let weeklyLogConversionPromise: Promise<WeeklyLogTable>;
     // if the new hours are more then add to the weekly, if less remove
     if (
       parseFloat(updateHourLogDto.minutes.toFixed(2)) + updateHourLogDto.hours >
