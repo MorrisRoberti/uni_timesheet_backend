@@ -101,6 +101,7 @@ CREATE TABLE `user_config` (
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL,
   `notifications` tinyint(4) NOT NULL,
+  `picture` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
@@ -114,7 +115,7 @@ CREATE TABLE `user_config` (
 
 LOCK TABLES `user_config` WRITE;
 /*!40000 ALTER TABLE `user_config` DISABLE KEYS */;
-INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL,0),(2,2,'nuova facolta',1,'2024-02-29 13:35:22','2024-03-28 22:11:15',NULL,1);
+INSERT INTO `user_config` VALUES (1,1,'Informatica',1,'2024-01-08 12:36:45','2024-01-08 12:36:45',NULL,0,NULL),(2,2,'nuova facolta',1,'2024-02-29 13:35:22','2024-03-28 22:11:15',NULL,0,'C:\\workspace_personale\\react_test\\src\\assets\\akira profile image placeholder.jpg');
 /*!40000 ALTER TABLE `user_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-06 10:49:02
+-- Dump completed on 2024-08-17 16:32:04

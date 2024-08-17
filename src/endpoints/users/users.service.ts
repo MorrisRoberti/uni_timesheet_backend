@@ -7,6 +7,8 @@ import { UserConfigTable } from 'src/db/models/user-config.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
+import { join } from 'path';
+import { read, readFileSync } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -66,17 +68,47 @@ export class UsersService {
     this.logger.log(
       `Converting GET ${this.USER} and ${this.USER_CONFIG} to get the userConfigInfo`,
     );
+
+    const base64Picture = this.convertPictureToBase64(user_config.picture);
+
     const userConfigInfo = {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
       faculty: user_config.faculty,
       notifications: user_config.notifications,
-      picture: null,
+      picture: base64Picture, // could be a string or null
     };
+
     this.logger.log('Done!');
     return userConfigInfo;
   }
+
+  convertPictureToBase64(imagePath: string): string | null {
+    this.logger.log(`Converting picture at ${imagePath} to base64 string`);
+    let base64Image = null;
+
+    const filePath = join(
+      `${__dirname}`,
+      '..',
+      '..',
+      '..',
+      'public',
+      imagePath,
+    );
+
+    try {
+      const imageFile = readFileSync(filePath);
+
+      // Convert the image file to Base64
+      base64Image = imageFile.toString('base64');
+    } catch (e) {
+      this.logger.error(`Error finding the image at address ${imagePath}`);
+    } finally {
+      return base64Image;
+    }
+  }
+
   // db functions
 
   async findOneByEmail(email: string): Promise<UserTable> {
