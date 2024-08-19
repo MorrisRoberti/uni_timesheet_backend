@@ -30,4 +30,8 @@ export class CreateUserDto extends LoginUserDto {
   @IsOptional()
   @IsBoolean()
   notifications: boolean;
+
+  @IsOptional()
+  @IsString()
+  picture: string;
 }

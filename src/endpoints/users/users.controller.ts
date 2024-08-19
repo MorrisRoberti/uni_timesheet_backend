@@ -107,9 +107,18 @@ export class UsersController {
     const convertedUserConfig =
       this.userService.convertUpdateUserConfig(updateUserDto);
 
+    const convertedUser = this.userService.convertUpdateUser(updateUserDto);
+
     const transaction = await this.sequelize.transaction();
 
-    // updates the record on db
+    // updates the user record on db
+    await this.userService.updateUserOnDb(
+      convertedUser,
+      request.user.id,
+      transaction,
+    );
+
+    // updates the user_config record on db
     await this.userService.updateUserConfigOnDb(
       convertedUserConfig,
       userConfig.id,

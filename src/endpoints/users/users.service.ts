@@ -64,6 +64,16 @@ export class UsersService {
     return dbUserConfig;
   }
 
+  convertUpdateUser(userToConvert: UpdateUserDto) {
+    this.logger.log(`Converting UPDATE ${this.USER} for update`);
+    const dbUser = {
+      first_name: userToConvert.first_name,
+      last_name: userToConvert.last_name,
+    };
+    this.logger.log('Done!');
+    return dbUser;
+  }
+
   converUserConfigInfo(user: UserTable, user_config: UserConfigTable) {
     this.logger.log(
       `Converting GET ${this.USER} and ${this.USER_CONFIG} to get the userConfigInfo`,
@@ -189,6 +199,25 @@ export class UsersService {
       this.USER_CONFIG,
       'updateUserConfigOnDb(userConfig, user_config_id)',
       [userConfig, user_config_id],
+    );
+  }
+
+  async updateUserOnDb(user: any, id: number, transaction: any) {
+    this.logger.log(`Updating ${this.USER} record on db`);
+    const userUpdated = await UserTable.update(user, {
+      where: { id },
+      transaction,
+    });
+
+    if (userUpdated && userUpdated !== null) {
+      this.logger.log('Done!');
+      return userUpdated;
+    }
+
+    throw new UpdateFailedException(
+      this.USER_CONFIG,
+      'updateUserOnDb(user, id)',
+      [user, id],
     );
   }
 
