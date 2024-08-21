@@ -67,7 +67,7 @@ import { FileHandlerModule } from './file_handler/file.handler.module';
         },
       },
     }),
-    FileHandlerModule,
+    // FileHandlerModule,
     UsersModule,
     SubjectsModule,
     HourLogsModule,

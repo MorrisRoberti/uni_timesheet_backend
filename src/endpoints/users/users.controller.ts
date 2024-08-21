@@ -24,7 +24,6 @@ import { EmailService } from 'src/email/email.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseFilters(DBExceptionFilter)
-@UseInterceptors(FileInterceptor('file'))
 @Controller('users')
 export class UsersController {
   constructor(
