@@ -60,6 +60,9 @@ export class UsersService {
       faculty: userConfigToConvert.faculty,
       notifications: userConfigToConvert.notifications,
     };
+
+    // I need to save the image in the server storage and save the name of the file in the picture field of dbUserConfig
+
     this.logger.log('Done!');
     return dbUserConfig;
   }
