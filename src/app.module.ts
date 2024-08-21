@@ -20,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { FileHandlerModule } from './file_handler/file.handler.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { join } from 'path';
         },
       },
     }),
+    FileHandlerModule,
     UsersModule,
     SubjectsModule,
     HourLogsModule,

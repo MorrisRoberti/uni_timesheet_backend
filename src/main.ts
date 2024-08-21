@@ -6,6 +6,7 @@ import { format, transports } from 'winston';
 import 'winston-daily-rotate-file';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -45,7 +46,8 @@ async function bootstrap() {
   });
 
   app.enableCors();
-
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   app.useGlobalPipes(new ValidationPipe());
 
   // serve per i custom validator

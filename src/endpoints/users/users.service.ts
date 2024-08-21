@@ -7,8 +7,9 @@ import { UserConfigTable } from 'src/db/models/user-config.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
-import { join } from 'path';
-import { read, readFileSync } from 'fs';
+import path, { join } from 'path';
+import fs from 'fs';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -56,13 +57,47 @@ export class UsersService {
 
   convertUpdateUserConfig(userConfigToConvert: UpdateUserDto) {
     this.logger.log(`Converting UPDATE ${this.USER_CONFIG} for update`);
+    // I need to save the image in the server storage and save the name of the file in the picture field of dbUserConfig
+    let fileName = null;
+    if (userConfigToConvert.picture) {
+      // Remove the data URL prefix if it exists
+      const base64Data = userConfigToConvert.picture.replace(
+        /^data:image\/\w+;base64,/,
+        '',
+      );
+
+      const invalidChars = /[<>:"/\\|?*]/g; // Add any other invalid characters as needed
+
+      const saltRounds = 10;
+
+      fileName = bcrypt
+        .hashSync(new Date().toISOString(), saltRounds)
+        .replaceAll(invalidChars, '_')
+        .concat('.png');
+
+      // Specify the path where you want to save the image
+      const filePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'public',
+        fileName,
+      );
+
+      // Write the Base64 data to a file
+      try {
+        fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
+      } catch (err) {
+        console.error(`Error in the writing of file: ${err}`);
+      }
+    }
+
     const dbUserConfig = {
       faculty: userConfigToConvert.faculty,
       notifications: userConfigToConvert.notifications,
+      picture: fileName,
     };
-
-    // I need to save the image in the server storage and save the name of the file in the picture field of dbUserConfig
-
     this.logger.log('Done!');
     return dbUserConfig;
   }

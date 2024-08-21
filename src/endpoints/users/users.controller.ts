@@ -9,6 +9,8 @@ import {
   Put,
   Request,
   UseFilters,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,8 +21,10 @@ import { UsersService } from './users.service';
 import { Sequelize } from 'sequelize-typescript';
 import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 import { EmailService } from 'src/email/email.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseFilters(DBExceptionFilter)
+@UseInterceptors(FileInterceptor('file'))
 @Controller('users')
 export class UsersController {
   constructor(
