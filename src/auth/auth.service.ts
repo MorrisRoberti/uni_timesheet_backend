@@ -102,7 +102,7 @@ export class AuthService {
   createAccessToken(user: LoginUserDto, id: number): string {
     const accessTokenPayload = { id, username: user.email, sub: user.password };
     const accessToken = this.jwtService.sign(accessTokenPayload, {
-      expiresIn: '2m',
+      expiresIn: '30m',
     });
     return accessToken;
   }
