@@ -7,7 +7,15 @@ import { HourLogTable } from 'src/db/models/hour-log.model';
 import { NotFoundException } from 'src/error_handling/models/not-found.exception.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
-import { format, startOfWeek, endOfWeek, formatters, subWeeks } from 'date-fns';
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  formatters,
+  subWeeks,
+  startOfMonth,
+  endOfMonth,
+} from 'date-fns';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 import { UserTable } from 'src/db/models/user.model';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
@@ -695,7 +703,9 @@ export class HourLogsService {
           user_id,
         },
       },
-      include: [{ model: UserSubjectTable, attributes: ['name'] }],
+      include: [
+        { model: UserSubjectTable, attributes: ['name'], where: { active: 1 } },
+      ],
       group: ['user_subject_id'],
       order: [
         ['hours', 'DESC'],
@@ -712,6 +722,40 @@ export class HourLogsService {
       `${this.HOUR_LOG}`,
       'findHoursForTheWeekForSubject(user_id, week_start, week_end)',
       [`${user_id}`, week_start, week_end],
+    );
+  }
+
+  async findMonthlyLogsForActiveSubject(user_id: number, month: number) {
+    this.logger.log(
+      `GET ${this.HOUR_LOG} aggregated for user_subject for user ${user_id} for the month ${month} for active user subjects`,
+    );
+
+    const currentYear = new Date().getFullYear();
+    const firstOfMonth = startOfMonth(new Date(currentYear, month, 1));
+    const lastOfMonth = endOfMonth(new Date(currentYear, month, 1));
+
+    const logs = await HourLogTable.findAll({
+      attributes: ['user_subject_id', 'weekly_log_id', 'hours', 'minutes'],
+      where: {
+        [Op.and]: {
+          date: { [Op.between]: [firstOfMonth, lastOfMonth] },
+          user_id,
+        },
+      },
+      include: [
+        { model: UserSubjectTable, attributes: ['name'], where: { active: 1 } },
+      ],
+      raw: true,
+    });
+
+    if (logs && logs !== null) {
+      this.logger.log('Done!');
+      return logs;
+    }
+    throw new NotFoundException(
+      `${this.HOUR_LOG}`,
+      'findMonthlyLogsForActiveSubject(user_id, month)',
+      [`${user_id}`, `${month}`],
     );
   }
 }

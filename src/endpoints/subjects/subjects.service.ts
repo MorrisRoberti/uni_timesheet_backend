@@ -105,7 +105,7 @@ export class SubjectsService {
   async findAllUserSubjectsOfUser(user_id: number) {
     this.logger.log(`GET All ${this.USER_SUBJECT} of User`);
     const userSubjects = await UserSubjectTable.findAndCountAll({
-      where: { user_id },
+      where: { user_id, active: 1 },
       paranoid: true,
     });
 

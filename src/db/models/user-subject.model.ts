@@ -72,6 +72,12 @@ export class UserSubjectTable extends Model {
   })
   aa_right: string;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+  })
+  active: boolean;
+
   // Associations
 
   @BelongsTo(() => UserTable)

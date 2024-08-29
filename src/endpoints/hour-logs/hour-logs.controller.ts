@@ -98,6 +98,20 @@ export class HourLogsController {
     return HttpStatus.CREATED;
   }
 
+  // It takes the hours of the active user_subjects for each week of the month and groups it by week
+  @Get('/weekly-hour-logs/in-month/:month')
+  async getWeeklyHourLogsForTheMonth(
+    @Request() request: any,
+    @Param('month') month: number,
+  ) {
+    // GET all the logs from the selected month of the active subjects
+    const monthLogs =
+      await this.hourLogsService.findMonthlyLogsForActiveSubject(
+        request.user.id,
+        month,
+      );
+  }
+
   // GET week hours (from week) -> returns all the hour_logs for the week and the total
   @Get('/weekly-hour-logs/:week_start/:week_end')
   async getWeeklyHourLogs(
