@@ -110,6 +110,15 @@ export class HourLogsController {
         request.user.id,
         month,
       );
+
+    // I need to group the logs from their weekly_log_id (I also need a way to order them) and then aggregate them by subject
+    const aggregatedHoursByWeek =
+      this.hourLogsService.aggregateHoursByWeekOfMonth(monthLogs);
+
+    const groupAggregatedHoursBySubject =
+      this.hourLogsService.aggregateWeeklyHoursBySubject(aggregatedHoursByWeek);
+
+    return groupAggregatedHoursBySubject;
   }
 
   // GET week hours (from week) -> returns all the hour_logs for the week and the total

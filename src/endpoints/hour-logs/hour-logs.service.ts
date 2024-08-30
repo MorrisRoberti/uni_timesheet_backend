@@ -369,6 +369,73 @@ export class HourLogsService {
     return convertedWeeklyLog;
   }
 
+  aggregateHoursByWeekOfMonth(monthLogs: Array<any>) {
+    this.logger.log(`Aggregating ${this.HOUR_LOG} of the month for week`);
+    const logsAggregatedForWeek = [];
+    const idsOfWeeks = [];
+    for (let i = 0; i < monthLogs.length; i++) {
+      if (!idsOfWeeks.includes(monthLogs[i].weekly_log_id)) {
+        idsOfWeeks.push(monthLogs[i].weekly_log_id);
+      }
+    }
+
+    for (let i = 0; i < idsOfWeeks.length; i++) {
+      const weekLogs = monthLogs.filter((log) => {
+        if (log.weekly_log_id == idsOfWeeks[i]) {
+          return log;
+        }
+      });
+      logsAggregatedForWeek.push(weekLogs);
+    }
+    this.logger.log('Done!');
+    return logsAggregatedForWeek;
+  }
+
+  aggregateWeeklyHoursBySubject(aggregatedWeeklyLog: Array<any>) {
+    this.logger.log(`Aggragating ${this.WEEKLY_LOG} of the month for subject`);
+    const logsAggregatedForSubject = [];
+    const subjects = [];
+
+    for (let i = 0; i < aggregatedWeeklyLog.length; i++) {
+      for (let j = 0; j < aggregatedWeeklyLog[i].length; j++) {
+        if (!subjects.includes(aggregatedWeeklyLog[i][j].user_subject_id)) {
+          subjects.push(aggregatedWeeklyLog[i][j].user_subject_id);
+        }
+      }
+    }
+
+    for (let j = 0; j < aggregatedWeeklyLog.length; j++) {
+      let weekLog = { name: `week ${j + 1}` };
+      for (let i = 0; i < subjects.length; i++) {
+        // in logs I put all the logs of the week with the same subject
+        const logs = aggregatedWeeklyLog[j].filter((log) => {
+          if (log.user_subject_id == subjects[i]) {
+            return log;
+          }
+        });
+
+        // i make the sum of the hour logs
+        if (logs && logs.length > 0) {
+          // sum the hours of all the logs of that subject for that week
+          let { total_hours, total_minutes } =
+            this.sumTotalHoursOfHourLogsArray(logs);
+
+          // I give a ~30% margin to consider another hour
+          if (total_minutes >= 45) total_hours++;
+
+          const field = { [logs[0]['user_subject_table.name']]: total_hours };
+
+          Object.assign(weekLog, field);
+        }
+      }
+
+      logsAggregatedForSubject.push(weekLog);
+    }
+
+    this.logger.log('Done!');
+    return logsAggregatedForSubject;
+  }
+
   // db functions
   async isWeeklyLogPresent(user_id: number, date: string): Promise<boolean> {
     this.logger.log(`Check if ${this.WEEKLY_LOG} is present`);
@@ -745,6 +812,7 @@ export class HourLogsService {
       include: [
         { model: UserSubjectTable, attributes: ['name'], where: { active: 1 } },
       ],
+      order: [['date', 'ASC']],
       raw: true,
     });
 
