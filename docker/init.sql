@@ -138,6 +138,7 @@ CREATE TABLE `user_subjects` (
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `active` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`),
@@ -153,7 +154,7 @@ CREATE TABLE `user_subjects` (
 
 LOCK TABLES `user_subjects` WRITE;
 /*!40000 ALTER TABLE `user_subjects` DISABLE KEYS */;
-INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL),(2,2,3,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algoritmi e strutture dati'),(3,2,4,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione A'),(4,2,5,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione B'),(5,2,7,9,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Analisi'),(6,2,6,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Fisica'),(7,2,8,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algebra e geometria'),(8,2,2,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Elementi di logica e strutture discrete'),(9,2,1,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Architettura degli elaboratori');
+INSERT INTO `user_subjects` VALUES (1,1,1,6,1,2023,2024,'2024-08-01 10:10:10','2024-08-01 10:10:10',NULL,NULL,0),(2,2,3,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algoritmi e strutture dati',0),(3,2,4,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione A',1),(4,2,5,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Programmazione B',1),(5,2,7,9,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Analisi',0),(6,2,6,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Fisica',1),(7,2,8,9,2,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Algebra e geometria',0),(8,2,2,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Elementi di logica e strutture discrete',1),(9,2,1,6,1,2023,2024,'2024-03-28 22:17:06','2024-03-28 22:17:06',NULL,'Architettura degli elaboratori',0);
 /*!40000 ALTER TABLE `user_subjects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,4 +236,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-17 16:32:04
+-- Dump completed on 2024-08-31 21:42:27
