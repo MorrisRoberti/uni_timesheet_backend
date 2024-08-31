@@ -495,6 +495,48 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Hour Logs of the month",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/hour-logs/weekly-hour-logs/in-month/2",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"hour-logs",
+						"weekly-hour-logs",
+						"in-month",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subject Get All active",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/active",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						"active"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

@@ -25,7 +25,6 @@ import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 export class SubjectsController {
   constructor(
     private readonly subjectsService: SubjectsService,
-    private logger: Logger,
     private sequelize: Sequelize,
   ) {}
 
@@ -34,6 +33,20 @@ export class SubjectsController {
     const userSubjects = await this.subjectsService.findAllUserSubjectsOfUser(
       request.user.id,
     );
+
+    // I convert the objects back to the Dto format to hide sensible data
+    const userSubjectsConverted =
+      this.subjectsService.convertArrayOfUserSubjectsToDto(userSubjects);
+
+    return userSubjectsConverted;
+  }
+
+  @Get('/active')
+  async findAllActive(@Request() request: any) {
+    const userSubjects =
+      await this.subjectsService.findAllActiveUserSubjectsOfUser(
+        request.user.id,
+      );
 
     // I convert the objects back to the Dto format to hide sensible data
     const userSubjectsConverted =

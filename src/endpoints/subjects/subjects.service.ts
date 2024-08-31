@@ -56,6 +56,7 @@ export class SubjectsService {
       const userSubjectDto = {
         id: userSubjectDB.id,
         name: userSubjectDB.name,
+        active: userSubjectDB.active,
         cfu: userSubjectDB.cfu,
         semester: userSubjectDB.semester,
         aa_left: userSubjectDB.aa_left,
@@ -102,10 +103,30 @@ export class SubjectsService {
     return false;
   }
 
+  async findAllActiveUserSubjectsOfUser(user_id: number) {
+    this.logger.log(`GET All active ${this.USER_SUBJECT} of User`);
+    const userSubjects = await UserSubjectTable.findAndCountAll({
+      where: { user_id, active: 1 },
+      paranoid: true,
+    });
+
+    if (userSubjects && userSubjects !== null) {
+      this.logger.log('Done!');
+      return userSubjects.rows;
+    }
+
+    // the error could be logged in the custom exception filter
+    throw new NotFoundException(
+      this.USER_SUBJECT,
+      'findAllActiveUserSubjectsOfUser(user_id)',
+      [`${user_id}`],
+    );
+  }
+
   async findAllUserSubjectsOfUser(user_id: number) {
     this.logger.log(`GET All ${this.USER_SUBJECT} of User`);
     const userSubjects = await UserSubjectTable.findAndCountAll({
-      where: { user_id, active: 1 },
+      where: { user_id },
       paranoid: true,
     });
 
