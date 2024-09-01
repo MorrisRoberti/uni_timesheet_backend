@@ -40,6 +40,7 @@ export class SubjectsService {
       aa_left: createdSubjectDto.aa_left,
       aa_right: createdSubjectDto.aa_right,
       semester: createdSubjectDto.semester,
+      active: false,
     };
     this.logger.log('Done!');
     return dbSubject;
