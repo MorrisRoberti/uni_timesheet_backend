@@ -537,6 +537,35 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Update User Subjects Active",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": 3,\r\n        \"name\": \"Programmazione A\",\r\n        \"active\": false,\r\n        \"cfu\": 6,\r\n        \"semester\": 1,\r\n        \"aa_left\": 2023,\r\n        \"aa_right\": 2024\r\n    },\r\n    {\r\n        \"id\": 4,\r\n        \"name\": \"Programmazione B\",\r\n        \"active\": false,\r\n        \"cfu\": 9,\r\n        \"semester\": 2,\r\n        \"aa_left\": 2023,\r\n        \"aa_right\": 2024\r\n    },\r\n    {\r\n        \"id\": 6,\r\n        \"name\": \"Fisica\",\r\n        \"active\": false,\r\n        \"cfu\": 9,\r\n        \"semester\": 2,\r\n        \"aa_left\": 2023,\r\n        \"aa_right\": 2024\r\n    },\r\n    {\r\n        \"id\": 8,\r\n        \"name\": \"Elementi di logica e strutture discrete\",\r\n        \"active\": false,\r\n        \"cfu\": 6,\r\n        \"semester\": 1,\r\n        \"aa_left\": 2023,\r\n        \"aa_right\": 2024\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/subjects/update-active-subjects",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"subjects",
+						"update-active-subjects"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

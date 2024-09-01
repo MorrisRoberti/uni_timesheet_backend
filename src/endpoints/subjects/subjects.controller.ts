@@ -157,6 +157,26 @@ export class SubjectsController {
     return HttpStatus.OK;
   }
 
+  @Put('/update-active-subjects')
+  async updateActiveUserSubjects(
+    @Request() request: any,
+    @Body() body: Array<any>,
+  ) {
+    // I start a new transaction and do an update on multiple user_subjects based on the user_subjects_id
+    const updateObjects =
+      this.subjectsService.buildSubjectActiveUpdateObjects(body);
+    const transaction = await this.sequelize.transaction();
+
+    await this.subjectsService.updateActiveUserSubjectsOnDb(
+      updateObjects,
+      transaction,
+    );
+
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
+
   @Put('/:id')
   async update(
     @Request() request: any,

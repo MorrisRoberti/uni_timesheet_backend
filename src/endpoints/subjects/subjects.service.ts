@@ -45,6 +45,22 @@ export class SubjectsService {
     return dbSubject;
   }
 
+  buildSubjectActiveUpdateObjects(
+    subjects: Array<any>,
+  ): Array<{ id: number; active: boolean }> {
+    this.logger.log(
+      `Building the array of subjects that I will use to update active field on db`,
+    );
+    const updateSubjects = [];
+    subjects.forEach((subject) => {
+      const updateSubject = { id: subject.id, active: subject.active };
+      updateSubjects.push(updateSubject);
+    });
+
+    this.logger.log('Done!');
+    return updateSubjects;
+  }
+
   convertArrayOfUserSubjectsToDto(userSubjects: Array<UserSubjectTable>) {
     this.logger.log(
       `Converting ${this.USER_SUBJECT} array from db to array of dto`,
@@ -241,8 +257,40 @@ export class SubjectsService {
     }
     throw new UpdateFailedException(
       this.USER_SUBJECT,
-      'updateUserSubject(user_id)',
+      'updateUserSubject(userSubject)',
       [`${userSubject}`],
+    );
+  }
+
+  async updateActiveUserSubjectsOnDb(
+    userSubjects: Array<{ id: number; active: boolean }>,
+    transaction: any,
+  ) {
+    this.logger.log(
+      `Update the active field of ${this.USER_SUBJECT}s record on db`,
+    );
+
+    const results = [];
+
+    for (let i = 0; i < userSubjects.length; i++) {
+      const updatedUserSubject = await UserSubjectTable.update(
+        userSubjects[i],
+        {
+          where: { id: userSubjects[i].id },
+          paranoid: false,
+          transaction,
+        },
+      );
+      results.push(updatedUserSubject);
+    }
+    if (results && results !== null) {
+      this.logger.log('Done!');
+      return results;
+    }
+    throw new UpdateFailedException(
+      this.USER_SUBJECT,
+      'updateActiveUserSubjectsOnDb(userSubjects)',
+      [`${userSubjects}`],
     );
   }
 
