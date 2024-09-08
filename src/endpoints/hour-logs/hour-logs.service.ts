@@ -254,6 +254,7 @@ export class HourLogsService {
     const hourLogDto = {
       id: hourLog.id,
       user_subject_id: hourLog.user_subject_id,
+      subject: hourLog['user_subject_table'].name,
       hours: hourLog.hours,
       minutes: hourLog.minutes,
       date: hourLog.date,
@@ -485,7 +486,10 @@ export class HourLogsService {
     date: string,
   ): Promise<Array<HourLogTable>> {
     this.logger.log(`GET all ${this.HOUR_LOG} of user from day`);
-    const hourLogs = await HourLogTable.findAll({ where: { user_id, date } });
+    const hourLogs = await HourLogTable.findAll({
+      where: { user_id, date },
+      include: [{ model: UserSubjectTable, attributes: ['name'] }],
+    });
 
     if (hourLogs && hourLogs !== null) {
       this.logger.log('Done!');
