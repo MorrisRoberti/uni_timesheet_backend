@@ -467,6 +467,7 @@ export class HourLogsService {
     this.logger.log(`GET ${this.WEEKLY_LOG} of user from week number`);
     const weeklyLog = await WeeklyLogTable.findOne({
       where: { user_id, week_start, week_end },
+      paranoid: true,
     });
 
     if (weeklyLog && weeklyLog !== null) {
@@ -610,6 +611,24 @@ export class HourLogsService {
       this.WEEKLY_LOG,
       'findHourLogsOfWeekForSubject(user_id, weekly_log_id, user_subject_id)',
       [`${user_id}`, `${weekly_log_id}`, `${user_subject_id}`],
+    );
+  }
+
+  async findHourLogsForUserSubject(user_subject_id: number) {
+    this.logger.log(`GET all ${this.HOUR_LOG} of specified user_subject_id`);
+    const hourLogs = await HourLogTable.findAndCountAll({
+      where: { user_subject_id },
+    });
+
+    if (hourLogs && hourLogs !== null) {
+      this.logger.log('Done!');
+      return hourLogs;
+    }
+
+    throw new NotFoundException(
+      this.HOUR_LOG,
+      'findHourLogsForUserSubject(user_subject_id)',
+      [`${user_subject_id}`],
     );
   }
 
@@ -768,6 +787,7 @@ export class HourLogsService {
         [sequelize.fn('sum', sequelize.col('hours')), 'hours'],
         [sequelize.fn('sum', sequelize.col('minutes')), 'minutes'],
       ],
+      paranoid: true,
       where: {
         [Op.and]: {
           date: { [Op.between]: [week_start, week_end] },

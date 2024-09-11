@@ -11,6 +11,8 @@ import {
   HttpStatus,
   Put,
   UseFilters,
+  HttpException,
+  Res,
 } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
@@ -18,6 +20,7 @@ import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Sequelize } from 'sequelize-typescript';
 import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
+import { HourLogsService } from '../hour-logs/hour-logs.service';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -25,6 +28,7 @@ import { DBExceptionFilter } from 'src/error_handling/db.exception.filter';
 export class SubjectsController {
   constructor(
     private readonly subjectsService: SubjectsService,
+    private readonly hourLogsService: HourLogsService,
     private sequelize: Sequelize,
   ) {}
 
@@ -140,12 +144,23 @@ export class SubjectsController {
   }
 
   @Delete('/:id')
-  async delete(@Request() request: any, @Param('id') id: number) {
+  async delete(
+    @Request() request: any,
+    @Param('id') id: number,
+    @Res() response: any,
+  ) {
     // look for the user_subject
     const userSubject = await this.subjectsService.findOneUserSubject(
       request.user.id,
       id,
     );
+
+    const userSubjectLogs =
+      await this.hourLogsService.findHourLogsForUserSubject(userSubject.id);
+
+    if (userSubjectLogs.count > 0) {
+      return response.status(HttpStatus.CONFLICT).json();
+    }
 
     const transaction = await this.sequelize.transaction();
 
