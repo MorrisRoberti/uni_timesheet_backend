@@ -55,7 +55,7 @@ export class UserExamsTable extends Model {
     type: DataType.STRING,
     allowNull: true,
   })
-  subject_name: string;
+  user_subject_name: string;
 
   @Column({
     type: DataType.INTEGER,
