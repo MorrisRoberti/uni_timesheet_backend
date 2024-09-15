@@ -10,6 +10,7 @@ import { NotFoundException } from 'src/error_handling/models/not-found.exception
 import path, { join } from 'path';
 import fs from 'fs';
 import { readFileSync } from 'fs';
+import { UserCarreerTable } from 'src/db/models/user-carreer.model';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,19 @@ export class UsersService {
 
   USER = 'User';
   USER_CONFIG = 'UserConfig';
+  USER_CARREER = 'User Carreer';
+
+  createNewUserCarreer(user_id: number) {
+    this.logger.log(`Creating new ${this.USER_CARREER}`);
+    const userCarreer = {
+      user_id,
+      total_cfu: 0,
+      average_grade: 0,
+      average_graduation_grade: 0,
+    };
+    this.logger.log('Done!');
+    return userCarreer;
+  }
 
   extractUsersIdsFromUsersConfig(users: Array<UserTable>): Array<number> {
     this.logger.log(`Extracting ${this.USER} ids`);
@@ -287,6 +301,23 @@ export class UsersService {
       this.USER_CONFIG,
       'createUserConfigOnDb(user)',
       [user],
+    );
+  }
+
+  async createUserCarreerOnDb(user_carreer: any, transaction: any) {
+    this.logger.log(`Creating ${this.USER_CONFIG} record on db`);
+    const userCarreerCreated = await UserCarreerTable.create(user_carreer, {
+      transaction,
+    });
+    if (userCarreerCreated && userCarreerCreated !== null) {
+      this.logger.log('Done!');
+      return userCarreerCreated;
+    }
+
+    throw new InsertionFailedException(
+      this.USER_CARREER,
+      'createUserCarreerOnDb(user_carreer)',
+      [user_carreer],
     );
   }
 

@@ -78,6 +78,12 @@ export class UsersController {
       transaction,
     );
 
+    // creates a standard user_carreer object to associate to the new user
+    const userCarreer = this.userService.createNewUserCarreer(user.id);
+
+    // insert the newly created user_carrer in the db
+    await this.userService.createUserCarreerOnDb(userCarreer, transaction);
+
     // converts the dto in the db user config object
     const convertedUserConfig = this.userService.convertNewUserConfig(
       createUserDto,

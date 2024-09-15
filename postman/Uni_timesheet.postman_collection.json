@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"first_name\": \"morris\",\r\n    \"last_name\": \"roberti\",\r\n    \"email\": \"test@email4.com\",\r\n    \"password\": \"admin\",\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\"\r\n}",
+					"raw": "{\r\n    \"first_name\": \"fff\",\r\n    \"last_name\": \"fff\",\r\n    \"email\": \"test@adfasdf.com\",\r\n    \"password\": \"aaaa\",\r\n    \"notifications\": false,\r\n    \"active\": 1,\r\n    \"faculty\": \"Informatica\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
