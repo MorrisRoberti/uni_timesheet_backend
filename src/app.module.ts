@@ -21,6 +21,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { FileHandlerModule } from './file_handler/file.handler.module';
+import { UserCarreerTable } from './db/models/user-carreer.model';
+import { UserExamsTable } from './db/models/user-exams.model';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { FileHandlerModule } from './file_handler/file.handler.module';
         SubjectTable,
         HourLogTable,
         WeeklyLogTable,
+        UserCarreerTable,
+        UserExamsTable,
       ],
     }),
     MailerModule.forRoot({

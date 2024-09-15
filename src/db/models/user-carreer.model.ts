@@ -8,17 +8,15 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { UserTable } from './user.model';
-import { SubjectTable } from './subject.model';
-import { HourLogTable } from './hour-log.model';
 import { UserExamsTable } from './user-exams.model';
 
 @Table({
-  tableName: 'user_subjects',
-  modelName: 'UserSubjectTable',
+  tableName: 'user_carreer',
+  modelName: 'UserCarreerTable',
   freezeTableName: true,
   paranoid: true,
 })
-export class UserSubjectTable extends Model {
+export class UserCarreerTable extends Model {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -35,59 +33,28 @@ export class UserSubjectTable extends Model {
   })
   user_id: number;
 
-  @ForeignKey(() => SubjectTable)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  subject_id: number;
+  total_cfu: number;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
     allowNull: false,
   })
-  cfu: number;
+  average_grade: number;
 
   @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-  })
-  semester: number;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  name: string;
-
-  @Column({
-    type: 'YEAR',
+    type: DataType.FLOAT,
     allowNull: false,
   })
-  aa_left: string;
-
-  @Column({
-    type: 'YEAR',
-    allowNull: false,
-  })
-  aa_right: string;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-  })
-  active: boolean;
+  average_graduation_grade: number;
 
   // Associations
 
   @BelongsTo(() => UserTable)
   user_table: UserTable;
-
-  @BelongsTo(() => SubjectTable)
-  subject_table: SubjectTable;
-
-  @HasMany(() => HourLogTable)
-  hour_log_table: HourLogTable;
 
   @HasMany(() => UserExamsTable)
   user_exams_table: UserExamsTable;

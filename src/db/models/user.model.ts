@@ -1,8 +1,16 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  HasMany,
+  HasOne,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { UserSubjectTable } from './user-subject.model';
 import { HourLogTable } from './hour-log.model';
 import { UserConfigTable } from './user-config.model';
 import { WeeklyLogTable } from './weekly-log.model';
+import { UserCarreerTable } from './user-carreer.model';
 
 @Table({
   tableName: 'users',
@@ -46,6 +54,9 @@ export class UserTable extends Model {
 
   @HasMany(() => UserConfigTable)
   user_config_table: UserConfigTable;
+
+  @HasMany(() => UserCarreerTable)
+  user_carreer_table: UserCarreerTable;
 
   @HasMany(() => WeeklyLogTable)
   weekly_log_table: WeeklyLogTable;
