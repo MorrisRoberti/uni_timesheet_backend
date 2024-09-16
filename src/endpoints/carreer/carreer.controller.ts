@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
   Post,
@@ -29,6 +30,21 @@ export class CarreerController {
     private readonly subjectsService: SubjectsService,
     private readonly carreerService: CarreerService,
   ) {}
+
+  // Get the carreer information
+  @Get('carreer-information')
+  async getCarreerInformation(@Request() request: any) {
+    // get the user_carreer
+    const userCarreer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
+
+    // convert the user_carreer
+    const convertedUserCareer =
+      this.carreerService.convertUserCarreerFromDb(userCarreer);
+
+    return convertedUserCareer;
+  }
 
   @Post('create-exam')
   async createExam(
@@ -68,6 +84,7 @@ export class CarreerController {
     const updatedUserCarreer = this.carreerService.convertUpdateUserCarreer(
       userCarreer,
       convertedExam,
+      userSubject.cfu,
     );
 
     // update user carreer on db
@@ -80,15 +97,33 @@ export class CarreerController {
     return HttpStatus.CREATED;
   }
 
+  // update the exam result and accptance and handle the carreer accordingly
+  // if after this exam is inserted a successful try the update of acceptance and passed will not be possible
   // @Put('update-exam/:id')
   // async updateExam(
   //   @Request() request: any,
   //   @Body() updateExamDto: UpdateExamDto,
   //   @Param('id') id: number,
   // ) {
+
+  // get the user_subject
+
+  // find possible other successful tries and return an error if found
+
+  // convert dto
+
+  // if its passed and accepted convert user_carreer
+
+  // const transaction = await this.sequelize.transaction();
+
+  // update user career
+
+  // await transaction.commit();
+
   //   return HttpStatus.OK;
   // }
 
+  // when a passed+accepted try is eliminated, logically destroy the record and update the user_carreer: grade, total_grade, averages and exams passed
   // @Delete('delete-exam/:id')
   // async deleteExam(@Request() request: any, @Param('id') id: number) {
   //   return HttpStatus.OK;
@@ -99,6 +134,4 @@ export class CarreerController {
   // Get all passed exams
 
   // Get all exams aggregated by user_subject_id (passed, not passed, refused)
-
-  // Get the carreer information
 }

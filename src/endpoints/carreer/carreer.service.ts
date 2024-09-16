@@ -40,6 +40,30 @@ export class CarreerService {
     return convertedUserExam;
   }
 
+  convertUserCarreerFromDb(userCarreer: UserCarreerTable) {
+    this.logger.log(`Converting ${this.USER_CARREER} from db to return object`);
+
+    const fixed_grad_grade =
+      userCarreer.average_graduation_grade > 0
+        ? parseFloat(userCarreer.average_graduation_grade.toFixed(2))
+        : 0;
+
+    const fixed_grade =
+      userCarreer.average_grade > 0
+        ? parseFloat(userCarreer.average_grade.toFixed(2))
+        : 0;
+
+    const convertedUserCarreer = {
+      average_grade: fixed_grade,
+      average_graduation_grade: fixed_grad_grade,
+      total_cfu: userCarreer.total_cfu,
+      number_of_exams_passed: userCarreer.number_of_exams_passed,
+    };
+
+    this.logger.log(`Done!`);
+    return convertedUserCarreer;
+  }
+
   updateAverageGrades(sum_of_grades: number, number_of_exams_passed: number) {
     let average_grade = 0;
     let average_graduation_grade = 0;
@@ -55,6 +79,7 @@ export class CarreerService {
   convertUpdateUserCarreer(
     oldUserCareer: UserCarreerTable,
     convertedExam: any,
+    cfu: number,
   ): UserCarreerTable {
     this.logger.log(`Updating ${this.USER_CARREER}`);
     const updatedUserCareer = Object.assign({}, oldUserCareer.dataValues);
@@ -62,6 +87,7 @@ export class CarreerService {
     if (convertedExam.passed == true && convertedExam.accepted == true) {
       updatedUserCareer.number_of_exams_passed += 1;
       updatedUserCareer.sum_of_exams_grade += convertedExam.grade;
+      updatedUserCareer.total_cfu += cfu;
       const { average_grade, average_graduation_grade } =
         this.updateAverageGrades(
           updatedUserCareer.sum_of_exams_grade,
