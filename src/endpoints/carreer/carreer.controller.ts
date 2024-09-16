@@ -26,7 +26,7 @@ export class CarreerController {
     private readonly carreerService: CarreerService,
   ) {}
 
-  @Post('/create-exam')
+  @Post('create-exam')
   async createExam(
     @Request() request: any,
     @Body() createExamDto: CreateExamDto,
@@ -39,6 +39,11 @@ export class CarreerController {
     // get the userSubject
     const userSubject = await this.subjectsService.findOneUserSubject(
       request.user.id,
+      createExamDto.user_subject_id,
+    );
+
+    // find existing exam passed, if it exists the new created cannot be inserted
+    await this.carreerService.checkIfUserExamHasAlreadyBeenPassed(
       createExamDto.user_subject_id,
     );
 
@@ -56,9 +61,16 @@ export class CarreerController {
     await this.carreerService.createNewUserExamOnDb(convertedExam, transaction);
 
     // create object for update user_carreer (if passed == true): total_cfu, average_grade and average_graduation_grade
-    // const updatedUserCarreer = this.carreerService.convertUpdateUserCarreer();
+    const updatedUserCarreer = this.carreerService.convertUpdateUserCarreer(
+      userCarreer,
+      convertedExam,
+    );
 
     // update user carreer on db
+    await this.carreerService.updateUserCarreerOnDb(
+      updatedUserCarreer,
+      transaction,
+    );
 
     await transaction.commit();
     return HttpStatus.CREATED;

@@ -23,6 +23,7 @@ import { join } from 'path';
 import { FileHandlerModule } from './file_handler/file.handler.module';
 import { UserCarreerTable } from './db/models/user-carreer.model';
 import { UserExamsTable } from './db/models/user-exams.model';
+import { CarreerModule } from './endpoints/carreer/carreer.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { UserExamsTable } from './db/models/user-exams.model';
     HourLogsModule,
     AuthModule,
     EmailModule,
+    CarreerModule,
   ],
   controllers: [AppController],
   providers: [AppService, MinutesOverflowConstraint],

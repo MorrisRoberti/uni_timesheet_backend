@@ -51,6 +51,18 @@ export class UserCarreerTable extends Model {
   })
   average_graduation_grade: number;
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  number_of_exams_passed: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  sum_of_exams_grade: number;
+
   // Associations
 
   @BelongsTo(() => UserTable)
