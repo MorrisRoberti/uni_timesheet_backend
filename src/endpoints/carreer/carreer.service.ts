@@ -30,6 +30,7 @@ export class CarreerService {
       user_carreer_id,
       user_subject_id: createExamDto.user_subject_id,
       passed,
+      accepted: passed == true ? createExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
       grade: createExamDto.grade,
       date: createExamDto.date,
       user_subject_name: user_subject_name,
@@ -58,7 +59,7 @@ export class CarreerService {
     this.logger.log(`Updating ${this.USER_CARREER}`);
     const updatedUserCareer = Object.assign({}, oldUserCareer.dataValues);
 
-    if (convertedExam.passed == true) {
+    if (convertedExam.passed == true && convertedExam.accepted == true) {
       updatedUserCareer.number_of_exams_passed += 1;
       updatedUserCareer.sum_of_exams_grade += convertedExam.grade;
       const { average_grade, average_graduation_grade } =
@@ -96,8 +97,10 @@ export class CarreerService {
 
   // once the exam has been passed is not possible to add other tries
   async checkIfUserExamHasAlreadyBeenPassed(user_subject_id: number) {
+    let passedUserExam;
     try {
-      await this.findPassedUserExamBySubjectId(user_subject_id);
+      passedUserExam =
+        await this.findPassedUserExamBySubjectId(user_subject_id);
     } catch (e) {
       this.logger.log(
         `The ${this.USER_EXAM} associated with the user_subject_id 
@@ -106,17 +109,19 @@ export class CarreerService {
       );
     }
 
-    throw new DuplicatedException(
-      this.USER_EXAM,
-      'checkIfUserExamHasAlreadyBeenPassed(user_subject_id)',
-      [`${user_subject_id}`],
-    );
+    if (passedUserExam) {
+      throw new DuplicatedException(
+        this.USER_EXAM,
+        'checkIfUserExamHasAlreadyBeenPassed(user_subject_id)',
+        [`${user_subject_id}`],
+      );
+    }
   }
 
   async findPassedUserExamBySubjectId(user_subject_id: number) {
     this.logger.log(`GET passed ${this.USER_EXAM} from user_subject_id`);
     const passedUserExamBySubjectId = await UserExamsTable.findOne({
-      where: { [Op.and]: { user_subject_id, passed: 1 } },
+      where: { [Op.and]: { user_subject_id, passed: 1, accepted: 1 } },
       paranoid: true,
     });
 

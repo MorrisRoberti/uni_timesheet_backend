@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsDefined,
   IsNotEmpty,
@@ -36,4 +37,9 @@ export class CreateExamDto {
   @Min(0)
   @Max(31)
   minimum_passing_grade: number;
+
+  @IsDefined()
+  @IsNotEmpty()
+  @IsBoolean()
+  accepted: boolean;
 }

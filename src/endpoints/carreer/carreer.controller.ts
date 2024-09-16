@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpStatus,
+  Param,
   Post,
+  Put,
   Request,
   UseFilters,
   UseGuards,
@@ -14,6 +17,7 @@ import { HourLogsService } from '../hour-logs/hour-logs.service';
 import { SubjectsService } from '../subjects/subjects.service';
 import { CarreerService } from './carreer.service';
 import { CreateExamDto } from './dto/create-exam.dto';
+import { UpdateExamDto } from './dto/update-exam.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @UseFilters(DBExceptionFilter)
@@ -75,4 +79,26 @@ export class CarreerController {
     await transaction.commit();
     return HttpStatus.CREATED;
   }
+
+  // @Put('update-exam/:id')
+  // async updateExam(
+  //   @Request() request: any,
+  //   @Body() updateExamDto: UpdateExamDto,
+  //   @Param('id') id: number,
+  // ) {
+  //   return HttpStatus.OK;
+  // }
+
+  // @Delete('delete-exam/:id')
+  // async deleteExam(@Request() request: any, @Param('id') id: number) {
+  //   return HttpStatus.OK;
+  // }
+
+  // Get all not passed exams
+
+  // Get all passed exams
+
+  // Get all exams aggregated by user_subject_id (passed, not passed, refused)
+
+  // Get the carreer information
 }

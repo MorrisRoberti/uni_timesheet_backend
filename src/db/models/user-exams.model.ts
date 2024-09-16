@@ -63,6 +63,12 @@ export class UserExamsTable extends Model {
   })
   grade: number;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+  })
+  accepted: number;
+
   // Associations
 
   @BelongsTo(() => UserCarreerTable)
