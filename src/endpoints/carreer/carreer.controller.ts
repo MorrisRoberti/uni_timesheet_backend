@@ -64,6 +64,7 @@ export class CarreerController {
 
     // find existing exam passed, if it exists the new created cannot be inserted
     await this.carreerService.checkIfUserExamHasAlreadyBeenPassed(
+      createExamDto,
       createExamDto.user_subject_id,
     );
 
@@ -132,6 +133,7 @@ export class CarreerController {
     ) {
       // find possible other successful tries and return an error if found
       await this.carreerService.checkIfUserExamHasAlreadyBeenPassed(
+        updateExamDto,
         userSubject.id,
       );
 

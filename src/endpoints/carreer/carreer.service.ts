@@ -252,7 +252,10 @@ export class CarreerService {
   }
 
   // once the exam has been passed is not possible to add other tries
-  async checkIfUserExamHasAlreadyBeenPassed(user_subject_id: number) {
+  async checkIfUserExamHasAlreadyBeenPassed(
+    newUserExam: CreateExamDto | UpdateExamDto,
+    user_subject_id: number,
+  ) {
     let passedUserExam;
     try {
       passedUserExam =
@@ -265,7 +268,12 @@ export class CarreerService {
       );
     }
 
-    if (passedUserExam) {
+    // I make this control because if the incoming exam is a failed tentative inserted after or a refused, it should be inserted normally
+    if (
+      passedUserExam &&
+      newUserExam.grade >= newUserExam.minimum_passing_grade &&
+      newUserExam.accepted == true
+    ) {
       throw new DuplicatedException(
         this.USER_EXAM,
         'checkIfUserExamHasAlreadyBeenPassed(user_subject_id)',
