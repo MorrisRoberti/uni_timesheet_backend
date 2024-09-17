@@ -574,7 +574,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"carreer_id\": 1,\n  \"user_subject_id\": 8,\n  \"accepted\": true,\n  \"date\": \"2024-09-16\",\n  \"grade\": 26,\n  \"minimum_passing_grade\": 18 \n  }",
+					"raw": "{\n  \"carreer_id\": 1,\n  \"user_subject_id\": 8,\n  \"accepted\": true,\n  \"date\": \"2024-09-16\",\n  \"grade\": 30,\n  \"minimum_passing_grade\": 18 \n  }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -691,6 +691,36 @@
 					"path": [
 						"carreer",
 						"get-refused-exams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user exam",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"carreer_id\": 1,\n  \"user_subject_id\": 8,\n  \"accepted\": true,\n  \"date\": \"2024-09-16\",\n  \"grade\": 30,\n  \"minimum_passing_grade\": 18 \n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/update-exam/1",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"update-exam",
+						"1"
 					]
 				}
 			},

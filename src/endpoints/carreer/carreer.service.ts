@@ -5,10 +5,11 @@ import { UserCarreerTable } from 'src/db/models/user-carreer.model';
 import { InsertionFailedException } from 'src/error_handling/models/insertion-failed.exception.model';
 import { UserExamsTable } from 'src/db/models/user-exams.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { DuplicatedException } from 'src/error_handling/models/duplicated.exception.model';
 import { format } from 'date-fns';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
+import { UpdateExamDto } from './dto/update-exam.dto';
 
 @Injectable()
 export class CarreerService {
@@ -35,6 +36,30 @@ export class CarreerService {
       accepted: passed == true ? createExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
       grade: createExamDto.grade,
       date: createExamDto.date,
+      user_subject_name: user_subject_name,
+    };
+    this.logger.log('Done!');
+
+    return convertedUserExam;
+  }
+
+  convertUpdateUserExam(
+    updateExamDto: UpdateExamDto,
+    user_subject_name: string,
+  ) {
+    this.logger.log(`Converting update ${this.USER_EXAM}`);
+
+    let passed = false;
+    if (updateExamDto.grade >= updateExamDto.minimum_passing_grade)
+      passed = true;
+
+    const convertedUserExam = {
+      user_carreer_id: updateExamDto.carreer_id,
+      user_subject_id: updateExamDto.user_subject_id,
+      passed,
+      accepted: passed == true ? updateExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
+      grade: updateExamDto.grade,
+      date: updateExamDto.date,
       user_subject_name: user_subject_name,
     };
     this.logger.log('Done!');
@@ -90,6 +115,35 @@ export class CarreerService {
       updatedUserCareer.number_of_exams_passed += 1;
       updatedUserCareer.sum_of_exams_grade += convertedExam.grade;
       updatedUserCareer.total_cfu += cfu;
+      const { average_grade, average_graduation_grade } =
+        this.updateAverageGrades(
+          updatedUserCareer.sum_of_exams_grade,
+          updatedUserCareer.number_of_exams_passed,
+        );
+      updatedUserCareer.average_grade = average_grade;
+      updatedUserCareer.average_graduation_grade = average_graduation_grade;
+    }
+
+    this.logger.log('Done!');
+
+    return updatedUserCareer;
+  }
+
+  convertUpdateUserCarreerWhenUpdatingToNonPassedExam(
+    oldUserCareer: UserCarreerTable,
+    convertedExam: any,
+    oldExam: UserExamsTable,
+    cfu: number,
+  ): UserCarreerTable {
+    this.logger.log(
+      `Updating ${this.USER_CARREER} with an exam that has gone from passed to non passed/refused`,
+    );
+    const updatedUserCareer = Object.assign({}, oldUserCareer.dataValues);
+
+    if (oldExam.passed == true && oldExam.accepted == true) {
+      updatedUserCareer.number_of_exams_passed -= 1;
+      updatedUserCareer.sum_of_exams_grade -= oldExam.grade;
+      updatedUserCareer.total_cfu -= cfu;
       const { average_grade, average_graduation_grade } =
         this.updateAverageGrades(
           updatedUserCareer.sum_of_exams_grade,
@@ -382,8 +436,47 @@ export class CarreerService {
 
     throw new UpdateFailedException(
       this.USER_CARREER,
-      'updateUserCarreerOnDb(use)',
+      'updateUserCarreerOnDb(updateUserCarreer)',
       [updateUserCarreer],
     );
+  }
+
+  async updateUserExamOnDb(
+    updateUserExam: any,
+    user_exam_id: number,
+    transaction: Transaction,
+  ) {
+    this.logger.log(`Updating ${this.USER_EXAM} record on db`);
+    const userExamUpdated = await UserExamsTable.update(updateUserExam, {
+      where: { id: user_exam_id },
+      transaction,
+    });
+    if (userExamUpdated && userExamUpdated !== null) {
+      this.logger.log('Done!');
+      return userExamUpdated;
+    }
+
+    throw new UpdateFailedException(
+      this.USER_EXAM,
+      'updateUserExamOnDb(updateUserExam)',
+      [updateUserExam],
+    );
+  }
+
+  async findUserExamFromId(id: number): Promise<UserExamsTable> {
+    this.logger.log(`GET ${this.USER_EXAM} from id`);
+    const userExam = await UserExamsTable.findOne({
+      where: { id },
+      paranoid: true,
+    });
+
+    if (userExam && userExam !== null) {
+      this.logger.log('Done!');
+      return userExam;
+    }
+
+    throw new NotFoundException(this.USER_EXAM, 'findUserExamFromId(id)', [
+      `${id}`,
+    ]);
   }
 }

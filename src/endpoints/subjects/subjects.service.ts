@@ -227,10 +227,14 @@ export class SubjectsService {
 
     return false;
   }
-  async findOneUserSubject(user_id: number, id: number) {
+  async findOneUserSubject(
+    user_id: number,
+    id: number,
+  ): Promise<UserSubjectTable> {
     this.logger.log(`GET ${this.USER_SUBJECT}`);
     const userSubject = await UserSubjectTable.findOne({
       where: { user_id, id },
+      paranoid: true,
     });
 
     if (userSubject && userSubject !== null) {

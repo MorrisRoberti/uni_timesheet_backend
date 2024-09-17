@@ -67,7 +67,7 @@ export class UserExamsTable extends Model {
     type: DataType.BOOLEAN,
     allowNull: false,
   })
-  accepted: number;
+  accepted: boolean;
 
   // Associations
 

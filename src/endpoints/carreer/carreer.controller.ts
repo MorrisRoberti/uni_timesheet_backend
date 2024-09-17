@@ -99,29 +99,100 @@ export class CarreerController {
 
   // update the exam result and accptance and handle the carreer accordingly
   // if after this exam is inserted a successful try the update of acceptance and passed will not be possible
-  // @Put('update-exam/:id')
-  // async updateExam(
-  //   @Request() request: any,
-  //   @Body() updateExamDto: UpdateExamDto,
-  //   @Param('id') id: number,
-  // ) {
+  @Put('update-exam/:id')
+  async updateExam(
+    @Request() request: any,
+    @Body() updateExamDto: UpdateExamDto,
+    @Param('id') id: number,
+  ) {
+    // get the user_subject
+    const userSubject = await this.subjectsService.findOneUserSubject(
+      request.user.id,
+      updateExamDto.user_subject_id,
+    );
 
-  // get the user_subject
+    // check if the exam exists
+    const oldExam = await this.carreerService.findUserExamFromId(id);
 
-  // find possible other successful tries and return an error if found
+    // get the user carreer
+    const userCarreer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
 
-  // convert dto
+    // in any case I convert the user_exam to have it ready for the update
+    const convertUpdateUserExam = this.carreerService.convertUpdateUserExam(
+      updateExamDto,
+      userSubject.name,
+    );
 
-  // if its passed and accepted convert user_carreer
+    // CASE 1: if the exam will be put to passed I need to check if there is another passed exam for the same subj
+    if (
+      updateExamDto.grade >= updateExamDto.minimum_passing_grade &&
+      updateExamDto.accepted == true
+    ) {
+      // find possible other successful tries and return an error if found
+      await this.carreerService.checkIfUserExamHasAlreadyBeenPassed(
+        userSubject.id,
+      );
 
-  // const transaction = await this.sequelize.transaction();
+      const transaction = await this.sequelize.transaction();
 
-  // update user career
+      // update the user_exam
+      await this.carreerService.updateUserExamOnDb(
+        convertUpdateUserExam,
+        oldExam.id,
+        transaction,
+      );
 
-  // await transaction.commit();
+      // convert the user_carreer updating the fields that depend on passed exams
+      const convertedUpdatedUserCarreer =
+        this.carreerService.convertUpdateUserCarreer(
+          userCarreer,
+          convertUpdateUserExam,
+          userSubject.cfu,
+        );
 
-  //   return HttpStatus.OK;
-  // }
+      // update user_carreer
+      await this.carreerService.updateUserCarreerOnDb(
+        convertedUpdatedUserCarreer,
+        transaction,
+      );
+
+      await transaction.commit();
+
+      return HttpStatus.OK;
+    }
+
+    // CASE 2: the exam is set to not passed
+
+    // convert the user_carreer updating the fields that depend on passed exams
+    const convertedUpdatedUserCarreer =
+      this.carreerService.convertUpdateUserCarreerWhenUpdatingToNonPassedExam(
+        userCarreer,
+        convertUpdateUserExam,
+        oldExam,
+        userSubject.cfu,
+      );
+
+    const transaction = await this.sequelize.transaction();
+
+    // update the user_exam
+    await this.carreerService.updateUserExamOnDb(
+      convertUpdateUserExam,
+      oldExam.id,
+      transaction,
+    );
+
+    // update user career
+    await this.carreerService.updateUserCarreerOnDb(
+      convertedUpdatedUserCarreer,
+      transaction,
+    );
+
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
 
   // when a passed+accepted try is eliminated, logically destroy the record and update the user_carreer: grade, total_grade, averages and exams passed
   // @Delete('delete-exam/:id')
