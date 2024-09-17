@@ -130,8 +130,85 @@ export class CarreerController {
   // }
 
   // Get all not passed exams
+  @Get('get-all-non-passed-exams')
+  async getAllNonPassedExams(@Request() request: any) {
+    // get urser carreer
+    const userCareer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
+
+    // get user_exams that are non passed and not deleted
+    const nonPassedUserExamsFromDb =
+      await this.carreerService.findNonPassedUserExamsByCarreerId(
+        userCareer.id,
+      );
+
+    // convert all user_exam
+    const convertedUserExams =
+      this.carreerService.convertArrayOfUserExamsFromDb(
+        nonPassedUserExamsFromDb,
+      );
+
+    // aggregate them by subject
+    const nonPassedUserExams =
+      this.carreerService.aggregateArrayOfUserExamsBySubject(
+        convertedUserExams,
+      );
+
+    return nonPassedUserExams;
+  }
 
   // Get all passed exams
+  @Get('get-all-passed-exams')
+  async getAllPassedUserExams(@Request() request: any) {
+    // get urser carreer
+    const userCareer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
+
+    // get user_exams that are passed and not deleted
+    const nonPassedUserExamsFromDb =
+      await this.carreerService.findPassedUserExamsByCarreerId(userCareer.id);
+
+    // convert all user_exam
+    const convertedUserExams =
+      this.carreerService.convertArrayOfUserExamsFromDb(
+        nonPassedUserExamsFromDb,
+      );
+
+    // aggregate them by subject
+    const nonPassedUserExams =
+      this.carreerService.aggregateArrayOfUserExamsBySubject(
+        convertedUserExams,
+      );
+
+    return nonPassedUserExams;
+  }
 
   // Get all exams aggregated by user_subject_id (passed, not passed, refused)
+  @Get('get-all-exams')
+  async getAllUserExams(@Request() request: any) {
+    // get urser carreer
+    const userCareer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
+
+    // get user_exams that all non deleted user exams
+    const nonPassedUserExamsFromDb =
+      await this.carreerService.findAllUserExamsByCarreerId(userCareer.id);
+
+    // convert all user_exam
+    const convertedUserExams =
+      this.carreerService.convertArrayOfUserExamsFromDb(
+        nonPassedUserExamsFromDb,
+      );
+
+    // aggregate them by subject
+    const nonPassedUserExams =
+      this.carreerService.aggregateArrayOfUserExamsBySubject(
+        convertedUserExams,
+      );
+
+    return nonPassedUserExams;
+  }
 }

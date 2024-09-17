@@ -615,6 +615,66 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET all non passed exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/get-all-non-passed-exams",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"get-all-non-passed-exams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all passed exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/get-all-passed-exams",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"get-all-passed-exams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all user exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/get-all-exams",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"get-all-exams"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

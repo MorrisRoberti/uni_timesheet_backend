@@ -7,6 +7,8 @@ import { UserExamsTable } from 'src/db/models/user-exams.model';
 import { UpdateFailedException } from 'src/error_handling/models/update-failed.exception.model';
 import { Op } from 'sequelize';
 import { DuplicatedException } from 'src/error_handling/models/duplicated.exception.model';
+import { format } from 'date-fns';
+import { UserSubjectTable } from 'src/db/models/user-subject.model';
 
 @Injectable()
 export class CarreerService {
@@ -102,6 +104,80 @@ export class CarreerService {
     return updatedUserCareer;
   }
 
+  aggregateArrayOfUserExamsBySubject(arrayOfUserExams: Array<any>): Array<any> {
+    this.logger.log(`Aggregating array of ${this.USER_EXAM} for subject`);
+
+    const aggregatedArrayOfUserExams = [];
+    const arrayOfUserSubjects = new Map<
+      number,
+      { user_subject_name: string; cfu: number; semester: number; aa: string }
+    >();
+    // I get all the user_subjects_id to make the aggregation
+    arrayOfUserExams.forEach((userExam) => {
+      if (arrayOfUserSubjects.has(userExam.user_subject_id) == false) {
+        arrayOfUserSubjects.set(userExam.user_subject_id, {
+          user_subject_name: userExam.user_subject_name,
+          cfu: userExam.cfu,
+          semester: userExam.semester,
+          aa: userExam.aa,
+        });
+      }
+    });
+
+    // I aggregate the records following the previously get user_subject_id
+    arrayOfUserSubjects.forEach((userSubjectObject, key) => {
+      const userExamsAggregated = arrayOfUserExams.filter(
+        (userExam) => userExam.user_subject_id === key,
+      );
+
+      const examObjectComposed = {
+        user_subject_id: key,
+        user_subject_name: userSubjectObject.user_subject_name,
+        cfu: userSubjectObject.cfu,
+        semester: userSubjectObject.semester,
+        aa: userSubjectObject.aa,
+        user_exams: userExamsAggregated,
+      };
+
+      aggregatedArrayOfUserExams.push(examObjectComposed);
+    });
+
+    this.logger.log('Done!');
+    return aggregatedArrayOfUserExams;
+  }
+
+  convertArrayOfUserExamsFromDb(
+    arrayOfUserExams: Array<UserExamsTable>,
+  ): Array<any> {
+    this.logger.log(
+      `Converting array of ${this.USER_EXAM} from db to return object`,
+    );
+
+    const convertedArrayOfUserExams = [];
+
+    arrayOfUserExams.forEach((userExam) => {
+      const convertedUserExam = {
+        id: userExam.id,
+        user_subject_id: userExam.user_subject_id,
+        user_subject_name: userExam.user_subject_name,
+        grade: userExam.grade,
+        cfu: userExam.user_subject_table.cfu,
+        semster: userExam.user_subject_table.semester,
+        aa: `${userExam.user_subject_table.aa_left}/${userExam.user_subject_table.aa_right}`,
+        passed: userExam.passed,
+        accepted: userExam.accepted,
+        date: format(userExam.date, 'yyyy-MM-dd'),
+      };
+
+      convertedArrayOfUserExams.push(convertedUserExam);
+    });
+
+    this.logger.log('Done!');
+    return convertedArrayOfUserExams;
+  }
+
+  // DB
+
   async findUserCarreerFromUserId(user_id: number): Promise<UserCarreerTable> {
     this.logger.log(`GET ${this.USER_CARREER}`);
     const userCarreer = await UserCarreerTable.findOne({
@@ -144,14 +220,15 @@ export class CarreerService {
     }
   }
 
-  async findPassedUserExamBySubjectId(user_subject_id: number) {
+  async findPassedUserExamBySubjectId(
+    user_subject_id: number,
+  ): Promise<UserExamsTable> {
     this.logger.log(`GET passed ${this.USER_EXAM} from user_subject_id`);
     const passedUserExamBySubjectId = await UserExamsTable.findOne({
       where: { [Op.and]: { user_subject_id, passed: 1, accepted: 1 } },
       paranoid: true,
     });
 
-    this.logger.log('Done!');
     if (passedUserExamBySubjectId && passedUserExamBySubjectId !== null) {
       this.logger.log('Done!');
       return passedUserExamBySubjectId;
@@ -161,6 +238,87 @@ export class CarreerService {
       this.USER_EXAM,
       'checkIfUserExamHasAlreadyBeenPassed(user_subject_id)',
       [`${user_subject_id}`],
+    );
+  }
+
+  async findNonPassedUserExamsByCarreerId(
+    user_carreer_id: number,
+  ): Promise<Array<UserExamsTable>> {
+    this.logger.log(`GET NON passed ${this.USER_EXAM} from user_carreer_id`);
+    const nonPassedUserExamsByCarrerId = await UserExamsTable.findAll({
+      where: { [Op.and]: { user_carreer_id, passed: 0 } },
+      include: [
+        {
+          model: UserSubjectTable,
+          attributes: ['cfu', 'semester', 'aa_left', 'aa_right'],
+        },
+      ],
+      paranoid: true,
+    });
+
+    if (nonPassedUserExamsByCarrerId && nonPassedUserExamsByCarrerId !== null) {
+      this.logger.log('Done!');
+      return nonPassedUserExamsByCarrerId;
+    }
+
+    throw new NotFoundException(
+      this.USER_EXAM,
+      'findNonPassedUserExamsByCarreerId(user_carreer_id)',
+      [`${user_carreer_id}`],
+    );
+  }
+
+  async findAllUserExamsByCarreerId(
+    user_carreer_id: number,
+  ): Promise<Array<UserExamsTable>> {
+    this.logger.log(`GET ALL ${this.USER_EXAM} from user_carreer_id`);
+    const allUserExamsByCarrerId = await UserExamsTable.findAll({
+      where: { [Op.and]: { user_carreer_id } },
+      include: [
+        {
+          model: UserSubjectTable,
+          attributes: ['cfu', 'semester', 'aa_left', 'aa_right'],
+        },
+      ],
+      paranoid: true,
+    });
+
+    if (allUserExamsByCarrerId && allUserExamsByCarrerId !== null) {
+      this.logger.log('Done!');
+      return allUserExamsByCarrerId;
+    }
+
+    throw new NotFoundException(
+      this.USER_EXAM,
+      'findAllUserExamsByCarreerId(user_carreer_id)',
+      [`${user_carreer_id}`],
+    );
+  }
+
+  async findPassedUserExamsByCarreerId(
+    user_carreer_id: number,
+  ): Promise<Array<UserExamsTable>> {
+    this.logger.log(`GET passed ${this.USER_EXAM} from user_carreer_id`);
+    const passedUserExamByCarrerId = await UserExamsTable.findAll({
+      where: { [Op.and]: { user_carreer_id, passed: 1, accepted: 1 } },
+      include: [
+        {
+          model: UserSubjectTable,
+          attributes: ['cfu', 'semester', 'aa_left', 'aa_right'],
+        },
+      ],
+      paranoid: true,
+    });
+
+    if (passedUserExamByCarrerId && passedUserExamByCarrerId !== null) {
+      this.logger.log('Done!');
+      return passedUserExamByCarrerId;
+    }
+
+    throw new NotFoundException(
+      this.USER_EXAM,
+      'findPassedUserExamsByCarreerId(user_carreer_id)',
+      [`${user_carreer_id}`],
     );
   }
 
