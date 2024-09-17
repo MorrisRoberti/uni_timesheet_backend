@@ -675,6 +675,26 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET refused exams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/get-refused-exams",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"get-refused-exams"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

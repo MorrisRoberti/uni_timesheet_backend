@@ -322,6 +322,33 @@ export class CarreerService {
     );
   }
 
+  async findRefusedUserExamsByCarreerId(
+    user_carreer_id: number,
+  ): Promise<Array<UserExamsTable>> {
+    this.logger.log(`GET refused ${this.USER_EXAM} from user_carreer_id`);
+    const refusedUserExamByCarrerId = await UserExamsTable.findAll({
+      where: { [Op.and]: { user_carreer_id, passed: 1, accepted: 0 } },
+      include: [
+        {
+          model: UserSubjectTable,
+          attributes: ['cfu', 'semester', 'aa_left', 'aa_right'],
+        },
+      ],
+      paranoid: true,
+    });
+
+    if (refusedUserExamByCarrerId && refusedUserExamByCarrerId !== null) {
+      this.logger.log('Done!');
+      return refusedUserExamByCarrerId;
+    }
+
+    throw new NotFoundException(
+      this.USER_EXAM,
+      'findRefusedUserExamsByCarreerId(user_carreer_id)',
+      [`${user_carreer_id}`],
+    );
+  }
+
   async createNewUserExamOnDb(userExam: any, transaction: any) {
     this.logger.log(`Creating ${this.USER_EXAM} record on db`);
     const userExamCreated = await UserExamsTable.create(userExam, {
