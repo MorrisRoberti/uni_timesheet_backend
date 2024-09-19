@@ -725,6 +725,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "DELETE user exam",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}:3000/carreer/delete-exam/1",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "3000",
+					"path": [
+						"carreer",
+						"delete-exam",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

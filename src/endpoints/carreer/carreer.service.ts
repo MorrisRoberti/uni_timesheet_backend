@@ -10,6 +10,7 @@ import { DuplicatedException } from 'src/error_handling/models/duplicated.except
 import { format } from 'date-fns';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
 import { UpdateExamDto } from './dto/update-exam.dto';
+import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
 
 @Injectable()
 export class CarreerService {
@@ -129,9 +130,8 @@ export class CarreerService {
     return updatedUserCareer;
   }
 
-  convertUpdateUserCarreerWhenUpdatingToNonPassedExam(
+  convertUpdateUserCarreerWhenRemovingPassedExam(
     oldUserCareer: UserCarreerTable,
-    convertedExam: any,
     oldExam: UserExamsTable,
     cfu: number,
   ): UserCarreerTable {
@@ -486,5 +486,21 @@ export class CarreerService {
     throw new NotFoundException(this.USER_EXAM, 'findUserExamFromId(id)', [
       `${id}`,
     ]);
+  }
+
+  async deleteUserExamFromId(id: number, transaction: Transaction) {
+    this.logger.log(`DELETE ${this.USER_EXAM} from id`);
+    const deletedUserExam = await UserExamsTable.destroy({
+      where: { id },
+      transaction,
+    });
+
+    if (deletedUserExam !== 1) {
+      throw new DeletionFailedException(
+        this.USER_EXAM,
+        'deleteUserExamFromId(id)',
+        [`${id}`],
+      );
+    }
   }
 }

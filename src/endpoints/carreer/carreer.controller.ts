@@ -169,9 +169,8 @@ export class CarreerController {
 
     // convert the user_carreer updating the fields that depend on passed exams
     const convertedUpdatedUserCarreer =
-      this.carreerService.convertUpdateUserCarreerWhenUpdatingToNonPassedExam(
+      this.carreerService.convertUpdateUserCarreerWhenRemovingPassedExam(
         userCarreer,
-        convertUpdateUserExam,
         oldExam,
         userSubject.cfu,
       );
@@ -197,10 +196,49 @@ export class CarreerController {
   }
 
   // when a passed+accepted try is eliminated, logically destroy the record and update the user_carreer: grade, total_grade, averages and exams passed
-  // @Delete('delete-exam/:id')
-  // async deleteExam(@Request() request: any, @Param('id') id: number) {
-  //   return HttpStatus.OK;
-  // }
+  // when another type of exam is eliminated just delete the record
+  @Delete('delete-exam/:id')
+  async deleteExam(@Request() request: any, @Param('id') id: number) {
+    // get user_carreer
+    const userCareer = await this.carreerService.findUserCarreerFromUserId(
+      request.user.id,
+    );
+
+    // get the user_exam
+    const userExamToDelete = await this.carreerService.findUserExamFromId(id);
+
+    // get the user_subject
+    const userSubject = await this.subjectsService.findOneUserSubject(
+      request.user.id,
+      userExamToDelete.user_subject_id,
+    );
+
+    const transaction = await this.sequelize.transaction();
+
+    // delete user_exam
+    await this.carreerService.deleteUserExamFromId(id, transaction);
+
+    // check if the exam is passed and accepted, in this case destroy it and update the user_carreer
+    if (userExamToDelete.passed == true && userExamToDelete.accepted == true) {
+      // build new user_carreer
+      const userCareerToUpdate =
+        this.carreerService.convertUpdateUserCarreerWhenRemovingPassedExam(
+          userCareer,
+          userExamToDelete,
+          userSubject.cfu,
+        );
+
+      // update user carreer
+      await this.carreerService.updateUserCarreerOnDb(
+        userCareerToUpdate,
+        transaction,
+      );
+    }
+
+    await transaction.commit();
+
+    return HttpStatus.OK;
+  }
 
   // Get all not passed exams
   @Get('get-all-non-passed-exams')
