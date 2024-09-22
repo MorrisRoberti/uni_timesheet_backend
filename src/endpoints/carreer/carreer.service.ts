@@ -44,10 +44,7 @@ export class CarreerService {
     return convertedUserExam;
   }
 
-  convertUpdateUserExam(
-    updateExamDto: UpdateExamDto,
-    user_subject_name: string,
-  ) {
+  convertUpdateUserExam(updateExamDto: UpdateExamDto) {
     this.logger.log(`Converting update ${this.USER_EXAM}`);
 
     let passed = false;
@@ -55,13 +52,10 @@ export class CarreerService {
       passed = true;
 
     const convertedUserExam = {
-      user_carreer_id: updateExamDto.carreer_id,
-      user_subject_id: updateExamDto.user_subject_id,
       passed,
       accepted: passed == true ? updateExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
       grade: updateExamDto.grade,
       date: updateExamDto.date,
-      user_subject_name: user_subject_name,
     };
     this.logger.log('Done!');
 
@@ -107,9 +101,43 @@ export class CarreerService {
   convertUpdateUserCarreer(
     oldUserCareer: UserCarreerTable,
     convertedExam: any,
+    oldExam: UserExamsTable,
     cfu: number,
   ): UserCarreerTable {
     this.logger.log(`Updating ${this.USER_CARREER}`);
+    const updatedUserCareer = Object.assign({}, oldUserCareer.dataValues);
+
+    if (convertedExam.passed == true && convertedExam.accepted == true) {
+      if (oldExam.passed == false || oldExam.accepted == false) {
+        updatedUserCareer.number_of_exams_passed += 1;
+        updatedUserCareer.total_cfu += cfu;
+      }
+      if (convertedExam.grade > oldExam.grade) {
+        updatedUserCareer.sum_of_exams_grade +=
+          convertedExam.grade - oldExam.grade;
+      } else if (convertedExam.grade < oldExam.grade) {
+        updatedUserCareer.sum_of_exams_grade -=
+          oldExam.grade - convertedExam.grade;
+      }
+      const { average_grade, average_graduation_grade } =
+        this.updateAverageGrades(
+          updatedUserCareer.sum_of_exams_grade,
+          updatedUserCareer.number_of_exams_passed,
+        );
+      updatedUserCareer.average_grade = average_grade;
+      updatedUserCareer.average_graduation_grade = average_graduation_grade;
+    }
+
+    this.logger.log('Done!');
+
+    return updatedUserCareer;
+  }
+  convertUpdateUserCarreerWhenCreatingUserExam(
+    oldUserCareer: UserCarreerTable,
+    convertedExam: any,
+    cfu: number,
+  ): UserCarreerTable {
+    this.logger.log(`Updating ${this.USER_CARREER} when creating user exam`);
     const updatedUserCareer = Object.assign({}, oldUserCareer.dataValues);
 
     if (convertedExam.passed == true && convertedExam.accepted == true) {

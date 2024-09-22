@@ -82,11 +82,12 @@ export class CarreerController {
     await this.carreerService.createNewUserExamOnDb(convertedExam, transaction);
 
     // create object for update user_carreer (if passed == true): total_cfu, average_grade and average_graduation_grade
-    const updatedUserCarreer = this.carreerService.convertUpdateUserCarreer(
-      userCarreer,
-      convertedExam,
-      userSubject.cfu,
-    );
+    const updatedUserCarreer =
+      this.carreerService.convertUpdateUserCarreerWhenCreatingUserExam(
+        userCarreer,
+        convertedExam,
+        userSubject.cfu,
+      );
 
     // update user carreer on db
     await this.carreerService.updateUserCarreerOnDb(
@@ -121,15 +122,14 @@ export class CarreerController {
     );
 
     // in any case I convert the user_exam to have it ready for the update
-    const convertUpdateUserExam = this.carreerService.convertUpdateUserExam(
-      updateExamDto,
-      userSubject.name,
-    );
+    const convertUpdateUserExam =
+      this.carreerService.convertUpdateUserExam(updateExamDto);
 
     // CASE 1: if the exam will be put to passed I need to check if there is another passed exam for the same subj
     if (
       updateExamDto.grade >= updateExamDto.minimum_passing_grade &&
-      updateExamDto.accepted == true
+      updateExamDto.accepted == true &&
+      (oldExam.passed == false || oldExam.accepted == false)
     ) {
       // find possible other successful tries and return an error if found
       await this.carreerService.checkIfUserExamHasAlreadyBeenPassed(
@@ -151,6 +151,40 @@ export class CarreerController {
         this.carreerService.convertUpdateUserCarreer(
           userCarreer,
           convertUpdateUserExam,
+          oldExam,
+          userSubject.cfu,
+        );
+
+      // update user_carreer
+      await this.carreerService.updateUserCarreerOnDb(
+        convertedUpdatedUserCarreer,
+        transaction,
+      );
+
+      await transaction.commit();
+
+      return HttpStatus.OK;
+    } else if (
+      updateExamDto.grade >= updateExamDto.minimum_passing_grade &&
+      updateExamDto.accepted == true &&
+      oldExam.passed == true &&
+      oldExam.accepted == true
+    ) {
+      const transaction = await this.sequelize.transaction();
+
+      // update the user_exam
+      await this.carreerService.updateUserExamOnDb(
+        convertUpdateUserExam,
+        oldExam.id,
+        transaction,
+      );
+
+      // convert the user_carreer updating the fields that depend on passed exams
+      const convertedUpdatedUserCarreer =
+        this.carreerService.convertUpdateUserCarreer(
+          userCarreer,
+          convertUpdateUserExam,
+          oldExam,
           userSubject.cfu,
         );
 
