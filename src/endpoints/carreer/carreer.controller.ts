@@ -288,6 +288,12 @@ export class CarreerController {
         userCareer.id,
       );
 
+    // I get the hours studied
+    const hoursStudiedForUserSubject =
+      await this.hourLogsService.findTotalHoursStudiedForUserSubject(
+        request.user.id,
+      );
+
     // convert all user_exam
     const convertedUserExams =
       this.carreerService.convertArrayOfUserExamsFromDb(
@@ -298,6 +304,7 @@ export class CarreerController {
     const nonPassedUserExams =
       this.carreerService.aggregateArrayOfUserExamsBySubject(
         convertedUserExams,
+        hoursStudiedForUserSubject,
       );
 
     return nonPassedUserExams;
@@ -315,6 +322,12 @@ export class CarreerController {
     const passedUserExamsFromDb =
       await this.carreerService.findPassedUserExamsByCarreerId(userCareer.id);
 
+    // I get the hours studied
+    const hoursStudiedForUserSubject =
+      await this.hourLogsService.findTotalHoursStudiedForUserSubject(
+        request.user.id,
+      );
+
     // convert all user_exam
     const convertedUserExams =
       this.carreerService.convertArrayOfUserExamsFromDb(passedUserExamsFromDb);
@@ -323,6 +336,7 @@ export class CarreerController {
     const passedUserExams =
       this.carreerService.aggregateArrayOfUserExamsBySubject(
         convertedUserExams,
+        hoursStudiedForUserSubject,
       );
 
     return passedUserExams;
@@ -340,6 +354,12 @@ export class CarreerController {
     const refusedUserExamsFromDb =
       await this.carreerService.findRefusedUserExamsByCarreerId(userCareer.id);
 
+    // I get the hours studied
+    const hoursStudiedForUserSubject =
+      await this.hourLogsService.findTotalHoursStudiedForUserSubject(
+        request.user.id,
+      );
+
     // convert all user_exam
     const convertedUserExams =
       this.carreerService.convertArrayOfUserExamsFromDb(refusedUserExamsFromDb);
@@ -348,6 +368,7 @@ export class CarreerController {
     const refusedUserExams =
       this.carreerService.aggregateArrayOfUserExamsBySubject(
         convertedUserExams,
+        hoursStudiedForUserSubject,
       );
 
     return refusedUserExams;
@@ -365,15 +386,21 @@ export class CarreerController {
     const userExamsFromDb =
       await this.carreerService.findAllUserExamsByCarreerId(userCareer.id);
 
+    // I get the hours studied
+    const hoursStudiedForUserSubject =
+      await this.hourLogsService.findTotalHoursStudiedForUserSubject(
+        request.user.id,
+      );
+
     // convert all user_exam
     const convertedUserExams =
       this.carreerService.convertArrayOfUserExamsFromDb(userExamsFromDb);
 
     // aggregate them by subject
-    const userExams =
-      this.carreerService.aggregateArrayOfUserExamsBySubject(
-        convertedUserExams,
-      );
+    const userExams = this.carreerService.aggregateArrayOfUserExamsBySubject(
+      convertedUserExams,
+      hoursStudiedForUserSubject,
+    );
 
     return userExams;
   }

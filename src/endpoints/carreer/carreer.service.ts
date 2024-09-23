@@ -11,10 +11,14 @@ import { format } from 'date-fns';
 import { UserSubjectTable } from 'src/db/models/user-subject.model';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { DeletionFailedException } from 'src/error_handling/models/deletion-failed.exception.model';
+import { HourLogsService } from '../hour-logs/hour-logs.service';
 
 @Injectable()
 export class CarreerService {
-  constructor(private logger: Logger) {}
+  constructor(
+    private logger: Logger,
+    private readonly hourLogsService: HourLogsService,
+  ) {}
 
   USER_EXAM = 'UserExam';
   USER_CARREER = 'User Carreer';
@@ -186,22 +190,44 @@ export class CarreerService {
     return updatedUserCareer;
   }
 
-  aggregateArrayOfUserExamsBySubject(arrayOfUserExams: Array<any>): Array<any> {
+  aggregateArrayOfUserExamsBySubject(
+    arrayOfUserExams: Array<any>,
+    timeStudiedForUserExamsArray: Array<any>,
+  ): Array<any> {
     this.logger.log(`Aggregating array of ${this.USER_EXAM} for subject`);
 
     const aggregatedArrayOfUserExams = [];
     const arrayOfUserSubjects = new Map<
       number,
-      { user_subject_name: string; cfu: number; semester: number; aa: string }
+      {
+        user_subject_name: string;
+        cfu: number;
+        semester: number;
+        aa: string;
+        total_time: string;
+      }
     >();
     // I get all the user_subjects_id to make the aggregation
     arrayOfUserExams.forEach((userExam) => {
       if (arrayOfUserSubjects.has(userExam.user_subject_id) == false) {
+        const foundValues = timeStudiedForUserExamsArray.find((subject) => {
+          return subject.user_subject_id === userExam.user_subject_id;
+        });
+
+        const { total_hours, total_minutes } = foundValues;
+
+        // remap hours and minutes
+        const [newHours, newMinutes] = this.hourLogsService.formatTimeValues(
+          total_hours,
+          total_minutes,
+        );
+
         arrayOfUserSubjects.set(userExam.user_subject_id, {
           user_subject_name: userExam.user_subject_name,
           cfu: userExam.cfu,
           semester: userExam.semester,
           aa: userExam.aa,
+          total_time: `${newHours}:${newMinutes}`,
         });
       }
     });
@@ -218,6 +244,7 @@ export class CarreerService {
         cfu: userSubjectObject.cfu,
         semester: userSubjectObject.semester,
         aa: userSubjectObject.aa,
+        total_time: userSubjectObject.total_time,
         user_exams: userExamsAggregated,
       };
 

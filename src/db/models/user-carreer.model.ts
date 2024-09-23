@@ -2,6 +2,7 @@ import {
   BelongsTo,
   Column,
   DataType,
+  Default,
   ForeignKey,
   HasMany,
   Model,
@@ -33,30 +34,35 @@ export class UserCarreerTable extends Model {
   })
   user_id: number;
 
+  @Default(0)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
   total_cfu: number;
 
+  @Default(0)
   @Column({
     type: DataType.FLOAT,
     allowNull: false,
   })
   average_grade: number;
 
+  @Default(0)
   @Column({
     type: DataType.FLOAT,
     allowNull: false,
   })
   average_graduation_grade: number;
 
+  @Default(0)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
   number_of_exams_passed: number;
 
+  @Default(0)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,

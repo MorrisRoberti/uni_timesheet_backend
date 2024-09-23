@@ -850,4 +850,31 @@ export class HourLogsService {
       [`${user_id}`, `${month}`],
     );
   }
+
+  async findTotalHoursStudiedForUserSubject(
+    user_id: number,
+  ): Promise<Array<HourLogTable>> {
+    this.logger.log(`GET all ${this.HOUR_LOG} studied per user_subject_id`);
+    const hourLogs = await HourLogTable.findAll({
+      attributes: [
+        'user_subject_id',
+        [sequelize.fn('sum', sequelize.col('hours')), 'total_hours'],
+        [sequelize.fn('sum', sequelize.col('minutes')), 'total_minutes'],
+      ],
+      where: { user_id },
+      group: 'user_subject_id',
+      raw: true,
+    });
+
+    if (hourLogs && hourLogs !== null) {
+      this.logger.log('Done!');
+      return hourLogs;
+    }
+
+    throw new NotFoundException(
+      this.HOUR_LOG,
+      'findTotalHoursStudiedForUserSubject(user_id)',
+      [`${user_id}`],
+    );
+  }
 }
