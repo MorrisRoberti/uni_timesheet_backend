@@ -12,11 +12,6 @@ export class CreateExamDto {
   @IsDefined()
   @IsNotEmpty()
   @IsNumber()
-  carreer_id: number;
-
-  @IsDefined()
-  @IsNotEmpty()
-  @IsNumber()
   user_subject_id: number;
 
   @IsDefined()
