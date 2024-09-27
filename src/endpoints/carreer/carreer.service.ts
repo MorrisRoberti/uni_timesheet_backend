@@ -39,6 +39,7 @@ export class CarreerService {
       user_subject_id: createExamDto.user_subject_id,
       passed,
       accepted: passed == true ? createExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
+      minimum_passing_grade: createExamDto.minimum_passing_grade,
       grade: createExamDto.grade,
       date: createExamDto.date,
       user_subject_name: user_subject_name,
@@ -59,6 +60,7 @@ export class CarreerService {
       passed,
       accepted: passed == true ? updateExamDto.accepted : true, // I can chose to accept/refuse a grade only if i pass the exam
       grade: updateExamDto.grade,
+      minimum_passing_grade: updateExamDto.minimum_passing_grade,
       date: updateExamDto.date,
     };
     this.logger.log('Done!');
@@ -270,6 +272,7 @@ export class CarreerService {
         user_subject_id: userExam.user_subject_id,
         user_subject_name: userExam.user_subject_name,
         grade: userExam.grade,
+        minimum_passing_grade: userExam.minimum_passing_grade,
         cfu: userExam.user_subject_table.cfu,
         semster: userExam.user_subject_table.semester,
         aa: `${userExam.user_subject_table.aa_left}/${userExam.user_subject_table.aa_right}`,

@@ -64,6 +64,12 @@ export class UserExamsTable extends Model {
   grade: number;
 
   @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  minimum_passing_grade: number;
+
+  @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
   })
