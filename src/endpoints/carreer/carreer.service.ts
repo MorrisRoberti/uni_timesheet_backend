@@ -216,20 +216,24 @@ export class CarreerService {
           return subject.user_subject_id === userExam.user_subject_id;
         });
 
-        const { total_hours, total_minutes } = foundValues;
+        let newHours, newMinutes;
+        if (foundValues && foundValues !== null) {
+          const { total_hours, total_minutes } = foundValues;
 
-        // remap hours and minutes
-        const [newHours, newMinutes] = this.hourLogsService.formatTimeValues(
-          total_hours,
-          total_minutes,
-        );
-
+          // remap hours and minutes
+          [newHours, newMinutes] = this.hourLogsService.formatTimeValues(
+            total_hours,
+            total_minutes,
+          );
+        }
         arrayOfUserSubjects.set(userExam.user_subject_id, {
           user_subject_name: userExam.user_subject_name,
           cfu: userExam.cfu,
           semester: userExam.semester,
           aa: userExam.aa,
-          total_time: `${newHours}:${newMinutes}`,
+          total_time: foundValues
+            ? `${newHours}:${newMinutes}`
+            : 'no hours spent',
         });
       }
     });
