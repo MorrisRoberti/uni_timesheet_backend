@@ -231,7 +231,7 @@ export class CarreerService {
           cfu: userExam.cfu,
           semester: userExam.semester,
           aa: userExam.aa,
-          total_time: foundValues ? `${newHours}:${newMinutes}` : null,
+          total_time: foundValues ? `${newHours}:${newMinutes}` : '00:00',
         });
       }
     });
